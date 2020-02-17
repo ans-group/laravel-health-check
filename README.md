@@ -1,5 +1,7 @@
 <img src="https://images.ukfast.co.uk/logos/ukfast/441x126_transparent_strapline.png" alt="UKFast Logo" width="350px" height="auto" />
 
+![Tests](https://github.com/ukfast/laravel-health-check/workflows/Run%20tests/badge.svg?branch=master)
+
 # Health Check Package
 
 The purpose of this package is to surface a health-check endpoint on `/health` which, when hit, returns the status of all the services and dependencies your project relies on, along with the overall health of your system. This is useful in both development and production for debugging issues with a faulty application.
