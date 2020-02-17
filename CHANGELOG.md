@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2020-02-17
+
 ### Added
 
 - GitHub Actions CI workflow
+
+### Changed 
+
 - README.md changes
 
 ## [1.0.0] - 2020-02-14
@@ -18,5 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/ukfast/laravel-health-check/tree/v1.0.1
 [1.0.0]: https://github.com/ukfast/laravel-health-check/tree/v1.0.0
