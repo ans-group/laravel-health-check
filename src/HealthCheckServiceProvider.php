@@ -25,7 +25,7 @@ class HealthCheckServiceProvider extends ServiceProvider
         $configPath =  $this->app->basePath() . '/config/healthcheck.php';
         $this->publishes([
             __DIR__.'/../config/healthcheck.php' => $configPath,
-        ]);
+        ], 'config');
 
         if ($this->app instanceof \Laravel\Lumen\Application) {
             $this->app->configure('healthcheck');
