@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CI status badge to README.md
 
+### Changed
+
+- README.md changes
+
 ## [1.0.1] - 2020-02-17
 
 ### Added
