@@ -12,7 +12,7 @@ This package also adds a `/ping` endpoint. Just hit `/ping` and receive `pong` i
 
 To install the package:
 
-Run  `composer require ukfast/health-check` to add the package to your dependencies.
+Run  `composer require ukfast/laravel-health-check` to add the package to your dependencies.
 
 This will automatically install the package to your vendor folder.
 
