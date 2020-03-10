@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add support for Laravel/Illuminate 7.x
+- Add support for Laravel/Illuminate 7.x [#6](https://github.com/ukfast/laravel-health-check/pull/6) from [@rbibby](https://github.com/rbibby)
 
 
 ## [1.0.2] - 2020-03-05
