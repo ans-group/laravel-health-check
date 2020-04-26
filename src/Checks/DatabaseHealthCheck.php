@@ -22,6 +22,10 @@ class DatabaseHealthCheck extends HealthCheck
     {
         foreach (config('healthcheck.database.connections') as $connection) {
             try {
+                if ($connection == 'default') {
+                    $connection = '';
+                }
+
                 $pdo = $this->db->connection($connection)->getPdo();
             } catch (Exception $e) {
                 return $this->problem('Could not connect to db', [
