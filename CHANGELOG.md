@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [1.0.4] - 2020-04-26
+
+### Changed
+
+- Use empty string to connect to default database. [#8](https://github.com/ukfast/laravel-health-check/pull/8) from [@RootPrivileges](https://github.com/RootPrivileges)
+
+
 ## [1.0.3] - 2020-03-10
 
 ### Added
@@ -45,7 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.0.3...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/ukfast/laravel-health-check/tree/v1.0.4
 [1.0.3]: https://github.com/ukfast/laravel-health-check/tree/v1.0.3
 [1.0.2]: https://github.com/ukfast/laravel-health-check/tree/v1.0.2
 [1.0.1]: https://github.com/ukfast/laravel-health-check/tree/v1.0.1
