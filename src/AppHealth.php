@@ -22,7 +22,11 @@ class AppHealth
             return $check->name() == $checkName;
         })->first();
 
-        return $check ? $check->status()->isOkay() : false;
+        try {
+            return $check ? $check->status()->isOkay() : false;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     public function fails($checkName)

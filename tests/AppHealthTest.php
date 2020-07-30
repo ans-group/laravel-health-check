@@ -26,7 +26,17 @@ class AppHealthTest extends TestCase
         $appHealth = new AppHealth(collect([new AlwaysUpCheck, new AlwaysDownCheck]));
 
         $this->assertFalse($appHealth->fails('always-up'));
-        $this->assertTrue($appHealth->fails('always-down'));   
+        $this->assertTrue($appHealth->fails('always-down')); 
+    }
+
+    /**
+     * @test
+     */
+    public function returns_false_if_check_throws_exception()
+    {
+        $appHealth = new AppHealth(collect([new UnreliableCheck]));
+
+        $this->assertFalse($appHealth->passes('unreliable'));
     }
 }
 
@@ -49,5 +59,16 @@ class AlwaysDownCheck extends HealthCheck
         return $this->problem('Something went wrong', [
             'debug' => 'info',
         ]);
+    }
+}
+
+
+class UnreliableCheck extends HealthCheck
+{
+    protected $name = 'unreliable';
+
+    public function status()
+    {
+        throw new \RuntimeException('Something went badly wrong');
     }
 }
