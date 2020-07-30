@@ -66,6 +66,17 @@ return [
     'x-service-checks' => [],
 
     /**
+     * An array of cache stores can be provided for the Cache health
+     * check which will be looped through to ensure you can reach
+     * each of your stores and then read/write.
+     */
+    'cache' => [
+        'stores' => [
+            'array'
+        ]
+    ],
+
+    /**
      * Additional config can be put here. For example, a health check
      * for your .env file needs to know which keys need to be present.
      * You can pass this information by specifying a new key here then
