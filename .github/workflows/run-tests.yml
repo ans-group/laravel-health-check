@@ -2,6 +2,10 @@ name: Run tests
 
 on:
   push:
+    branches:
+      - master
+    tags:
+      - *
   pull_request:
   schedule:
       - cron: '0 0 * * *'
