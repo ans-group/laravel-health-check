@@ -66,9 +66,7 @@ return [
     'x-service-checks' => [],
 
     /**
-     * An array of cache stores can be provided for the Cache health
-     * check which will be looped through to ensure you can reach
-     * each of your stores and then read/write.
+     * A list of stores to be checked by the Cache health check
      */
     'cache' => [
         'stores' => [
