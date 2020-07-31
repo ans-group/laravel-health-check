@@ -21,7 +21,7 @@ class CacheHealthCheck extends HealthCheck
             try {
                 $cache = Cache::store($store);
 
-                $cache->put('laravel-health-check', 'healthy');
+                $cache->put('laravel-health-check', 'healthy', 60);
                 
                 $value = $cache->pull('laravel-health-check', 'broken');
 
