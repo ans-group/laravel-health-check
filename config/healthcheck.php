@@ -26,6 +26,9 @@ return [
      */
     'middleware' => [],
 
+    /**
+     * Used by the basic auth middleware
+     */
     'auth' => [
         'user' => env('HEALTH_CHECK_USER'),
         'password' => env('HEALTH_CHECK_PASSWORD'),
