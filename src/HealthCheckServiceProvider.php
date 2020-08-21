@@ -16,6 +16,14 @@ class HealthCheckServiceProvider extends ServiceProvider
             'uses' => HealthCheckController::class
         ]);
 
+        $this->app->bind('app-health', function ($app) {
+            $checks = collect();
+            foreach ($app->config->get('healthcheck.checks') as $classPath) {
+                $checks->push($app->make($classPath));
+            }
+            return new AppHealth($checks);
+        });
+
         $this->app->make('router')->get('/ping', PingController::class);
     }
 

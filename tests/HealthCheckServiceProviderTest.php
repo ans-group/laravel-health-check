@@ -42,4 +42,16 @@ class HealthCheckServiceProviderTest extends TestCase
         $response = $this->get('/ping');
         $this->assertEquals('pong', $response->getContent());
     }
+
+    /**
+     * @test
+     */
+    public function binds_app_health()
+    {
+        $this->app->register(HealthCheckServiceProvider::class);
+
+        config(['healthcheck.checks' => [\UKFast\HealthCheck\Checks\EnvHealthCheck::class]]);
+
+        $this->assertInstanceOf(\UKFast\HealthCheck\AppHealth::class, $this->app->make('app-health'));
+    }
 }
