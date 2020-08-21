@@ -111,7 +111,7 @@ return [
 
     'auth' => [
         'user' => env('HEALTH_CHECK_USER'),
-        'user' => env('HEALTH_CHECK_PASSWORD'),
+        'password' => env('HEALTH_CHECK_PASSWORD'),
     ],
 
     /**
