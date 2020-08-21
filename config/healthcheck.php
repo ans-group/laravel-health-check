@@ -20,8 +20,16 @@ return [
      * A list of middleware to run on the health-check route
      * It's recommended that you have a middleware that only
      * allows admin consumers to see the endpoint.
+     * 
+     * See UKFast\HealthCheck\BasicAuth for a one-size-fits all
+     * solution
      */
     'middleware' => [],
+
+    'auth' => [
+        'user' => env('HEALTH_CHECK_USER'),
+        'user' => env('HEALTH_CHECK_PASSWORD'),
+    ],
 
     /**
      * Can define a list of connection names to test. Names can be
