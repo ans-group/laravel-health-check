@@ -3,6 +3,7 @@
 namespace UKFast\HealthCheck;
 
 use Illuminate\Support\Collection;
+use UKFast\HealthCheck\Exceptions\CheckNotFoundException;
 
 class AppHealth
 {
@@ -22,8 +23,12 @@ class AppHealth
             return $check->name() == $checkName;
         })->first();
 
+        if (!$check) {
+            throw new CheckNotFoundException($checkName);
+        }
+
         try {
-            return $check ? $check->status()->isOkay() : false;
+            return $check->status()->isOkay();
         } catch (\Exception $e) {
             return false;
         }

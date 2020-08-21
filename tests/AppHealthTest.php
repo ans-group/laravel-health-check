@@ -3,6 +3,7 @@
 namespace Tests;
 
 use UKFast\HealthCheck\AppHealth;
+use UKFast\HealthCheck\Exceptions\CheckNotFoundException;
 use UKFast\HealthCheck\HealthCheck;
 
 class AppHealthTest extends TestCase
@@ -37,6 +38,18 @@ class AppHealthTest extends TestCase
         $appHealth = new AppHealth(collect([new UnreliableCheck]));
 
         $this->assertFalse($appHealth->passes('unreliable'));
+    }
+
+    /**
+     * @test
+     */
+    public function throws_exception_if_check_does_not_exist()
+    {
+        $appHealth = new AppHealth(collect([new AlwaysUpCheck, new AlwaysDownCheck]));
+    
+        $this->expectException(CheckNotFoundException::class);
+
+        $appHealth->passes('does-not-exist');
     }
 }
 
