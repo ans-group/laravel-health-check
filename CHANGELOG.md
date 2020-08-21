@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.1.0] - 2020-08-21
+
+### Added
+
+- Add BasicAuth middleware
+
 ### Changed
 
 - Run CI on pull requests
@@ -55,7 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.0.4...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/ukfast/laravel-health-check/tree/v1.1.0
 [1.0.4]: https://github.com/ukfast/laravel-health-check/tree/v1.0.4
 [1.0.3]: https://github.com/ukfast/laravel-health-check/tree/v1.0.3
 [1.0.2]: https://github.com/ukfast/laravel-health-check/tree/v1.0.2
