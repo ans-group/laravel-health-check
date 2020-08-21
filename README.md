@@ -6,7 +6,8 @@
 
 The purpose of this package is to surface a health-check endpoint on `/health` which, when hit, returns the status of all the services and dependencies your project relies on, along with the overall health of your system. This is useful in both development and production for debugging issues with a faulty application.
 
-This package also adds a `/ping` endpoint. Just hit `/ping` and receive `pong` in response.
+This package also adds a `/ping` endpoint. Just hit `/ping` and receive `pong` in response. 
+
 
 ## Installation
 
@@ -44,6 +45,23 @@ You can test that the package is working correctly by hitting the `/health` endp
 ### Laravel
 
 
+##### Facade
+
+We surface a `HealthCheck` facade with the package. You can use the `passes`, `fails`, or `all` methods, if you want to access the results of a check or the number of checks running from within your code.
+
+```php
+if (HealthCheck::passes('env')) {
+    // check passed
+}
+
+if (HealthCheck::fails('http')) {
+    // check failed
+}
+
+$numberOfChecks = HealthCheck::all();
+```
+
+
 ##### Config
 
 If you'd like to tweak the config file (helpful for configuring the `EnvHealthCheck`, for example), you can publish it with:
@@ -62,9 +80,12 @@ You can register custom middleware to run on requests to the `/health` endpoint.
  * A list of middleware to run on the health-check route
  * It's recommended that you have a middleware that only
  * allows admin consumers to see the endpoint.
+ *
+ * See UKFast\HealthCheck\BasicAuth for a one-size-fits all
+ * solution
  */
 'middleware' => [
-    App\Http\Middleware\CustomMiddleware.php
+    App\Http\Middleware\CustomMiddleware::class
 ],
 ```
 
@@ -72,6 +93,23 @@ Now your `CustomMiddleware` middleware will be ran on every request to the `/hea
 
 
 ### Lumen
+
+
+##### Facade
+
+We surface a `HealthCheck` facade with the package. You can use the `passes`, `fails`, or `all` methods, if you want to access the results of a check or the number of checks running from within your code.
+
+```php
+if (HealthCheck::passes('env')) {
+    // check passed
+}
+
+if (HealthCheck::fails('http')) {
+    // check failed
+}
+
+$numberOfChecks = HealthCheck::all();
+```
 
 
 ##### Config
@@ -193,9 +231,12 @@ You can register custom middleware to run on requests to the `/health` endpoint.
  * A list of middleware to run on the health-check route
  * It's recommended that you have a middleware that only
  * allows admin consumers to see the endpoint.
+ *
+ * See UKFast\HealthCheck\BasicAuth for a one-size-fits all
+ * solution
  */
 'middleware' => [
-    App\Http\Middleware\CustomMiddleware.php
+    App\Http\Middleware\CustomMiddleware::class
 ],
 ```
 
