@@ -8,6 +8,16 @@ use UKFast\HealthCheck\Middleware\BasicAuth;
 
 class BasicAuthTest extends TestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        config([
+            'healthcheck.auth.user' => 'correct-user',
+            'healthcheck.auth.password' => 'correct-password'
+        ]);
+    }
+
     /**
      * @test
      */
@@ -46,11 +56,6 @@ class BasicAuthTest extends TestCase
      */
     public function shows_full_response_if_passes_basic_auth()
     {
-        config([
-            'healthcheck.auth.user' => 'correct-user',
-            'healthcheck.auth.password' => 'correct-password'
-        ]);
-    
         $request = Request::create('/health', 'GET', [], [], [], [
             'PHP_AUTH_USER' => 'correct-user',
             'PHP_AUTH_PW' => 'correct-password',
