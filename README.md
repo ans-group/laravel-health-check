@@ -160,6 +160,15 @@ return [
     'x-service-checks' => [],
 
     /**
+     * A list of stores to be checked by the Cache health check
+     */
+    'cache' => [
+        'stores' => [
+            'array'
+        ]
+    ],
+
+    /**
      * Additional config can be put here. For example, a health check
      * for your .env file needs to know which keys need to be present.
      * You can pass this information by specifying a new key here then
