@@ -14,9 +14,19 @@
     "authors": [
         {
             "name": "George Kelly",
-            "email": "george.kelly@ukfast.co.uk"
+            "email": "george.kelly@ukfast.co.uk",
+            "role": "Author & Maintainer"
+        },
+        {
+            "name": "Tyler Woonton",
+            "email": "tyler.woonton@ukfast.co.uk",
+            "role": "Maintainer"
         }
     ],
+    "support": {
+        "issues": "https://github.com/ukfast/laravel-health-check/issues",
+        "source": "https://github.com/ukfast/laravel-health-check/tree/master"
+    },
     "autoload": {
         "psr-4": {
             "UKFast\\HealthCheck\\": "src/"
