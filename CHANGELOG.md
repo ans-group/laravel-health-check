@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.2.0] - 2020-08-21
+
 ### Added
 
 - Add CacheHealthCheck
-
+- Add HealthCheck facade
 
 ## [1.1.0] - 2020-08-21
 
@@ -66,7 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.1.0...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/ukfast/laravel-health-check/tree/v1.2.0
 [1.1.0]: https://github.com/ukfast/laravel-health-check/tree/v1.1.0
 [1.0.4]: https://github.com/ukfast/laravel-health-check/tree/v1.0.4
 [1.0.3]: https://github.com/ukfast/laravel-health-check/tree/v1.0.3
