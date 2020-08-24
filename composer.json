@@ -41,11 +41,11 @@
         "laravel": {
             "providers": [
                 "UKFast\\HealthCheck\\HealthCheckServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "HealthCheck": "UKFast\\HealthCheck\\Facade\\HealthCheck"
+            }
         }
-    },
-    "aliases": {
-        "HealthCheck": "UKFast\\HealtCheck\\Facade\\HealthCheck"
     },
     "config": {
         "sort-packages": true
