@@ -58,7 +58,7 @@ if (HealthCheck::fails('http')) {
     // check failed
 }
 
-$numberOfChecks = HealthCheck::all();
+$numberOfChecks = HealthCheck::all()->count();
 ```
 
 If one of the checks provided cannot be resolved from the service container, we'll throw a `CheckNotFoundException` with the name of the missing check.
@@ -110,7 +110,7 @@ if (HealthCheck::fails('http')) {
     // check failed
 }
 
-$numberOfChecks = HealthCheck::all();
+$numberOfChecks = HealthCheck::all()->count();
 ```
 
 If one of the checks provided cannot be resolved from the service container, we'll throw a `CheckNotFoundException` with the name of the missing check.
