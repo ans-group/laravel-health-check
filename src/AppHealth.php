@@ -39,8 +39,13 @@ class AppHealth
         return !$this->passes($checkName);
     }
 
+    /**
+     * Returns a collection of all health checks
+     * 
+     * @return Illuminate\Support\Collection
+     */
     public function all()
     {
-        return $this->checks->count();
+        return $this->checks;
     }
 }
