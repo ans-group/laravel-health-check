@@ -44,6 +44,9 @@
             ]
         }
     },
+    "aliases": {
+        "HealthCheck": "UKFast\\HealtCheck\\Facade\\HealthCheck"
+    },
     "config": {
         "sort-packages": true
     },
