@@ -54,22 +54,22 @@
     "require": {
         "php": ">=5.6",
         "ext-json": "*",
-        "illuminate/support": "^5.4|^6.0|^7.0",
-        "illuminate/http": "^5.4|^6.0|^7.0"
+        "illuminate/support": "^5.4|^6.0|^7.0|^8.0",
+        "illuminate/http": "^5.4|^6.0|^7.0|^8.0"
     },
     "require-dev": {
         "phpunit/phpunit": ">=5.0",
-        "orchestra/testbench": "^3.0",
+        "orchestra/testbench": "^3.0|^4.0|^5.0|^6.0",
         "mockery/mockery": "^1.0",
-        "illuminate/database": "^5.4|^6.0|^7.0",
-        "illuminate/log": "^5.4|^6.0|^7.0",
-        "illuminate/redis": "^5.4|^6.0|^7.0",
+        "illuminate/database": "^5.4|^6.0|^7.0|^8.0",
+        "illuminate/log": "^5.4|^6.0|^7.0|^8.0",
+        "illuminate/redis": "^5.4|^6.0|^7.0|^8.0",
         "guzzlehttp/guzzle": ">=5.6.3"
     },
     "suggest": {
-        "illuminate/database": "Allows the database health check to function. Use version 5.4 for Laravel 5 and 6.0 for Laravel 6.x",
-        "illuminate/log": "Allows the log health check to function. Use version 5.4 for Laravel 5 and 6.0 for Laravel 6.x",
-        "illuminate/redis": "Allows the redis health check to function. Use version 5.4 for Laravel 5 and 6.0 for Laravel 6.x",
+        "illuminate/database": "Allows the database health check to function.",
+        "illuminate/log": "Allows the log health check to function.",
+        "illuminate/redis": "Allows the redis health check to function.",
         "guzzlehttp/guzzle": "Allows the http health check to function."
     }
 }
