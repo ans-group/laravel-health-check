@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [1.3.0] - 2020-09-08
+
+### Added
+
+- Add support for Laravel v8.x
+
 ## [1.2.1] - 2020-08-24
 
 ### Added
@@ -21,7 +27,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed facade all method to return a collection
-
 
 ## [1.2.0] - 2020-08-21
 
@@ -84,7 +89,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.2.1...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/ukfast/laravel-health-check/tree/v1.3.0
 [1.2.1]: https://github.com/ukfast/laravel-health-check/tree/v1.2.1
 [1.2.0]: https://github.com/ukfast/laravel-health-check/tree/v1.2.0
 [1.1.0]: https://github.com/ukfast/laravel-health-check/tree/v1.1.0
