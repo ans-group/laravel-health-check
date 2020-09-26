@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [1.4.0] - 2020-09-26
+
+### Added
+
+- Add AddHeaders middleware
+
 ## [1.3.0] - 2020-09-08
 
 ### Added
@@ -89,7 +95,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.3.0...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/ukfast/laravel-health-check/tree/v1.4.0
 [1.3.0]: https://github.com/ukfast/laravel-health-check/tree/v1.3.0
 [1.2.1]: https://github.com/ukfast/laravel-health-check/tree/v1.2.1
 [1.2.0]: https://github.com/ukfast/laravel-health-check/tree/v1.2.0
