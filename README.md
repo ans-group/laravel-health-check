@@ -246,6 +246,11 @@ You can register custom middleware to run on requests to the `/health` endpoint.
 
 Now your `CustomMiddleware` middleware will be ran on every request to the `/health` endpoint.
 
+Out of the box, the health check package provides:
+
+ * BasicAuth - Requires that basic auth credentials be sent in order to see full status
+ * AddHeaders - Adds X-check-status headers to the response, so you can avoid having to parse JSON
+
 
 ## Creating your own health checks
 
