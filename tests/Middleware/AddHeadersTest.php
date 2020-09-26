@@ -24,7 +24,7 @@ class AddHeadersTest extends TestCase
 
         $request = Request::create('/health', 'GET');
         $response = (new AddHeaders)->handle($request, function ($request) {
-            return response()->json(null, 404);
+            return response()->json(null, 500);
         });
 
         $this->assertEquals(1, $response->headers->get('X-always-up-status'));
