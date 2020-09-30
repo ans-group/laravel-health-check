@@ -20,10 +20,10 @@ If you think you have identified a security vulnerability, please contact our te
 Submitting Changes
 ------------------
 
-Before submitting your [merge request](https://docs.gitlab.com/ee/user/project/merge_requests/),
+Before submitting your [pull request](https://help.github.com/en/articles/about-pull-requests),
 please make sure that the coding standards are respected and that all tests are passing. 
 
-Merge requests should provide an overview of the changes made so it is clear what you are trying to achieve, this will help us when reviewing your changes.
+Pull requests should provide an overview of the changes made so it is clear what you are trying to achieve, this will help us when reviewing your changes.
 
 Commit messages should be clear, we don't mind one-line messages for small changes 
 but larger changes should follow [The Seven Rules](https://chris.beams.io/posts/git-commit/) set by Chris Beams. 
