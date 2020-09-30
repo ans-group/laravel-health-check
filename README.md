@@ -330,6 +330,16 @@ Finally, hit the `/health` endpoint, depending on if your app can actually hit R
 
 We welcome contributions to this package that will be beneficial to the community.
 
-All new health checks need to be simple, and not too specific to a particular project. Furthermore, all new changes should be well-tested and follow [PSR-12](https://www.php-fig.org/psr/psr-12/) standards.
+You can reach out to our open-source team via **open-source@ukfast.co.uk** who will get back to you as soon as possible.
 
 Please refer to our [CONTRIBUTING](CONTRIBUTING.md) file for more information.
+
+
+## Security
+
+If you think you have identified a security vulnerability, please contact our team via **security@ukfast.co.uk** who will get back to you as soon as possible, rather than using the issue tracker.
+
+
+## Licence
+
+This project is licenced under the MIT Licence (MIT). Please see the [Licence](LICENCE) file for more information.

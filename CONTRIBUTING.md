@@ -12,7 +12,9 @@ Issues
 
 Issues should include a title and clear description with as much relevant information as possible.
 
-If you think you have identified a security vulnerability, please contact our team via **security@ukfast.co.uk** who will get back to you as soon as possible.
+If you'd like to discuss a potential change, you can open an issue or reach out to our open-source team via **open-source@ukfast.co.uk** who will get back to you as soon as possible.
+
+If you think you have identified a security vulnerability, please contact our team via **security@ukfast.co.uk** instead of using the issue tracker.
 
 
 Submitting Changes
@@ -31,9 +33,11 @@ We don't mind squashing small changes to tidy things up but please don't squash 
 
 Coding Standards
 ---------------
-This library uses the [PSR-12 Coding Standard](https://www.php-fig.org/psr/psr-12/).
+
+This project adheres to the [PSR-12 Coding Standard](https://www.php-fig.org/psr/psr-12/).
 
 
 Testing
 -------
+
 Please ensure all new functionality is matched with appropriate tests, we will advise if we feel more is needed.
