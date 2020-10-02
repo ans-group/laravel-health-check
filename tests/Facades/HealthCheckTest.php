@@ -16,6 +16,6 @@ class HealthCheckTest extends TestCase
         $this->app->register(HealthCheckServiceProvider::class);
 
         config(['healthcheck.checks' => [\UKFast\HealthCheck\Checks\EnvHealthCheck::class]]);
-        $this->assertEquals(1, HealthCheck::all()->count());
+        $this->assertSame(1, HealthCheck::all()->count());
     }
 }

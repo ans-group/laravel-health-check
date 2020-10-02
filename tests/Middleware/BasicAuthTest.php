@@ -27,8 +27,8 @@ class BasicAuthTest extends TestCase
             return response('body', 500);
         });
 
-        $this->assertEquals('', $response->getContent());
-        $this->assertEquals(500, $response->status());
+        $this->assertSame('', $response->getContent());
+        $this->assertSame(500, $response->status());
     }
 
     /**
@@ -47,8 +47,8 @@ class BasicAuthTest extends TestCase
             return response('body', 500);
         });
 
-        $this->assertEquals('', $response->getContent());
-        $this->assertEquals(500, $response->status());
+        $this->assertSame('', $response->getContent());
+        $this->assertSame(500, $response->status());
     }
 
     /**
@@ -70,7 +70,7 @@ class BasicAuthTest extends TestCase
             return response('body', 500);
         });
 
-        $this->assertEquals('body', $response->getContent());
-        $this->assertEquals(500, $response->status());
+        $this->assertSame('body', $response->getContent());
+        $this->assertSame(500, $response->status());
     }
 }
