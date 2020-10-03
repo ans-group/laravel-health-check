@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Update README.md
 - Update CONTRIBUTING.md
+- Update tests to use assertSame instead of assertEquals. [#31](https://github.com/ukfast/laravel-health-check/pull/31) from [@wesolowski](https://github.com/wesolowski)
 
 
 ## [1.4.0] - 2020-09-26
