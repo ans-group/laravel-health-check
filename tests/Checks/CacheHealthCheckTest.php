@@ -35,6 +35,26 @@ class CacheHealthCheckTest extends TestCase
     /**
      * @test
      */
+    public function shows_problem_if_incorrect_read_from_cache()
+    {
+        config([
+            'healthcheck.cache.stores' => [
+                'local'
+            ]
+        ]);
+
+        Cache::shouldReceive('store')->with('local')->once()->andReturnSelf()
+            ->shouldReceive('put')->once()
+            ->shouldReceive('pull')->once()->andReturn('incorrect-string');
+
+        $status = (new CacheHealthCheck($this->app))->status();
+
+        $this->assertTrue($status->isProblem());
+    }
+
+    /**
+     * @test
+     */
     public function shows_okay_if_can_write_to_cache()
     {
         config([

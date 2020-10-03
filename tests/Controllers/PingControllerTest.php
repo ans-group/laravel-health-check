@@ -12,6 +12,6 @@ class PingControllerTest extends TestCase
      */
     public function returns_pong()
     {
-        $this->assertEquals('pong', (new PingController)->__invoke());
+        $this->assertSame('pong', (new PingController)->__invoke());
     }
 }

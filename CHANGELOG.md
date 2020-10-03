@@ -10,12 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add CODE_OF_CONDUCT.md
-- Add StorageHealthCheck
+- Add StorageHealthCheck. [#32](https://github.com/ukfast/laravel-health-check/pull/32) from [@srichter](https://github.com/srichter)
+- Increase test coverage for HttpHealthCheck. [#34](https://github.com/ukfast/laravel-health-check/pull/34) from [@srichter](https://github.com/srichter)
+- Increase Test coverage for CacheHealthCheck. [#33](https://github.com/ukfast/laravel-health-check/pull/33) from [@srichter](https://github.com/srichter)
 
 ### Changed
 
 - Update README.md
 - Update CONTRIBUTING.md
+- Update tests to use assertSame instead of assertEquals. [#31](https://github.com/ukfast/laravel-health-check/pull/31) from [@wesolowski](https://github.com/wesolowski)
 
 
 ## [1.4.0] - 2020-09-26

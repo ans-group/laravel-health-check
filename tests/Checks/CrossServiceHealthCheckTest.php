@@ -28,8 +28,8 @@ class CrossServiceHealthCheckTest extends TestCase
         $check = new CrossServiceHealthCheck($client, $request);
 
         $this->assertTrue($check->status()->isOkay());
-        $this->assertEquals(1, count($container));
-        $this->assertEquals('http://api.example.com/health', (string) $container[0]['request']->getUri());
+        $this->assertSame(1, count($container));
+        $this->assertSame('http://api.example.com/health', (string) $container[0]['request']->getUri());
         $this->assertTrue(isset($container[0]['request']->getHeaders()['X-Service-Check']));
     }
 
@@ -47,8 +47,8 @@ class CrossServiceHealthCheckTest extends TestCase
         $check = new CrossServiceHealthCheck($client, $request);
 
         $this->assertTrue($check->status()->isProblem());
-        $this->assertEquals(1, count($container));
-        $this->assertEquals('http://api.example.com/health', (string) $container[0]['request']->getUri());
+        $this->assertSame(1, count($container));
+        $this->assertSame('http://api.example.com/health', (string) $container[0]['request']->getUri());
         $this->assertTrue(isset($container[0]['request']->getHeaders()['X-Service-Check']));
     }
 
@@ -67,8 +67,8 @@ class CrossServiceHealthCheckTest extends TestCase
         $check = new CrossServiceHealthCheck($client, $request);
 
         $this->assertTrue($check->status()->isOkay());
-        $this->assertEquals('Skipped, X-Service-Check header is present', $check->status()->context());
-        $this->assertEquals(0, count($container));
+        $this->assertSame('Skipped, X-Service-Check header is present', $check->status()->context());
+        $this->assertSame(0, count($container));
     }
 
     private function mockClient($responses, &$container)
