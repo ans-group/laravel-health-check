@@ -58,7 +58,61 @@ class HttpHealthCheckTest extends TestCase
             $responses = [
                 (new \GuzzleHttp\Psr7\Response(500)),
             ];
-            $mockHandler = new MockHandler($responses);
+            $mockHandler = MockHandler::createWithMiddleware($responses);
+
+            return new Client(['handler' => $mockHandler]);
+        });
+
+        $status = (new HttpHealthCheck())->status();
+
+        $this->assertTrue($status->isProblem());
+    }
+
+    /**
+     * @test
+     */
+    public function shows_problem_on_connect_exception()
+    {
+        config([
+            'healthcheck.addresses' => [
+                '192.168.0.1'
+            ],
+            'default-response-code' => 200,
+            'default-curl-timeout' => 1
+        ]);
+
+        $this->app->bind(Client::class, function ($app, $args) {
+            $exceptions = [
+                (new \GuzzleHttp\Exception\ConnectException('Connection refused', new \GuzzleHttp\Psr7\Request('GET', 'test'))),
+            ];
+            $mockHandler = new MockHandler($exceptions);
+
+            return new Client(['handler' => $mockHandler]);
+        });
+
+        $status = (new HttpHealthCheck())->status();
+
+        $this->assertTrue($status->isProblem());
+    }
+
+    /**
+     * @test
+     */
+    public function shows_problem_on_general_exception()
+    {
+        config([
+            'healthcheck.addresses' => [
+                '192.168.0.1'
+            ],
+            'default-response-code' => 200,
+            'default-curl-timeout' => 1
+        ]);
+
+        $this->app->bind(Client::class, function ($app, $args) {
+            $exceptions = [
+                (new \GuzzleHttp\Exception\TooManyRedirectsException('Will not follow more than 5 redirects', new \GuzzleHttp\Psr7\Request('GET', 'test'))),
+            ];
+            $mockHandler = new MockHandler($exceptions);
 
             return new Client(['handler' => $mockHandler]);
         });
