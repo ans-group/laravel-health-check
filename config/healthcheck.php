@@ -86,6 +86,15 @@ return [
     ],
 
     /**
+     * A list of disks to be checked by the Storage health check
+     */
+    'storage' => [
+        'disks' => [
+            'local',
+        ]
+    ],
+
+    /**
      * Additional config can be put here. For example, a health check
      * for your .env file needs to know which keys need to be present.
      * You can pass this information by specifying a new key here then
