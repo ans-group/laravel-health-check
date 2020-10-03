@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add CODE_OF_CONDUCT.md
+- Increase test coverage for HttpHealthCheck. [#34](https://github.com/ukfast/laravel-health-check/pull/34) from [@srichter](https://github.com/srichter)
+- Increase Test coverage for CacheHealthCheck. [#33](https://github.com/ukfast/laravel-health-check/pull/33) from [@srichter](https://github.com/srichter)
 
 ### Changed
 
