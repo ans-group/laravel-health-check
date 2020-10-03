@@ -27,7 +27,7 @@ class HealthCheckServiceProviderTest extends TestCase
         config(['healthcheck.checks' => []]);
 
         $response = $this->get('/health');
-        $this->assertEquals('{"status":"OK"}', $response->getContent());
+        $this->assertSame('{"status":"OK"}', $response->getContent());
     }
 
     /**
@@ -40,7 +40,7 @@ class HealthCheckServiceProviderTest extends TestCase
         config(['healthcheck.checks' => []]);
 
         $response = $this->get('/ping');
-        $this->assertEquals('pong', $response->getContent());
+        $this->assertSame('pong', $response->getContent());
     }
 
     /**

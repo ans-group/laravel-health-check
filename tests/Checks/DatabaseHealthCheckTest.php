@@ -65,7 +65,7 @@ class DatabaseHealthCheckTest extends TestCase
         $status = (new DatabaseHealthCheck($db))->status();
 
         $this->assertTrue($status->isProblem());
-        $this->assertEquals('bad', $status->context()['connection']);
+        $this->assertSame('bad', $status->context()['connection']);
     }
 }
 

@@ -35,7 +35,7 @@ class StatusTest extends TestCase
     {
         $status = (new Status)->withContext('arbitrary context');
 
-        $this->assertEquals('arbitrary context', $status->context());
+        $this->assertSame('arbitrary context', $status->context());
     }
 
     /**
@@ -45,7 +45,7 @@ class StatusTest extends TestCase
     {
         $status = (new Status)->withName('redis');
 
-        $this->assertEquals('redis', $status->name());
+        $this->assertSame('redis', $status->name());
     }
 
     /**
@@ -55,6 +55,6 @@ class StatusTest extends TestCase
     {
         $status = (new Status)->problem('My thing doesnt work');
 
-        $this->assertEquals('My thing doesnt work', $status->message());
+        $this->assertSame('My thing doesnt work', $status->message());
     }
 }

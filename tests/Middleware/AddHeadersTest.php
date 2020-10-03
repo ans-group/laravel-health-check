@@ -27,8 +27,8 @@ class AddHeadersTest extends TestCase
             return response()->json(null, 500);
         });
 
-        $this->assertEquals(1, $response->headers->get('X-always-up-status'));
-        $this->assertEquals(0, $response->headers->get('X-always-down-status'));
+        $this->assertSame('1', $response->headers->get('X-always-up-status'));
+        $this->assertSame('0', $response->headers->get('X-always-down-status'));
     }
 }
 

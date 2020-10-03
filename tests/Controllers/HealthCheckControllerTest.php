@@ -21,7 +21,7 @@ class HealthCheckControllerTest extends TestCase
         $this->setChecks([AlwaysUpCheck::class]);
         $response = (new HealthCheckController)->__invoke($this->app);
 
-        $this->assertEquals([
+        $this->assertSame([
             'status' => 'OK',
             'always-up' => ['status' => 'OK'],
         ], json_decode($response->getContent(), true));
@@ -35,7 +35,7 @@ class HealthCheckControllerTest extends TestCase
         $this->setChecks([AlwaysUpCheck::class, AlwaysDownCheck::class]);
         $response = (new HealthCheckController)->__invoke($this->app);
 
-        $this->assertEquals([
+        $this->assertSame([
             'status' => 'PROBLEM',
             'always-up' => ['status' => 'OK'],
             'always-down' => [
