@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add PacakgeSecurityHealthCheck
+- Add PackageSecurityHealthCheck
+
+### Fixed
+
+- Fix StorageHealthCheckTest filename. [#35](https://github.com/ukfast/laravel-health-check/pull/35) from [@srichter](https://github.com/srichter)
 
 ## [1.5.0] - 2020-10-03
 
