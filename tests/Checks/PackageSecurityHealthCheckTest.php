@@ -2,7 +2,9 @@
 
 namespace Tests\Checks;
 
+use Closure;
 use Exception;
+use Mockery;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\PackageSecurityHealthCheck;
 
@@ -11,6 +13,18 @@ class PackageSecurityHealthCheckTest extends TestCase
     public function getPackageProviders($app)
     {
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+    }
+
+    /**
+     * Mock a partial instance of an object in the container.
+     *
+     * @param  string  $abstract
+     * @param  \Closure|null  $mock
+     * @return \Mockery\MockInterface
+     */
+    protected function partialMock($abstract, Closure $mock = null)
+    {
+        return $this->instance($abstract, Mockery::mock(...array_filter(func_get_args()))->makePartial());
     }
 
     /**
@@ -28,9 +42,9 @@ class PackageSecurityHealthCheckTest extends TestCase
      */
     public function shows_problem_if_cannot_check_packages()
     {
-        $this->mock('overload:SensioLabs\Security\SecurityChecker', function ($mock) {
+        $this->partialMock('overload:SensioLabs\Security\SecurityChecker', function ($mock) {
             $mock->shouldReceive('check')->andThrow(new Exception('Lock file does not exist.'));
-        })->makePartial();
+        });
 
         $status = (new PackageSecurityHealthCheck($this->app))->status();
 
@@ -42,10 +56,10 @@ class PackageSecurityHealthCheckTest extends TestCase
      */
     public function shows_problem_if_package_has_vulnerability()
     {
-        $this->mock('overload:SensioLabs\Security\SecurityChecker', function ($mock) {
+        $this->partialMock('overload:SensioLabs\Security\SecurityChecker', function ($mock) {
             $mock->shouldReceive('check')
                 ->andReturn(new MockResult(1, file_get_contents('tests/json/sensiolabsPackageHasVulnerability.json')));
-        })->makePartial();
+        });
 
         $status = (new PackageSecurityHealthCheck($this->app))->status();
 
@@ -63,10 +77,10 @@ class PackageSecurityHealthCheckTest extends TestCase
             ],
         ]);
 
-        $this->mock('overload:SensioLabs\Security\SecurityChecker', function ($mock) {
+        $this->partialMock('overload:SensioLabs\Security\SecurityChecker', function ($mock) {
             $mock->shouldReceive('check')
                 ->andReturn(new MockResult(1, file_get_contents('tests/json/sensiolabsPackageHasVulnerability.json')));
-        })->makePartial();
+        });
 
         $status = (new PackageSecurityHealthCheck($this->app))->status();
 
@@ -78,10 +92,10 @@ class PackageSecurityHealthCheckTest extends TestCase
      */
     public function shows_okay_if_no_packages_have_vulnerabilities()
     {
-        $this->mock('overload:SensioLabs\Security\SecurityChecker', function ($mock) {
+        $this->partialMock('overload:SensioLabs\Security\SecurityChecker', function ($mock) {
             $mock->shouldReceive('check')
                 ->andReturn(new MockResult(0, '{}'));
-        })->makePartial();
+        });
 
         $status = (new PackageSecurityHealthCheck($this->app))->status();
 
