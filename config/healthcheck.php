@@ -95,6 +95,13 @@ return [
     ],
 
     /**
+     * A list of packages to be ignored by the Package Security health check
+     */
+    'package-security' => [
+        'ignore' => [],
+    ],
+
+    /**
      * Additional config can be put here. For example, a health check
      * for your .env file needs to know which keys need to be present.
      * You can pass this information by specifying a new key here then

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add PacakgeSecurityHealthCheck
+
 ## [1.5.0] - 2020-10-03
 
 ### Added
