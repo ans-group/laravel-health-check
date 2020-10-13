@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
 
+- Add MigrationUpToDateHealthCheck. [#38](https://github.com/ukfast/laravel-health-check/pull/38) from [@timohund](https://github.com/timohund)
 
 ## [1.6.0] - 2020-10-08
 
