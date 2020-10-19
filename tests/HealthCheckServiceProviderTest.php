@@ -75,4 +75,18 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->expectException(NotFoundHttpException::class);
         $this->assertNull($routes->match(Request::create('/health')));
     }
+
+    /**
+     * @test
+     */
+    public function base_path_defaults_to_nothing()
+    {
+        config(['healthcheck.base-path' => '']);
+        $this->app->register(HealthCheckServiceProvider::class);
+
+        $routes = $this->app->make('router')->getRoutes();
+
+        $this->assertNotNull($routes->match(Request::create('/ping')));
+        $this->assertNotNull($routes->match(Request::create('/health')));
+    }
 }

@@ -11,7 +11,7 @@ class HealthCheckServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configure();
-        $this->app->make('router')->get('/' . trim(config('healthcheck.base-path'), '/') . '/health', [
+        $this->app->make('router')->get($this->withBasePath('/health'), [
             'middleware' => config('healthcheck.middleware'),
             'uses' => HealthCheckController::class
         ]);
@@ -24,7 +24,7 @@ class HealthCheckServiceProvider extends ServiceProvider
             return new AppHealth($checks);
         });
 
-        $this->app->make('router')->get('/' . trim(config('healthcheck.base-path'), '/') . '/ping', PingController::class);
+        $this->app->make('router')->get($this->withBasePath('/ping'), PingController::class);
     }
 
     protected function configure()
@@ -38,5 +38,17 @@ class HealthCheckServiceProvider extends ServiceProvider
         if ($this->app instanceof \Laravel\Lumen\Application) {
             $this->app->configure('healthcheck');
         }
+    }
+
+    private function withBasePath($path)
+    {
+        $path = trim($path, '/');
+        $basePath = trim(config('healthcheck.base-path'), '/');
+
+        if ($basePath == '') {
+            return "/$path";
+        }
+
+        return "/$basePath/$path";
     }
 }
