@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UKFast\HealthCheck\Checks\LogHealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 
@@ -53,5 +55,24 @@ class HealthCheckServiceProviderTest extends TestCase
         config(['healthcheck.checks' => [\UKFast\HealthCheck\Checks\EnvHealthCheck::class]]);
 
         $this->assertInstanceOf(\UKFast\HealthCheck\AppHealth::class, $this->app->make('app-health'));
+    }
+
+    /**
+     * @test
+     */
+    public function uses_base_path_for_health_check_routes()
+    {
+        config(['healthcheck.base-path' => '/test/']);
+        $this->app->register(HealthCheckServiceProvider::class);
+
+        $routes = $this->app->make('router')->getRoutes();
+
+        $this->assertNotNull($routes->match(Request::create('/test/ping')));
+        $this->expectException(NotFoundHttpException::class);
+        $this->assertNull($routes->match(Request::create('/ping')));
+
+        $this->assertNotNull($routes->match(Request::create('/test/health')));
+        $this->expectException(NotFoundHttpException::class);
+        $this->assertNull($routes->match(Request::create('/health')));
     }
 }
