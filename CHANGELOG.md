@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.7.1] - 2020-10-19
+
 ### Fixed
 
 - Use base_path when route registering routes [#41](https://github.com/ukfast/laravel-health-check/pull/41) by [@palpalani](https://github.com/palpalani)
-
 
 ## [1.7.0] - 2020-10-13
 
@@ -131,7 +133,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.7.0...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.7.1...HEAD
+[1.7.1]: https://github.com/ukfast/laravel-health-check/tree/v1.7.1
 [1.7.0]: https://github.com/ukfast/laravel-health-check/tree/v1.7.0
 [1.6.0]: https://github.com/ukfast/laravel-health-check/tree/v1.6.0
 [1.5.0]: https://github.com/ukfast/laravel-health-check/tree/v1.5.0
