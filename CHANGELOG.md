@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.7.2] - 2020-10-20
+
 ### Added
 
 - Add test case for base path functionality
-
 
 ## [1.7.1] - 2020-10-19
 
@@ -137,7 +139,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.7.1...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.7.2...HEAD
+[1.7.2]: https://github.com/ukfast/laravel-health-check/tree/v1.7.2
 [1.7.1]: https://github.com/ukfast/laravel-health-check/tree/v1.7.1
 [1.7.0]: https://github.com/ukfast/laravel-health-check/tree/v1.7.0
 [1.6.0]: https://github.com/ukfast/laravel-health-check/tree/v1.6.0
