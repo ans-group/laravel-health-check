@@ -103,7 +103,7 @@ return [
 
     'scheduler' => [
         'timestamp-filename' => 'laravel-scheduler-health-check.txt',
-        'minutes_between_checks' => 5,
+        'minutes-between-checks' => 5,
     ],
 
     /**

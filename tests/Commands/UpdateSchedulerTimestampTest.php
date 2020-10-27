@@ -22,8 +22,7 @@ class UpdateSchedulerTimestampTest extends TestCase
 
         $this->app->register(HealthCheckServiceProvider::class);
 
-        $this->artisan('health-check:update-scheduler-timestamp')
-            ->assertExitCode(0);
+        $this->artisan('health-check:update-scheduler-timestamp');
 
         Storage::assertExists('laravel-scheduler-health-check.txt');
         $this->assertEquals(time(), Storage::get('laravel-scheduler-health-check.txt'));

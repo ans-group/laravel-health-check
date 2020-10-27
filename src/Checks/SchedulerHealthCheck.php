@@ -28,9 +28,9 @@ class SchedulerHealthCheck extends HealthCheck
         }
 
         return $this->problem("Scheduler last ran more than $minutesBetweenChecks minute ago", [
-            'scheduler_last_ran' => $schedulerLastRan,
-            'now' => $now,
-            'time_since_scheduler_ran' => $secondsSinceSchedulerRan,
+            'last_ran' => date('Y-m-d H:i:s', $schedulerLastRan),
+            'now' => date('Y-m-d H:i:s', $now),
+            'seconds_since_scheduler_ran' => $secondsSinceSchedulerRan,
         ]);
     }
 }

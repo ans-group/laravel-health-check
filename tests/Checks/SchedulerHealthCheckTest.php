@@ -53,9 +53,9 @@ class SchedulerHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
         $this->assertEquals('Scheduler last ran more than 5 minute ago', $status->message());
 
-        $this->assertEquals($tenMinutesAgo, $status->context()['scheduler_last_ran']);
-        $this->assertEquals($now, $status->context()['now']);
-        $this->assertEquals(600, $status->context()['time_since_scheduler_ran']);   
+        $this->assertEquals(date('Y-m-d H:i:s', $tenMinutesAgo), $status->context()['last_ran']);
+        $this->assertEquals(date('Y-m-d H:i:s', $now), $status->context()['now']);
+        $this->assertEquals(600, $status->context()['seconds_since_scheduler_ran']);   
     }
 
     /**
