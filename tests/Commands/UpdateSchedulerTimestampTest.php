@@ -13,7 +13,7 @@ class UpdateSchedulerTimestampTest extends TestCase
      */
     public function running_command_updates_timestamp_in_file()
     {
-        Storage::fake();
+        Storage::fake('local');
 
         config([
             'healthcheck.scheduler.timestamp-filename' => 'laravel-scheduler-health-check.txt',
