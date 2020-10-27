@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add SchedulerHealthCheck [#43](https://github.com/ukfast/laravel-health-check/pull/43) by [@rbibby](https://github.com/rbibby)
+
 
 ## [1.7.2] - 2020-10-20
 

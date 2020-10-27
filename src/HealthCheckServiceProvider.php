@@ -3,6 +3,7 @@
 namespace UKFast\HealthCheck;
 
 use Illuminate\Support\ServiceProvider;
+use UKFast\HealthCheck\Commands\UpdateSchedulerTimestamp;
 use UKFast\HealthCheck\Controllers\PingController;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
 
@@ -23,6 +24,10 @@ class HealthCheckServiceProvider extends ServiceProvider
             }
             return new AppHealth($checks);
         });
+
+        $this->commands([
+            UpdateSchedulerTimestamp::class,
+        ]);
 
         $this->app->make('router')->get($this->withBasePath('/ping'), PingController::class);
     }

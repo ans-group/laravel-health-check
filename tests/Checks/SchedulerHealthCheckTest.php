@@ -19,6 +19,11 @@ class SchedulerHealthCheckTest extends TestCase
      */
     public function shows_problem_if_no_timestamp_file_exists()
     {
+        config([
+            'healthcheck.scheduler.timestamp-filename' => 'laravel-scheduler-health-check.txt',
+            'healthcheck.scheduler.minutes-between-checks' => 5,
+        ]);
+
         Storage::shouldReceive('exists')->andReturn(false);
 
         $status = (new SchedulerHealthCheck($this->app))->status();
@@ -32,20 +37,25 @@ class SchedulerHealthCheckTest extends TestCase
      */
     public function shows_problem_if_timestamp_file_is_over_a_minute_old()
     {
+        config([
+            'healthcheck.scheduler.timestamp-filename' => 'laravel-scheduler-health-check.txt',
+            'healthcheck.scheduler.minutes-between-checks' => 5,
+        ]);
+
         $now = time();
-        $fiveMinutesAgo = $now - (60 * 5);
+        $tenMinutesAgo = $now - (60 * 10);
 
         Storage::shouldReceive('exists')->andReturn(true)
-            ->shouldReceive('get')->andReturn($fiveMinutesAgo);
+            ->shouldReceive('get')->andReturn($tenMinutesAgo);
 
         $status = (new SchedulerHealthCheck($this->app))->status();
 
         $this->assertTrue($status->isProblem());
-        $this->assertEquals('Scheduler last ran more than 1 minute ago', $status->message());
+        $this->assertEquals('Scheduler last ran more than 5 minute ago', $status->message());
 
-        $this->assertEquals($fiveMinutesAgo, $status->context()['scheduler_last_ran']);
+        $this->assertEquals($tenMinutesAgo, $status->context()['scheduler_last_ran']);
         $this->assertEquals($now, $status->context()['now']);
-        $this->assertEquals(300, $status->context()['time_since_scheduler_ran']);   
+        $this->assertEquals(600, $status->context()['time_since_scheduler_ran']);   
     }
 
     /**
@@ -53,6 +63,11 @@ class SchedulerHealthCheckTest extends TestCase
      */
     public function shows_okay_if_timestamp_file_is_under_a_minute_old()
     {
+        config([
+            'healthcheck.scheduler.timestamp-filename' => 'laravel-scheduler-health-check.txt',
+            'healthcheck.scheduler.minutes-between-checks' => 5,
+        ]);
+        
         $now = time();
         $tenSecondsAgo = $now - 10;
 
