@@ -54,7 +54,7 @@ class HealthCheckServiceProviderTest extends TestCase
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
-        $this->assertArrayHasKey('health-check:update-scheduler-timestamp', Artisan::all());
+        $this->assertArrayHasKey('health-check:cache-scheduler-running', Artisan::all());
     }
 
     /**

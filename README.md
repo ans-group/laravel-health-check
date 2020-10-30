@@ -263,13 +263,13 @@ Out of the box, the health check package provides:
 
 ##### Scheduler Health Check
 
-The scheduler health check works by updating a timestamp file on your project every minute. You will need to register the
-UpdateSchedulerTimestamp command to run every minute in your projects `Kernel.php`.
+The scheduler health check works by using a time limited cache key on your project every minute. You will need to register the
+CacheSchedulerRunning command to run every minute in your projects `Kernel.php`.
 
-You can customise the timestamp file name and length of time in minutes before the scheduler not running will trigger an error.
+You can customise the cache key and length of time in minutes before the scheduler not running will trigger an error.
 
 ```php
-$schedule->command(UpdateSchedulerTimestamp::class)->everyMinute();
+$schedule->command(CacheSchedulerRunning::class)->everyMinute();
 ```
 
 ## Creating your own health checks

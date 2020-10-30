@@ -6,17 +6,17 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use UKFast\HealthCheck\Checks\SchedulerHealthCheck;
 
-class UpdateSchedulerTimestamp extends Command
+class CacheSchedulerRunning extends Command
 {
     /**
      * @var string
      */
-    protected $signature = 'health-check:update-scheduler-timestamp';
+    protected $signature = 'health-check:cache-scheduler-running';
 
     /**
      * @var string
      */
-    protected $description = 'Updates the timestamp of when the scheduler last ran';
+    protected $description = 'Caches the the scheduler has just ran';
 
     public function handle()
     {
