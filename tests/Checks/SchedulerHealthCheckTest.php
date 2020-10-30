@@ -24,7 +24,7 @@ class SchedulerHealthCheckTest extends TestCase
             'healthcheck.scheduler.minutes-between-checks' => 5,
         ]);
 
-        Cache::shouldReceive('exists')->andReturn(false);
+        Cache::shouldReceive('has')->andReturn(false);
 
         $status = (new SchedulerHealthCheck($this->app))->status();
 
@@ -42,7 +42,7 @@ class SchedulerHealthCheckTest extends TestCase
             'healthcheck.scheduler.minutes-between-checks' => 5,
         ]);
         
-        Cache::shouldReceive('exists')->andReturn(true);
+        Cache::shouldReceive('has')->andReturn(true);
 
         $status = (new SchedulerHealthCheck($this->app))->status();
 

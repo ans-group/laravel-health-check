@@ -14,7 +14,7 @@ class SchedulerHealthCheck extends HealthCheck
         $cacheKey = config('healthcheck.scheduler.cache-key');
         $minutesBetweenChecks = config('healthcheck.scheduler.minutes-between-checks');
 
-        if (!Cache::exists($cacheKey)) {
+        if (!Cache::has($cacheKey)) {
             return $this->problem("Scheduler has not ran in the last $minutesBetweenChecks minutes");
         }
         

@@ -19,7 +19,7 @@ class UpdateSchedulerTimestampTest extends TestCase
             ->andReturnSelf();
 
         config([
-            'healthcheck.scheduler.timestamp-filename' => 'laravel-scheduler-health-check',
+            'healthcheck.scheduler.cache-key' => 'laravel-scheduler-health-check',
             'healthcheck.scheduler.minutes-between-checks' => 5,
         ]);
 
