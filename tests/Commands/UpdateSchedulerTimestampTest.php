@@ -4,28 +4,27 @@ namespace Tests\Commands;
 
 use Tests\TestCase;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class UpdateSchedulerTimestampTest extends TestCase
 {
     /**
      * @test
      */
-    public function running_command_updates_timestamp_in_file()
+    public function running_command_updates_cache()
     {
-        Storage::fake('local');
+        Cache::shouldReceive('put')
+            ->with('laravel-scheduler-health-check', 'healthy', (5 * 60))
+            ->once()
+            ->andReturnSelf();
 
         config([
-            'healthcheck.scheduler.timestamp-filename' => 'laravel-scheduler-health-check.txt',
+            'healthcheck.scheduler.timestamp-filename' => 'laravel-scheduler-health-check',
             'healthcheck.scheduler.minutes-between-checks' => 5,
         ]);
 
         $this->app->register(HealthCheckServiceProvider::class);
 
-        $this->artisan('health-check:update-scheduler-timestamp');
-
-        Storage::assertExists('laravel-scheduler-health-check.txt');
-        $this->assertEquals(time(), Storage::get('laravel-scheduler-health-check.txt'));
-        
+        $this->artisan('health-check:update-scheduler-timestamp');        
     }
 }

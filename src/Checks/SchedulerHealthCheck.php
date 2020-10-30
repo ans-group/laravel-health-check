@@ -3,7 +3,7 @@
 namespace UKFast\HealthCheck\Checks;
 
 use UKFast\HealthCheck\HealthCheck;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class SchedulerHealthCheck extends HealthCheck
 {
@@ -11,26 +11,13 @@ class SchedulerHealthCheck extends HealthCheck
     
     public function status()
     {
-        $filename = config('healthcheck.scheduler.timestamp-filename');
+        $cacheKey = config('healthcheck.scheduler.cache-key');
         $minutesBetweenChecks = config('healthcheck.scheduler.minutes-between-checks');
 
-        if (!Storage::exists($filename)) {
-            return $this->problem('Scheduler has not ran yet');
+        if (!Cache::exists($cacheKey)) {
+            return $this->problem("Scheduler has not ran in the last $minutesBetweenChecks minutes");
         }
-
-        $schedulerLastRan = Storage::get($filename);
-        $now = time();
-
-        $secondsSinceSchedulerRan = $now - $schedulerLastRan;
-
-        if ($secondsSinceSchedulerRan < (60 * $minutesBetweenChecks)) {
-            return $this->okay();
-        }
-
-        return $this->problem("Scheduler last ran more than $minutesBetweenChecks minute ago", [
-            'last_ran' => date('Y-m-d H:i:s', $schedulerLastRan),
-            'now' => date('Y-m-d H:i:s', $now),
-            'seconds_since_scheduler_ran' => $secondsSinceSchedulerRan,
-        ]);
+        
+        return $this->okay();
     }
 }
