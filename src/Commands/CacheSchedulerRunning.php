@@ -16,7 +16,7 @@ class CacheSchedulerRunning extends Command
     /**
      * @var string
      */
-    protected $description = 'Caches the the scheduler has just ran';
+    protected $description = 'Caches the scheduler has just ran';
 
     public function handle()
     {
