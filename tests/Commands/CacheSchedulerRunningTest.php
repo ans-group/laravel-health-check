@@ -20,8 +20,7 @@ class CacheSchedulerRunningTest extends TestCase
 
         $this->app->register(HealthCheckServiceProvider::class);
 
-        $this->artisan('health-check:cache-scheduler-running');   
-        
-        $this->assertTrue(true); // check command ran without error
+        $this->artisan('health-check:cache-scheduler-running')
+            ->assertExitCode(0);
     }
 }

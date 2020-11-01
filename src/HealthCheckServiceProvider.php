@@ -25,9 +25,11 @@ class HealthCheckServiceProvider extends ServiceProvider
             return new AppHealth($checks);
         });
 
-        $this->commands([
-            CacheSchedulerRunning::class,
-        ]);
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                CacheSchedulerRunning::class,
+            ]);
+        }
 
         $this->app->make('router')->get($this->withBasePath('/ping'), PingController::class);
     }
