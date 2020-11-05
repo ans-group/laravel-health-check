@@ -41,7 +41,6 @@ You can test that the package is working correctly by hitting the `/health` endp
 
 ## Configuration
 
-
 ### Laravel
 
 
@@ -260,6 +259,18 @@ Out of the box, the health check package provides:
  * BasicAuth - Requires that basic auth credentials be sent in order to see full status
  * AddHeaders - Adds X-check-status headers to the response, so you can avoid having to parse JSON
 
+### Checks
+
+##### Scheduler Health Check
+
+The scheduler health check works by using a time limited cache key on your project every minute. You will need to register the
+CacheSchedulerRunning command to run every minute in your projects `Kernel.php`.
+
+You can customise the cache key and length of time in minutes before the scheduler not running will trigger an error.
+
+```php
+$schedule->command(CacheSchedulerRunning::class)->everyMinute();
+```
 
 ## Creating your own health checks
 

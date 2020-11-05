@@ -101,6 +101,11 @@ return [
         'ignore' => [],
     ],
 
+    'scheduler' => [
+        'cache-key' => 'laravel-scheduler-health-check',
+        'minutes-between-checks' => 5,
+    ],
+
     /**
      * Additional config can be put here. For example, a health check
      * for your .env file needs to know which keys need to be present.

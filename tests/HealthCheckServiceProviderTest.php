@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UKFast\HealthCheck\Checks\LogHealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
+use UKFast\HealthCheck\Commands\UpdateSchedulerTimestamp;
+use \Artisan;
 
 class HealthCheckServiceProviderTest extends TestCase
 {
@@ -43,6 +45,16 @@ class HealthCheckServiceProviderTest extends TestCase
 
         $response = $this->get('/ping');
         $this->assertSame('pong', $response->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function registers_scheduler_health_check_command()
+    {
+        $this->app->register(HealthCheckServiceProvider::class);
+
+        $this->assertArrayHasKey('health-check:cache-scheduler-running', Artisan::all());
     }
 
     /**
