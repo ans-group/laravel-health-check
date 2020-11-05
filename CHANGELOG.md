@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.8.0] - 2020-11-05
+
 ### Added
 
 - Add SchedulerHealthCheck [#43](https://github.com/ukfast/laravel-health-check/pull/43) by [@rbibby](https://github.com/rbibby)
-
 
 ## [1.7.2] - 2020-10-20
 
@@ -143,7 +145,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.7.2...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/ukfast/laravel-health-check/tree/v1.8.0
 [1.7.2]: https://github.com/ukfast/laravel-health-check/tree/v1.7.2
 [1.7.1]: https://github.com/ukfast/laravel-health-check/tree/v1.7.1
 [1.7.0]: https://github.com/ukfast/laravel-health-check/tree/v1.7.0
