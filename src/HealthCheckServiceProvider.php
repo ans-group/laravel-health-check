@@ -4,6 +4,7 @@ namespace UKFast\HealthCheck;
 
 use Illuminate\Support\ServiceProvider;
 use UKFast\HealthCheck\Commands\CacheSchedulerRunning;
+use UKFast\HealthCheck\Commands\Health;
 use UKFast\HealthCheck\Controllers\PingController;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
 
@@ -28,6 +29,7 @@ class HealthCheckServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 CacheSchedulerRunning::class,
+                Health::class,
             ]);
         }
 

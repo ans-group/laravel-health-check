@@ -4,27 +4,22 @@ namespace UKFast\HealthCheck\Controllers;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
+use UKFast\HealthCheck\HealthCheck;
 
 class HealthCheckController
 {
     public function __invoke(Container $container)
     {
-        $checks = new Collection;
-        foreach (config('healthcheck.checks') as $check) {
-            $checks->push($container->make($check));
-        }
+        $body = [];
+        $isOkay = true;
+        /** @var HealthCheck $check */
+        foreach (\UKFast\HealthCheck\Facade\HealthCheck::all() as $check) {
+            $status = $check->status();
 
-        $statuses = $checks->map(function ($check) {
-            return $check->status();
-        });
+            if ($isOkay && !$status->isOkay()) {
+                $isOkay = false;
+            }
 
-        $isOkay = $statuses->filter(function ($status) {
-            return $status->isProblem();
-        })->isEmpty();
-
-        $body = ['status' => $isOkay ? 'OK' : 'PROBLEM'];
-        foreach ($statuses as $status) {
             $body[$status->name()] = [];
             $body[$status->name()]['status'] = $status->isOkay() ? 'OK' : 'PROBLEM';
 
@@ -36,6 +31,8 @@ class HealthCheckController
                 $body[$status->name()]['context'] = $status->context();
             }
         }
+
+        $body = array_merge(['status' => $isOkay ? 'OK' : 'PROBLEM'], $body);
 
         return new Response($body, $isOkay ? 200 : 500);
     }

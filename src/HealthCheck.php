@@ -6,8 +6,10 @@ use Exception;
 
 abstract class HealthCheck
 {
+    /** @return string */
     protected $name;
 
+    /** @return Status */
     abstract public function status();
 
     public function name()

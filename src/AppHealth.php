@@ -8,7 +8,7 @@ use UKFast\HealthCheck\Exceptions\CheckNotFoundException;
 class AppHealth
 {
     /**
-     * @var Collection $checks
+     * @var Collection|HealthCheck[] $checks
      */
     protected $checks;
 
@@ -19,9 +19,9 @@ class AppHealth
 
     public function passes($checkName)
     {
-        $check = $this->checks->filter(function ($check) use ($checkName) {
+        $check = $this->checks->first(function ($check) use ($checkName) {
             return $check->name() == $checkName;
-        })->first();
+        });
 
         if (!$check) {
             throw new CheckNotFoundException($checkName);
@@ -42,7 +42,7 @@ class AppHealth
     /**
      * Returns a collection of all health checks
      * 
-     * @return Illuminate\Support\Collection
+     * @return Collection
      */
     public function all()
     {

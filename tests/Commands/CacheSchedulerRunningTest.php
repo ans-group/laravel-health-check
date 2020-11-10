@@ -4,7 +4,6 @@ namespace Tests\Commands;
 
 use Tests\TestCase;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
-use Illuminate\Support\Facades\Cache;
 
 class CacheSchedulerRunningTest extends TestCase
 {
@@ -20,8 +19,9 @@ class CacheSchedulerRunningTest extends TestCase
 
         $this->app->register(HealthCheckServiceProvider::class);
 
-        $this->artisan('health-check:cache-scheduler-running');
-        
-        $this->assertTrue(true); // check command ran without error
+        $this
+            ->artisan('health-check:cache-scheduler-running')
+            ->assertExitCode(0)
+        ;
     }
 }
