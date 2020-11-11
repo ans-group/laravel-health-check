@@ -3,7 +3,6 @@
 namespace Tests\Commands;
 
 use Mockery;
-use Mockery\Mock;
 use Mockery\MockInterface;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\LogHealthCheck;
@@ -20,12 +19,9 @@ class StatusCommandTest extends TestCase
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
 
-        $this->mock(LogHealthCheck::class, function (MockInterface $mock) {
-            $status = new Status();
-            $status->okay();
-
-            $mock->shouldReceive('status')->andReturn($status);
-        });
+        $status = new Status();
+        $status->okay();
+        $this->mockLogHealthCheck($status);
 
         $this
             ->artisan('health-check:status')
@@ -40,14 +36,9 @@ class StatusCommandTest extends TestCase
     {
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
-
-        $this->instance(LogHealthCheck::class, Mockery::mock(LogHealthCheck::class, function (MockInterface $mock) {
-            $status = new Status();
-            $status->withName('statusName')->problem('statusMessage');
-
-            $mock->shouldReceive('name')->andReturn('log');
-            $mock->shouldReceive('status')->andReturn($status);
-        }));
+        $status = new Status();
+        $status->withName('statusName')->problem('statusMessage');
+        $this->mockLogHealthCheck($status);
 
         $result = $this->artisan('health-check:status');
         $result->assertExitCode(1);
@@ -56,5 +47,15 @@ class StatusCommandTest extends TestCase
         if (method_exists($result, 'expectsTable')) {
             $result->expectsTable(['name', 'status', 'message'], [['log', 'statusName', 'statusMessage']]);
         }
+    }
+
+    private function mockLogHealthCheck(Status $status)
+    {
+        $this->instance(
+            LogHealthCheck::class,
+            Mockery::mock(LogHealthCheck::class, function (MockInterface $mock) use ($status) {
+                $mock->shouldReceive('name')->andReturn('log');
+                $mock->shouldReceive('status')->andReturn($status);
+            }));
     }
 }
