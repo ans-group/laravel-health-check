@@ -8,12 +8,12 @@ use UKFast\HealthCheck\Checks\LogHealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 use UKFast\HealthCheck\Status;
 
-class HealthTest extends TestCase
+class StatusTest extends TestCase
 {
     /**
      * @test
      */
-    public function running_command_health()
+    public function running_command_status()
     {
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
         $this->app->register(HealthCheckServiceProvider::class);
@@ -30,10 +30,11 @@ class HealthTest extends TestCase
             ->assertExitCode(0)
         ;
     }
+
     /**
      * @test
      */
-    public function running_command_health_with_failure_condition()
+    public function running_command_status_with_failure_condition()
     {
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
         $this->app->register(HealthCheckServiceProvider::class);

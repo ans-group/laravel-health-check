@@ -5,17 +5,17 @@ namespace UKFast\HealthCheck\Commands;
 use Illuminate\Console\Command;
 use UKFast\HealthCheck\Facade\HealthCheck;
 
-class Health extends Command
+class Status extends Command
 {
     /**
      * @var string
      */
-    protected $signature = 'health-check:health';
+    protected $signature = 'health-check:status';
 
     /**
      * @var string
      */
-    protected $description = 'Check health';
+    protected $description = 'Check health status';
 
     public function handle()
     {
