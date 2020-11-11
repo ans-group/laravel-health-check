@@ -2,6 +2,8 @@
 
 namespace Tests\Commands;
 
+use Mockery;
+use Mockery\Mock;
 use Mockery\MockInterface;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\LogHealthCheck;
@@ -39,13 +41,13 @@ class StatusCommandTest extends TestCase
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
 
-        $this->mock(LogHealthCheck::class, function (MockInterface $mock) {
+        $this->instance(LogHealthCheck::class, Mockery::mock(function (MockInterface $mock) {
             $status = new Status();
             $status->withName('statusName')->problem('statusMessage');
 
             $mock->shouldReceive('name')->andReturn('log');
             $mock->shouldReceive('status')->andReturn($status);
-        });
+        }));
 
         $result = $this->artisan('health-check:status');
         $result->assertExitCode(1);
