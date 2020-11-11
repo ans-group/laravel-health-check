@@ -41,7 +41,7 @@ class StatusCommandTest extends TestCase
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
 
-        $this->instance(LogHealthCheck::class, Mockery::mock(function (MockInterface $mock) {
+        $this->instance(LogHealthCheck::class, Mockery::mock(LogHealthCheck::class, function (MockInterface $mock) {
             $status = new Status();
             $status->withName('statusName')->problem('statusMessage');
 
