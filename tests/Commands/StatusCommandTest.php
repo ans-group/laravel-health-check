@@ -2,6 +2,7 @@
 
 namespace Tests\Commands;
 
+use Illuminate\Testing\PendingCommand;
 use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
@@ -23,10 +24,11 @@ class StatusCommandTest extends TestCase
         $status->okay();
         $this->mockLogHealthCheck($status);
 
-        $this
-            ->artisan('health-check:status')
-            ->assertExitCode(0)
-        ;
+        $result = $this->artisan('health-check:status');
+
+        if ($result instanceof PendingCommand) {
+            $result->assertExitCode(0);
+        }
     }
 
     /**
@@ -41,11 +43,14 @@ class StatusCommandTest extends TestCase
         $this->mockLogHealthCheck($status);
 
         $result = $this->artisan('health-check:status');
-        $result->assertExitCode(1);
 
-        //for laravel 5.*
-        if (method_exists($result, 'expectsTable')) {
-            $result->expectsTable(['name', 'status', 'message'], [['log', 'statusName', 'statusMessage']]);
+        if ($result instanceof PendingCommand) {
+            $result->assertExitCode(1);
+
+            //for laravel 5.*
+            if (method_exists($result, 'expectsTable')) {
+                $result->expectsTable(['name', 'status', 'message'], [['log', 'statusName', 'statusMessage']]);
+            }
         }
     }
 
