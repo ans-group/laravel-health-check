@@ -15,8 +15,8 @@ class StatusTest extends TestCase
      */
     public function running_command_status()
     {
-        config(['healthcheck.checks' => [LogHealthCheck::class]]);
         $this->app->register(HealthCheckServiceProvider::class);
+        config(['healthcheck.checks' => [LogHealthCheck::class]]);
 
         $this->mock(LogHealthCheck::class, function (MockInterface $mock) {
             $status = new Status();
@@ -36,8 +36,8 @@ class StatusTest extends TestCase
      */
     public function running_command_status_with_failure_condition()
     {
-        config(['healthcheck.checks' => [LogHealthCheck::class]]);
         $this->app->register(HealthCheckServiceProvider::class);
+        config(['healthcheck.checks' => [LogHealthCheck::class]]);
 
         $this->mock(LogHealthCheck::class, function (MockInterface $mock) {
             $status = new Status();

@@ -7,14 +7,8 @@ use UKFast\HealthCheck\Facade\HealthCheck;
 
 class Status extends Command
 {
-    /**
-     * @var string
-     */
     protected $signature = 'health-check:status';
 
-    /**
-     * @var string
-     */
     protected $description = 'Check health status';
 
     public function handle()
@@ -38,6 +32,6 @@ class Status extends Command
             $this->table(['name', 'status', 'message'], $problems);
         }
 
-        return !$isOkay;
+        return $isOkay ? 0 : 1;
     }
 }
