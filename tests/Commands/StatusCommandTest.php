@@ -28,6 +28,29 @@ class StatusCommandTest extends TestCase
 
         if ($result instanceof PendingCommand) {
             $result->assertExitCode(0);
+        } else {
+            $this->assertTrue(true);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function running_command_status_with_disable_option()
+    {
+        $this->app->register(HealthCheckServiceProvider::class);
+        config(['healthcheck.checks' => [LogHealthCheck::class]]);
+
+        $status = new Status();
+        $status->problem();
+        $this->mockLogHealthCheck($status);
+
+        $result = $this->artisan('health-check:status --disable=log');
+
+        if ($result instanceof PendingCommand) {
+            $result->assertExitCode(0);
+        } else {
+            $this->assertTrue(true);
         }
     }
 
