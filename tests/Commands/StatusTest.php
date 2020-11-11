@@ -47,10 +47,12 @@ class StatusTest extends TestCase
             $mock->shouldReceive('status')->andReturn($status);
         });
 
-        $this
-            ->artisan('health-check:status')
-            ->assertExitCode(1)
-            ->expectsTable(['name', 'status', 'message'], [['log', 'statusName', 'statusMessage']])
-        ;
+        $result = $this->artisan('health-check:status');
+        $result->assertExitCode(1);
+
+        //for laravel 5.*
+        if (method_exists($result, 'expectsTable')) {
+            $result->expectsTable(['name', 'status', 'message'], [['log', 'statusName', 'statusMessage']]);
+        }
     }
 }
