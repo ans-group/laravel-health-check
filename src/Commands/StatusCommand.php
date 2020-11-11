@@ -14,21 +14,18 @@ class StatusCommand extends Command
     public function handle()
     {
         $problems = [];
-        $isOkay = true;
         /** @var \UKFast\HealthCheck\HealthCheck $check */
         foreach (HealthCheck::all() as $check) {
             $status = $check->status();
 
             if (!$status->isOkay()) {
                 $problems[] = [$check->name(), $status->name(), $status->message()];
-
-                if ($isOkay) {
-                    $isOkay = false;
-                }
             }
         }
 
-        if (!$isOkay) {
+        $isOkay = empty($problems);
+
+        if ($isOkay) {
             $this->table(['name', 'status', 'message'], $problems);
         }
 
