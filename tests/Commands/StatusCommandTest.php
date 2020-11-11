@@ -45,7 +45,7 @@ class StatusCommandTest extends TestCase
         $status->problem();
         $this->mockLogHealthCheck($status);
 
-        $result = $this->artisan('health-check:status --disable=log');
+        $result = $this->artisan('health-check:status', ['--disable' => 'log']);
 
         if ($result instanceof PendingCommand) {
             $result->assertExitCode(0);

@@ -7,7 +7,7 @@ use UKFast\HealthCheck\Facade\HealthCheck;
 
 class StatusCommand extends Command
 {
-    protected $signature = 'health-check:status {--disable=}';
+    protected $signature = 'health-check:status {--D|disable= : comma separated checks names to disable}';
 
     protected $description = 'Check health status';
 
