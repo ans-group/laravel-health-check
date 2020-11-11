@@ -26,7 +26,7 @@ class StatusTest extends TestCase
         });
 
         $this
-            ->artisan('health-check:health')
+            ->artisan('health-check:status')
             ->assertExitCode(0)
         ;
     }
@@ -48,7 +48,7 @@ class StatusTest extends TestCase
         });
 
         $this
-            ->artisan('health-check:health')
+            ->artisan('health-check:status')
             ->assertExitCode(1)
             ->expectsTable(['name', 'status', 'message'], [['log', 'statusName', 'statusMessage']])
         ;
