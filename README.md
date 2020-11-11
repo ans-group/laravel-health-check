@@ -72,6 +72,10 @@ php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProv
 ```
 
 
+##### Console command
+
+RUN `php artisan health-check:status`
+
 ##### Middleware
 
 You can register custom middleware to run on requests to the `/health` endpoint. You can add this to the middleware array in the `config/healthcheck.php` config file created by the command above, as shown in the example below:
