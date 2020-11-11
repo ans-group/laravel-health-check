@@ -5,7 +5,7 @@ namespace UKFast\HealthCheck\Commands;
 use Illuminate\Console\Command;
 use UKFast\HealthCheck\Facade\HealthCheck;
 
-class Status extends Command
+class StatusCommand extends Command
 {
     protected $signature = 'health-check:status';
 

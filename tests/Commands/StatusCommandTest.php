@@ -8,7 +8,7 @@ use UKFast\HealthCheck\Checks\LogHealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 use UKFast\HealthCheck\Status;
 
-class StatusTest extends TestCase
+class StatusCommandTest extends TestCase
 {
     /**
      * @test
