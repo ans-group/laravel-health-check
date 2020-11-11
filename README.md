@@ -75,7 +75,8 @@ php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProv
 ##### Console command
 
 Check all: `php artisan health-check:status`
-Disable certain checks: `php artisan health-check:status --disable=log,cache`
+Only specific checks: `php artisan health-check:status --only=log,cache`
+Except specific checks: `php artisan health-check:status --except=cache`
 
 ##### Middleware
 

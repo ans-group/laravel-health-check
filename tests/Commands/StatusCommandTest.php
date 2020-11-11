@@ -6,6 +6,7 @@ use Illuminate\Testing\PendingCommand;
 use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
+use UKFast\HealthCheck\Checks\DatabaseHealthCheck;
 use UKFast\HealthCheck\Checks\LogHealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 use UKFast\HealthCheck\Status;
@@ -36,19 +37,58 @@ class StatusCommandTest extends TestCase
     /**
      * @test
      */
-    public function running_command_status_with_disable_option()
+    public function running_command_status_with_only_option()
     {
         $this->app->register(HealthCheckServiceProvider::class);
-        config(['healthcheck.checks' => [LogHealthCheck::class]]);
 
         $status = new Status();
-        $status->problem();
+        $status->okay();
         $this->mockLogHealthCheck($status);
 
-        $result = $this->artisan('health-check:status', ['--disable' => 'log']);
+        $result = $this->artisan('health-check:status', ['--only' => 'log']);
 
         if ($result instanceof PendingCommand) {
             $result->assertExitCode(0);
+        } else {
+            $this->assertTrue(true);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function running_command_status_with_except_option()
+    {
+        $this->app->register(HealthCheckServiceProvider::class);
+        config(['healthcheck.checks' => [LogHealthCheck::class, DatabaseHealthCheck::class]]);
+
+        $status = new Status();
+        $status->okay();
+        $this->mockLogHealthCheck($status);
+
+        $result = $this->artisan('health-check:status', ['--except' => 'database']);
+
+        if ($result instanceof PendingCommand) {
+            $result->assertExitCode(0);
+        } else {
+            $this->assertTrue(true);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function running_command_status_with_only_and_except_option()
+    {
+        $this->app->register(HealthCheckServiceProvider::class);
+
+        $result = $this->artisan('health-check:status', ['--only' => 'log', '--except' => 'log']);
+
+        if ($result instanceof PendingCommand) {
+            $result
+                ->assertExitCode(1)
+                ->expectsOutput('Pass --only OR --except, but not both!')
+            ;
         } else {
             $this->assertTrue(true);
         }
