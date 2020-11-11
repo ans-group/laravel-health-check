@@ -25,5 +25,7 @@ class CacheSchedulerRunningTest extends TestCase
         if ($result instanceof PendingCommand) {
             $result->assertExitCode(0);
         }
+
+        $this->assertTrue(true);
     }
 }
