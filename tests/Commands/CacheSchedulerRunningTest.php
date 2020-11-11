@@ -2,6 +2,7 @@
 
 namespace Tests\Commands;
 
+use Illuminate\Testing\PendingCommand;
 use Tests\TestCase;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 
@@ -19,9 +20,10 @@ class CacheSchedulerRunningTest extends TestCase
 
         $this->app->register(HealthCheckServiceProvider::class);
 
-        $this
-            ->artisan('health-check:cache-scheduler-running')
-            ->assertExitCode(0)
-        ;
+        $result = $this->artisan('health-check:cache-scheduler-running');
+
+        if ($result instanceof PendingCommand) {
+            $result->assertExitCode(0);
+        }
     }
 }
