@@ -6,7 +6,9 @@ use UKFast\HealthCheck\HealthCheck;
 
 class EnvHealthCheck extends HealthCheck
 {
-    protected $name = 'env';
+    const NAME = 'env';
+
+    protected $name = self::NAME;
     
     public function status()
     {

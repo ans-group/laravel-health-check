@@ -7,7 +7,9 @@ use UKFast\HealthCheck\HealthCheck;
 
 class CacheHealthCheck extends HealthCheck
 {
-    protected $name = 'cache';
+    const NAME = 'cache';
+
+    protected $name = self::NAME;
 
     protected $workingStores = [];
     

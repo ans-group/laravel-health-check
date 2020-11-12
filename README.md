@@ -131,14 +131,15 @@ return [
     'base-path' => '',
 
     /**
-     * List of health checks to run when determining the health
-     * of the service
+     * Comma separated list of health checks to run when determining the health
+     * of the service.
+     * Class path or bind name(alias should be bind with "hc_" prefix, for example - "hc_cache")
      */
-    'checks' => [
-        UKFast\HealthCheck\Checks\LogHealthCheck::class,
-        UKFast\HealthCheck\Checks\DatabaseHealthCheck::class,
-        UKFast\HealthCheck\Checks\EnvHealthCheck::class
-    ],
+    'checks' => env('HEALTH_CHECK_CHECKS', implode(',', [
+        UKFast\HealthCheck\Checks\LogHealthCheck::NAME,
+        UKFast\HealthCheck\Checks\DatabaseHealthCheck::NAME,
+        UKFast\HealthCheck\Checks\EnvHealthCheck::class,
+    ])),
 
     /**
      * A list of middleware to run on the health-check route
@@ -303,13 +304,30 @@ class RedisHealthCheck extends HealthCheck
 
 Now we've got our basic class setup, we can add it to the list of checks to run in our `config/healthcheck.php` file.
 
-Open up `config/healthcheck.php` and go to the `'checks'` array. Add your class to the list of those checks:
+Open up `config/healthcheck.php` and go to the `'checks'` items. Add your class to the list of those checks:
 
 ```php
-'checks' => [
+'checks' => env('HEALTH_CHECK_CHECKS', implode(',', [
     // ...
     App\HealthChecks\RedisHealthCheck::class,
-]
+])),
+```
+Or you can bind(!!!with `hc_` prefix to avoid collision!!!) your class and pass bind name:
+```php
+//AppServiceProvider
+$this->app->bind('hc_my-fancy-redis-check', App\HealthChecks\RedisHealthCheck::class);
+```
+```php
+//config/healthcheck.php
+'checks' => env('HEALTH_CHECK_CHECKS', implode(',', [
+    // ...
+    'my-fancy-redis-check',
+])),
+```
+
+You can also path `HEALTH_CHECK_CHECKS` env with comma separated checks names, for example:  
+```dotenv
+HEALTH_CHECK_CHECKS=log,redis,database
 ```
 
 If you hit the `/health` endpoint now, you'll see that there's a `my-fancy-redis-check` property and it should return `OK` for the status.

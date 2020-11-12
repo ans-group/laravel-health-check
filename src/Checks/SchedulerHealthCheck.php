@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Cache;
 
 class SchedulerHealthCheck extends HealthCheck
 {
-    protected $name = 'scheduler';
+    const NAME = 'scheduler';
+
+    protected $name = self::NAME;
     
     public function status()
     {

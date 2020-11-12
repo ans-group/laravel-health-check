@@ -8,7 +8,9 @@ use UKFast\HealthCheck\HealthCheck;
 
 class DatabaseHealthCheck extends HealthCheck
 {
-    protected $name = 'database';
+    const NAME = 'database';
+
+    protected $name = self::NAME;
 
     /** @var \Illuminate\Database\DatabaseManager */
     protected $db;

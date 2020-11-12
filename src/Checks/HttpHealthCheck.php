@@ -10,7 +10,9 @@ use UKFast\HealthCheck\HealthCheck;
 
 class HttpHealthCheck extends HealthCheck
 {
-    protected $name = 'http';
+    const NAME = 'http';
+
+    protected $name = self::NAME;
 
     public function status()
     {

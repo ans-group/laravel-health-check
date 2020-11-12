@@ -8,7 +8,9 @@ use UKFast\HealthCheck\Status;
 
 class MigrationUpToDateHealthCheck extends HealthCheck
 {
-    protected $name = 'migration';
+    const NAME = 'migration';
+
+    protected $name = self::NAME;
 
     /**
      * @var Migrator

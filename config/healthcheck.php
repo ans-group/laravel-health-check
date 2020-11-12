@@ -7,14 +7,15 @@ return [
     'base-path' => '',
 
     /**
-     * List of health checks to run when determining the health
-     * of the service
+     * Comma separated list of health checks to run when determining the health
+     * of the service.
+     * Class path or bind name(alias should be bind with "hc_" prefix, for example - "hc_cache")
      */
-    'checks' => [
-        UKFast\HealthCheck\Checks\LogHealthCheck::class,
-        UKFast\HealthCheck\Checks\DatabaseHealthCheck::class,
-        UKFast\HealthCheck\Checks\EnvHealthCheck::class
-    ],
+    'checks' => env('HEALTH_CHECK_CHECKS', implode(',', [
+        UKFast\HealthCheck\Checks\LogHealthCheck::NAME,
+        UKFast\HealthCheck\Checks\DatabaseHealthCheck::NAME,
+        UKFast\HealthCheck\Checks\EnvHealthCheck::class,
+    ])),
 
     /**
      * A list of middleware to run on the health-check route

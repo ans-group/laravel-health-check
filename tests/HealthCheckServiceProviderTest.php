@@ -4,6 +4,9 @@ namespace Tests;
 
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use UKFast\HealthCheck\AppHealth;
+use UKFast\HealthCheck\Checks\CacheHealthCheck;
+use UKFast\HealthCheck\Checks\EnvHealthCheck;
 use UKFast\HealthCheck\Checks\LogHealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 use UKFast\HealthCheck\Commands\UpdateSchedulerTimestamp;
@@ -64,9 +67,12 @@ class HealthCheckServiceProviderTest extends TestCase
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
-        config(['healthcheck.checks' => [\UKFast\HealthCheck\Checks\EnvHealthCheck::class]]);
+        config(['healthcheck.checks' => [EnvHealthCheck::class, CacheHealthCheck::NAME]]);
+        /** @var AppHealth $appHealth */
+        $appHealth = $this->app->make('app-health');
 
-        $this->assertInstanceOf(\UKFast\HealthCheck\AppHealth::class, $this->app->make('app-health'));
+        $this->assertInstanceOf(AppHealth::class, $appHealth);
+        $this->assertCount(2, $appHealth->all());
     }
 
     /**

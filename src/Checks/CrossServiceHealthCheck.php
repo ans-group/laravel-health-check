@@ -9,7 +9,9 @@ use UKFast\HealthCheck\HealthCheck;
 
 class CrossServiceHealthCheck extends HealthCheck
 {
-    protected $name = 'x-service-checks';
+    const NAME = 'x-service-checks';
+
+    protected $name = self::NAME;
 
     /**
      * @var \GuzzleHttp\Client

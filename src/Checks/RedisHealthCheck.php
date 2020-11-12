@@ -8,7 +8,9 @@ use Exception;
 
 class RedisHealthCheck extends HealthCheck
 {
-    protected $name = 'redis';
+    const NAME = 'redis';
+
+    protected $name = self::NAME;
 
     public function status()
     {

@@ -8,7 +8,9 @@ use UKFast\HealthCheck\HealthCheck;
 
 class PackageSecurityHealthCheck extends HealthCheck
 {
-    protected $name = 'package-security';
+    const NAME = 'package-security';
+
+    protected $name = self::NAME;
 
     protected $vulnerablePackages = [];
 

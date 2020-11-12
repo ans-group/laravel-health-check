@@ -8,7 +8,9 @@ use UKFast\HealthCheck\HealthCheck;
 
 class LogHealthCheck extends HealthCheck
 {
-    protected $name = 'log';
+    const NAME = 'log';
+
+    protected $name = self::NAME;
 
     protected $logger;
 

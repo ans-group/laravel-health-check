@@ -8,7 +8,9 @@ use UKFast\HealthCheck\HealthCheck;
 
 class StorageHealthCheck extends HealthCheck
 {
-    protected $name = 'storage';
+    const NAME = 'storage';
+
+    protected $name = self::NAME;
 
     protected $workingDisks = [];
     
