@@ -120,12 +120,8 @@ class HealthCheckServiceProviderTest extends TestCase
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
-        $mehodExists = is_callable(URL::class, 'signedRoute');
-
-        if (! $mehodExists) {
+        if (substr(phpversion(), 0, 2) === '5.') {
             $this->markTestSkipped('URL::signedRoute does not exists');
-
-            return;
         }
 
         $url = URL::signedRoute(config('healthcheck.routename'));
