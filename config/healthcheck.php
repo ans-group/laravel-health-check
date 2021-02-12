@@ -37,8 +37,7 @@ return [
     /*
      * Routename for the healthcheck
      */
-
-    'routename' => 'healthcheck',
+    'route-name' => 'healthcheck',
 
     /*
      * Can define a list of connection names to test. Names can be

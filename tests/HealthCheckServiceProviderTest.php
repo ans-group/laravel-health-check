@@ -110,7 +110,7 @@ class HealthCheckServiceProviderTest extends TestCase
     {
         $this->app->register(HealthCheckServiceProvider::class);
         $routes = $this->app->make('router')->getRoutes();
-        $this->assertEquals(config('healthcheck.routename'), $routes->match(Request::create('/health'))->getName());
+        $this->assertEquals(config('healthcheck.route-name'), $routes->match(Request::create('/health'))->getName());
     }
 
     /**
@@ -124,7 +124,7 @@ class HealthCheckServiceProviderTest extends TestCase
             $this->markTestSkipped('URL::signedRoute does not exists');
         }
 
-        $url = URL::signedRoute(config('healthcheck.routename'));
+        $url = URL::signedRoute(config('healthcheck.route-name'));
         $this->assertNotNull($url);
     }
 }
