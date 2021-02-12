@@ -12,7 +12,7 @@ class HealthCheckControllerTest extends TestCase
     {
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
     }
-    
+
     /**
      * @test
      */
@@ -41,8 +41,8 @@ class HealthCheckControllerTest extends TestCase
             'always-down' => [
                 'status' => 'PROBLEM',
                 'message' => 'Something went wrong',
-                'context' => ['debug' => 'info']
-            ]
+                'context' => ['debug' => 'info'],
+            ],
         ], json_decode($response->getContent(), true));
     }
 
