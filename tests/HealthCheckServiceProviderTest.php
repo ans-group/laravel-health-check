@@ -2,12 +2,13 @@
 
 namespace Tests;
 
+use Artisan;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UKFast\HealthCheck\Checks\LogHealthCheck;
-use UKFast\HealthCheck\HealthCheckServiceProvider;
 use UKFast\HealthCheck\Commands\UpdateSchedulerTimestamp;
-use \Artisan;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
+use URL;
 
 class HealthCheckServiceProviderTest extends TestCase
 {
@@ -100,5 +101,25 @@ class HealthCheckServiceProviderTest extends TestCase
 
         $this->assertNotNull($routes->match(Request::create('/ping')));
         $this->assertNotNull($routes->match(Request::create('/health')));
+    }
+
+    /**
+     * @test
+     */
+    public function registered_route_has_a_name()
+    {
+        $this->app->register(HealthCheckServiceProvider::class);
+        $routes = $this->app->make('router')->getRoutes();
+        $this->assertEquals(config('healthcheck.routename'), $routes->match(Request::create('/health'))->getName());
+    }
+
+    /**
+     * @test
+     */
+    public function health_name_can_be_used_for_route_generation()
+    {
+        $this->app->register(HealthCheckServiceProvider::class);
+        $url = URL::signedRoute(config('healthcheck.routename'));
+        $this->assertNull($url);
     }
 }
