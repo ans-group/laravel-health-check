@@ -120,6 +120,6 @@ class HealthCheckServiceProviderTest extends TestCase
     {
         $this->app->register(HealthCheckServiceProvider::class);
         $url = URL::signedRoute(config('healthcheck.routename'));
-        $this->assertNull($url);
+        $this->assertNotNull($url);
     }
 }
