@@ -119,6 +119,15 @@ class HealthCheckServiceProviderTest extends TestCase
     public function health_name_can_be_used_for_route_generation()
     {
         $this->app->register(HealthCheckServiceProvider::class);
+
+        $mehodExists = is_callable(URL::class, 'signedRoute');
+
+        if (! $mehodExists) {
+            $this->markTestSkipped('URL::signedRoute does not exists');
+
+            return;
+        }
+
         $url = URL::signedRoute(config('healthcheck.routename'));
         $this->assertNotNull($url);
     }
