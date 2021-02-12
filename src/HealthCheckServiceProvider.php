@@ -4,24 +4,26 @@ namespace UKFast\HealthCheck;
 
 use Illuminate\Support\ServiceProvider;
 use UKFast\HealthCheck\Commands\CacheSchedulerRunning;
-use UKFast\HealthCheck\Controllers\PingController;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
+use UKFast\HealthCheck\Controllers\PingController;
 
 class HealthCheckServiceProvider extends ServiceProvider
 {
     public function boot()
     {
         $this->configure();
+
         $this->app->make('router')->get($this->withBasePath('/health'), [
             'middleware' => config('healthcheck.middleware'),
-            'uses' => HealthCheckController::class
-        ]);
+            'uses' => HealthCheckController::class,
+        ])->name(config('healthcheck.route-name'));
 
         $this->app->bind('app-health', function ($app) {
             $checks = collect();
             foreach ($app->config->get('healthcheck.checks') as $classPath) {
                 $checks->push($app->make($classPath));
             }
+
             return new AppHealth($checks);
         });
 
@@ -37,7 +39,7 @@ class HealthCheckServiceProvider extends ServiceProvider
     protected function configure()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/healthcheck.php', 'healthcheck');
-        $configPath =  $this->app->basePath() . '/config/healthcheck.php';
+        $configPath = $this->app->basePath().'/config/healthcheck.php';
         $this->publishes([
             __DIR__.'/../config/healthcheck.php' => $configPath,
         ], 'config');
