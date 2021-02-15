@@ -16,7 +16,8 @@ class HealthCheckServiceProvider extends ServiceProvider
         $this->app->make('router')->get($this->withBasePath('/health'), [
             'middleware' => config('healthcheck.middleware'),
             'uses' => HealthCheckController::class,
-        ])->name(config('healthcheck.route-name'));
+            'as' => config('healthcheck.route-name')
+        ]);
 
         $this->app->bind('app-health', function ($app) {
             $checks = collect();
