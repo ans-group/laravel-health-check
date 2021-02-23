@@ -1,0 +1,15 @@
+<?php
+
+namespace DummyNamespace;
+
+use UKFast\HealthCheck\HealthCheck;
+
+class DummyClass extends HealthCheck
+{
+    protected $name = 'example';
+
+    public function status()
+    {
+        return $this->okay();
+    }
+}
