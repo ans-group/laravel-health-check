@@ -2,6 +2,7 @@
 
 namespace Tests\Commands;
 
+use Illuminate\Console\GeneratorCommand;
 use Tests\TestCase;
 use Illuminate\Support\Facades\File;
 
@@ -31,5 +32,23 @@ class HealthCheckMakeCommandTest extends TestCase
 
         // Cleaning the file.
         unlink($checkClassFile);
+    }
+
+    /**
+     * @test
+     */
+    public function php_reserved_name_check_does_not_get_created()
+    {
+        if (!property_exists(GeneratorCommand::class, 'reservedNames')) {
+            $this->markTestSkipped('GeneratorCommand does not support reservedNames.');
+        }
+
+        $checkName = "array";
+        $checkClassFile = $this->app->basePath("app/Checks/{$checkName}.php");
+        $this->assertFalse(File::exists($checkClassFile));
+
+        $this->artisan("make:check {$checkName}");
+
+        $this->assertFalse(File::exists($checkClassFile));
     }
 }
