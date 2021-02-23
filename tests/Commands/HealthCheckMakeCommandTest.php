@@ -24,7 +24,7 @@ class HealthCheckMakeCommandTest extends TestCase
 
         $this->assertFalse(File::exists($checkClassFile));
 
-        $this->artisan("make:check", ["name" => $checkName])->assertExitCode(0);
+        $this->artisan("make:check", ["name" => $checkName]);
 
         $this->assertTrue(File::exists($checkClassFile));
 
