@@ -3,8 +3,9 @@
 namespace Tests\Commands;
 
 use Illuminate\Console\GeneratorCommand;
-use Tests\TestCase;
 use Illuminate\Support\Facades\File;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
+use Tests\TestCase;
 
 class HealthCheckMakeCommandTest extends TestCase
 {
@@ -18,6 +19,8 @@ class HealthCheckMakeCommandTest extends TestCase
      */
     public function creates_a_new_check()
     {
+        $this->app->register(HealthCheckServiceProvider::class);
+        
         $checkName = "TestCheck";
         $checkClassFile = $this->app->basePath("app/Checks/{$checkName}.php");
 
@@ -39,6 +42,8 @@ class HealthCheckMakeCommandTest extends TestCase
      */
     public function php_reserved_name_check_does_not_get_created()
     {
+        $this->app->register(HealthCheckServiceProvider::class);
+
         if (!property_exists(GeneratorCommand::class, 'reservedNames')) {
             $this->markTestSkipped('GeneratorCommand does not support reservedNames.');
         }
