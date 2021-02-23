@@ -5,8 +5,6 @@ namespace Tests;
 use Artisan;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use UKFast\HealthCheck\Checks\LogHealthCheck;
-use UKFast\HealthCheck\Commands\UpdateSchedulerTimestamp;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 use URL;
 
