@@ -32,18 +32,4 @@ class HealthCheckMakeCommandTest extends TestCase
         // Cleaning the file.
         unlink($checkClassFile);
     }
-
-    /**
-     * @test
-     */
-    public function php_reserved_name_check_does_not_get_created()
-    {
-        $checkName = "array";
-        $checkClassFile = $this->app->basePath("app/Checks/{$checkName}.php");
-        $this->assertFalse(File::exists($checkClassFile));
-
-        $this->artisan("make:check {$checkName}");
-
-        $this->assertFalse(File::exists($checkClassFile));
-    }
 }

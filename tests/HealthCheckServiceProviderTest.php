@@ -61,6 +61,16 @@ class HealthCheckServiceProviderTest extends TestCase
     /**
      * @test
      */
+    public function registers_health_check_make_command()
+    {
+        $this->app->register(HealthCheckServiceProvider::class);
+
+        $this->assertArrayHasKey('make:check', Artisan::all());
+    }
+
+    /**
+     * @test
+     */
     public function binds_app_health()
     {
         $this->app->register(HealthCheckServiceProvider::class);
