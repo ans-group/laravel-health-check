@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [1.10.0] - 2021-02-24
+
+### Added
+
+- Add health check make command [#48](https://github.com/ukfast/laravel-health-check/pull/48) by [mawaishanif](https://github.com/mawaishanif)
+
 ## [1.9.1] - 2021-02-15
 
 ### Fixed
@@ -157,7 +163,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.9.1...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.10.0...HEAD
+[1.10.0]: https://github.com/ukfast/laravel-health-check/tree/v1.10.0
 [1.9.1]: https://github.com/ukfast/laravel-health-check/tree/v1.9.1
 [1.9.0]: https://github.com/ukfast/laravel-health-check/tree/v1.9.0
 [1.8.0]: https://github.com/ukfast/laravel-health-check/tree/v1.8.0
