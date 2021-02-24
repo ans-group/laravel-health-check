@@ -5,8 +5,6 @@ namespace Tests;
 use Artisan;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use UKFast\HealthCheck\Checks\LogHealthCheck;
-use UKFast\HealthCheck\Commands\UpdateSchedulerTimestamp;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 use URL;
 
@@ -56,6 +54,16 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->app->register(HealthCheckServiceProvider::class);
 
         $this->assertArrayHasKey('health-check:cache-scheduler-running', Artisan::all());
+    }
+
+    /**
+     * @test
+     */
+    public function registers_health_check_make_command()
+    {
+        $this->app->register(HealthCheckServiceProvider::class);
+
+        $this->assertArrayHasKey('make:check', Artisan::all());
     }
 
     /**
