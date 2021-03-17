@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fix namespace of BasicAuth in README file
+- Fix namespace of BasicAuth in README file [#49](https://github.com/ukfast/laravel-health-check/pull/49) by [mohamed-akef](https://github.com/mohamed-akef)
 
 ## [1.10.0] - 2021-02-24
 
