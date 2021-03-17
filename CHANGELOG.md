@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [1.10.1] - 2021-03-17
+
+### Fixed
+
+- Fix namespace of BasicAuth in README file
+
 ## [1.10.0] - 2021-02-24
 
 ### Added
@@ -163,7 +169,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.10.0...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.10.1...HEAD
+[1.10.1]: https://github.com/ukfast/laravel-health-check/tree/v1.10.1
 [1.10.0]: https://github.com/ukfast/laravel-health-check/tree/v1.10.0
 [1.9.1]: https://github.com/ukfast/laravel-health-check/tree/v1.9.1
 [1.9.0]: https://github.com/ukfast/laravel-health-check/tree/v1.9.0
