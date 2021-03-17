@@ -82,7 +82,7 @@ You can register custom middleware to run on requests to the `/health` endpoint.
  * It's recommended that you have a middleware that only
  * allows admin consumers to see the endpoint.
  *
- * See UKFast\HealthCheck\BasicAuth for a one-size-fits all
+ * See UKFast\HealthCheck\Middleware\BasicAuth for a one-size-fits all
  * solution
  */
 'middleware' => [
