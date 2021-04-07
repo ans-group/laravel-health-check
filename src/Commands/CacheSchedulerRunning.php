@@ -23,6 +23,6 @@ class CacheSchedulerRunning extends Command
         $cacheKey = config('healthcheck.scheduler.cache-key');
         $cacheMinutes = config('healthcheck.scheduler.minutes-between-checks');
 
-        Cache::put($cacheKey, 'healthy', (60 * $cacheMinutes));
+        Cache::put($cacheKey, 'healthy', now()->addMinutes($cacheMinutes));
     }
 }
