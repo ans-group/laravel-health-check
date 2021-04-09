@@ -176,7 +176,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial commit
 
 [unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.10.2...HEAD
-[1.10.1]: https://github.com/ukfast/laravel-health-check/tree/v1.10.2
+[1.10.2]: https://github.com/ukfast/laravel-health-check/tree/v1.10.2
 [1.10.1]: https://github.com/ukfast/laravel-health-check/tree/v1.10.1
 [1.10.0]: https://github.com/ukfast/laravel-health-check/tree/v1.10.0
 [1.9.1]: https://github.com/ukfast/laravel-health-check/tree/v1.9.1
