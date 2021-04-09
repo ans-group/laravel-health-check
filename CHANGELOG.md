@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [1.10.2] - 2021-04-09
+
+### Fixed
+
+- Added backward compatibility fixes to cache health check by making it use Carbon for times [#50](https://github.com/ukfast/laravel-health-check/pull/51) by [nick332](https://github.com/nick332)
+
 ## [1.10.1] - 2021-03-17
 
 ### Fixed
@@ -169,7 +175,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.10.1...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.10.2...HEAD
+[1.10.1]: https://github.com/ukfast/laravel-health-check/tree/v1.10.2
 [1.10.1]: https://github.com/ukfast/laravel-health-check/tree/v1.10.1
 [1.10.0]: https://github.com/ukfast/laravel-health-check/tree/v1.10.0
 [1.9.1]: https://github.com/ukfast/laravel-health-check/tree/v1.9.1
