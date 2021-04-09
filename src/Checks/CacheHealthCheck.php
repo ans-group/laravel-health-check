@@ -4,6 +4,7 @@ namespace UKFast\HealthCheck\Checks;
 
 use Illuminate\Support\Facades\Cache;
 use UKFast\HealthCheck\HealthCheck;
+use Carbon\Carbon;
 
 class CacheHealthCheck extends HealthCheck
 {
@@ -21,7 +22,7 @@ class CacheHealthCheck extends HealthCheck
             try {
                 $cache = Cache::store($store);
 
-                $cache->put('laravel-health-check', 'healthy', 60);
+                $cache->put('laravel-health-check', 'healthy', Carbon::now()->addMinutes(1));
                 
                 $value = $cache->pull('laravel-health-check', 'broken');
 

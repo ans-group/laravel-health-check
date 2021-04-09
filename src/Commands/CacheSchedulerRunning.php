@@ -5,7 +5,7 @@ namespace UKFast\HealthCheck\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use UKFast\HealthCheck\Checks\SchedulerHealthCheck;
-
+use Carbon\Carbon;
 class CacheSchedulerRunning extends Command
 {
     /**
@@ -23,6 +23,6 @@ class CacheSchedulerRunning extends Command
         $cacheKey = config('healthcheck.scheduler.cache-key');
         $cacheMinutes = config('healthcheck.scheduler.minutes-between-checks');
 
-        Cache::put($cacheKey, 'healthy', (60 * $cacheMinutes));
+        Cache::put($cacheKey, 'healthy', Carbon::now()->addMinutes($cacheMinutes));
     }
 }
