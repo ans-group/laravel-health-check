@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added PHP8 to the test runner [!52](https://github.com/ukfast/laravel-health-check/pull/52) by [Yozhef](https://github.com/Yozhef)
 
 ## [1.10.2] - 2021-04-09
 
