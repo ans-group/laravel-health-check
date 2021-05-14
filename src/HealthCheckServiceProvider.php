@@ -14,7 +14,7 @@ class HealthCheckServiceProvider extends ServiceProvider
     {
         $this->configure();
 
-        $this->app->make('router')->get($this->withBasePath('/health'), [
+        $this->app->make('router')->get($this->withBasePath(config('healthcheck.route-paths.health')), [
             'middleware' => config('healthcheck.middleware'),
             'uses' => HealthCheckController::class,
             'as' => config('healthcheck.route-name')
@@ -36,7 +36,7 @@ class HealthCheckServiceProvider extends ServiceProvider
             ]);
         }
 
-        $this->app->make('router')->get($this->withBasePath('/ping'), PingController::class);
+        $this->app->make('router')->get($this->withBasePath(config('healthcheck.route-paths.ping')), PingController::class);
     }
 
     protected function configure()

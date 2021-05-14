@@ -6,6 +6,14 @@ return [
      */
     'base-path' => '',
 
+    /**
+     * Path to host the health check
+     */
+    'route-paths' => [
+        'health' => '/health',
+        'ping' => '/ping',
+    ],
+
     /*
      * List of health checks to run when determining the health
      * of the service
