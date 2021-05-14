@@ -7,7 +7,7 @@ return [
     'base-path' => '',
 
     /**
-     * Path to host the health check
+     * Paths to host the health check and ping endpoints
      */
     'route-paths' => [
         'health' => '/health',
