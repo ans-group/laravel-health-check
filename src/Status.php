@@ -6,6 +6,8 @@ class Status
 {
     const PROBLEM = 'PROBLEM';
 
+    const DEGRADED = 'DEGRADED';
+
     const OKAY = 'OK';
 
     /** @var string */
@@ -31,6 +33,19 @@ class Status
     }
 
     /**
+     * Marks the status as degraded
+     * 
+     * @param string? $message Degraded message
+     * @return self
+     */
+    public function degraded($message = '')
+    {
+        $this->status = Status::DEGRADED;
+        $this->message = $message;
+        return $this;
+    }
+
+    /**
      * Marks status as okay
      * 
      * @return self
@@ -42,6 +57,16 @@ class Status
     }
 
     /**
+     * Returns the status string
+     * 
+     * @return string|null
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
      * Returns if the status is a problem
      * 
      * @return bool
@@ -49,6 +74,16 @@ class Status
     public function isProblem()
     {
         return $this->status == Status::PROBLEM;
+    }
+
+    /**
+     * Returns if the status is degraded
+     * 
+     * @return bool
+     */
+    public function isDegraded()
+    {
+        return $this->status == Status::DEGRADED;
     }
 
     /**
