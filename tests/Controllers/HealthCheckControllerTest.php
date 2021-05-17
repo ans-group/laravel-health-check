@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 use Tests\TestCase;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
 use UKFast\HealthCheck\HealthCheck;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class HealthCheckControllerTest extends TestCase
 {
@@ -21,6 +22,28 @@ class HealthCheckControllerTest extends TestCase
     {
         $this->setChecks([AlwaysUpCheck::class]);
         $response = (new HealthCheckController)->__invoke($this->app);
+
+        $this->assertSame([
+            'status' => 'OK',
+            'always-up' => ['status' => 'OK'],
+        ], json_decode($response->getContent(), true));
+    }
+
+    /**
+     * @test
+     */
+    public function overrides_default_path()
+    {
+        config([
+            'healthcheck.route-paths.health' => '/healthz',
+        ]);
+
+        // Manually re-boot the service provider to override the path
+        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+
+        $this->setChecks([AlwaysUpCheck::class]);
+
+        $response = $this->get('/healthz');
 
         $this->assertSame([
             'status' => 'OK',
