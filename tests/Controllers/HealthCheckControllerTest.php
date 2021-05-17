@@ -2,6 +2,7 @@
 
 namespace Tests\Controllers;
 
+use Illuminate\Http\Response;
 use Tests\TestCase;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
 use UKFast\HealthCheck\HealthCheck;
@@ -30,6 +31,26 @@ class HealthCheckControllerTest extends TestCase
     /**
      * @test
      */
+    public function returns_degraded_status_with_response_code_200_when_service_is_degraded()
+    {
+        $this->setChecks([AlwaysUpCheck::class, AlwaysDegradedCheck::class]);
+        $response = (new HealthCheckController())->__invoke($this->app);
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame([
+            'status' => 'DEGRADED',
+            'always-up' => ['status' => 'OK'],
+            'always-degraded' => [
+                'status' => 'DEGRADED',
+                'message' => 'Something went wrong',
+                'context' => ['debug' => 'info'],
+            ],
+        ], json_decode($response->getContent(), true));
+    }
+
+    /**
+     * @test
+     */
     public function returns_status_of_problem_when_a_problem_occurs()
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDownCheck::class]);
@@ -38,6 +59,30 @@ class HealthCheckControllerTest extends TestCase
         $this->assertSame([
             'status' => 'PROBLEM',
             'always-up' => ['status' => 'OK'],
+            'always-down' => [
+                'status' => 'PROBLEM',
+                'message' => 'Something went wrong',
+                'context' => ['debug' => 'info'],
+            ],
+        ], json_decode($response->getContent(), true));
+    }
+
+    /**
+     * @test
+     */
+    public function returns_status_of_problem_when_both_degraded_and_problem_statuses_occur()
+    {
+        $this->setChecks([AlwaysUpCheck::class, AlwaysDegradedCheck::class, AlwaysDownCheck::class]);
+        $response = (new HealthCheckController)->__invoke($this->app);
+
+        $this->assertSame([
+            'status' => 'PROBLEM',
+            'always-up' => ['status' => 'OK'],
+            'always-degraded' => [
+                'status' => 'DEGRADED',
+                'message' => 'Something went wrong',
+                'context' => ['debug' => 'info'],
+            ],
             'always-down' => [
                 'status' => 'PROBLEM',
                 'message' => 'Something went wrong',
@@ -59,6 +104,18 @@ class AlwaysUpCheck extends HealthCheck
     public function status()
     {
         return $this->okay();
+    }
+}
+
+class AlwaysDegradedCheck extends HealthCheck
+{
+    protected $name = 'always-degraded';
+
+    public function status()
+    {
+        return $this->degraded('Something went wrong', [
+            'debug' => 'info',
+        ]);
     }
 }
 

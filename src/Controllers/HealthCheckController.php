@@ -5,6 +5,7 @@ namespace UKFast\HealthCheck\Controllers;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use UKFast\HealthCheck\Status;
 
 class HealthCheckController
 {
@@ -19,16 +20,20 @@ class HealthCheckController
             return $check->status();
         });
 
-        $isOkay = $statuses->filter(function ($status) {
+        $isProblem = $statuses->contains(function ($status) {
             return $status->isProblem();
-        })->isEmpty();
+        });
 
-        $body = ['status' => $isOkay ? 'OK' : 'PROBLEM'];
+        $isDegraded = $statuses->contains(function ($status) {
+            return $status->isDegraded();
+        });
+
+        $body = ['status' => ($isProblem ? Status::PROBLEM : ($isDegraded ? Status::DEGRADED : Status::OKAY))];
         foreach ($statuses as $status) {
             $body[$status->name()] = [];
-            $body[$status->name()]['status'] = $status->isOkay() ? 'OK' : 'PROBLEM';
+            $body[$status->name()]['status'] = $status->getStatus();
 
-            if ($status->isProblem()) {
+            if (!$status->isOkay()) {
                 $body[$status->name()]['message'] = $status->message();
             }
 
@@ -37,6 +42,6 @@ class HealthCheckController
             }
         }
 
-        return new Response($body, $isOkay ? 200 : 500);
+        return new Response($body, $isProblem ? 500 : 200);
     }
 }

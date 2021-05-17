@@ -23,6 +23,14 @@ abstract class HealthCheck
             ->withName($this->name());
     }
 
+    public function degraded($message = '', $context = [])
+    {
+        return (new Status)
+            ->degraded($message)
+            ->withContext($context)
+            ->withName($this->name());
+    }
+
     public function okay($context = [])
     {
         return (new Status)
