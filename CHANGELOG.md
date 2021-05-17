@@ -7,11 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.12.0] - 2021-05-17
+
+### Added
+
+- Allow overriding health and ping route paths [#53](https://github.com/ukfast/laravel-health-check/pull/53) by [Andrew Warren-Love](https://github.com/awarrenlove)
+
 ## [1.11.0] - 2021-05-17
 
 ### Added
 
-- Added PHP8 to the test runner [!52](https://github.com/ukfast/laravel-health-check/pull/52) by [Yozhef](https://github.com/Yozhef)
+- Added PHP8 to the test runner [#52](https://github.com/ukfast/laravel-health-check/pull/52) by [Yozhef](https://github.com/Yozhef)
 - Added support for degraded health checks [#54](https://github.com/ukfast/laravel-health-check/issues/54) by [Andrew Warren-Love](https://github.com/awarrenlove)
 
 ## [1.10.2] - 2021-04-09
@@ -181,8 +188,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.11.0...HEAD
-[1.11.0]: https://github.com/ukfast/laravel-health-check/tree/v1.10.2
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/ukfast/laravel-health-check/tree/v1.12.0
+[1.11.0]: https://github.com/ukfast/laravel-health-check/tree/v1.11.0
 [1.10.2]: https://github.com/ukfast/laravel-health-check/tree/v1.10.2
 [1.10.1]: https://github.com/ukfast/laravel-health-check/tree/v1.10.1
 [1.10.0]: https://github.com/ukfast/laravel-health-check/tree/v1.10.0
