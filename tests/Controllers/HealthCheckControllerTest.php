@@ -91,6 +91,49 @@ class HealthCheckControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
+    /**
+     * @test
+     */
+    public function defaults_the_ping_path_if_config_is_not_set()
+    {
+        app('router')->setRoutes(app(RouteCollection::class));
+
+        $response = $this->get('/ping');
+        $response->assertStatus(404);
+
+        config([
+            'healthcheck.route-paths' => null,
+        ]);
+
+        // Manually re-boot the service provider to override the path
+        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+
+        $this->setChecks([AlwaysUpCheck::class]);
+
+        $response = $this->get('/ping');
+        $this->assertSame('pong', $response->getContent());
+
+    }
+
+    /**
+     * @test
+     */
+    public function defaults_the_health_path_if_config_is_not_set()
+    {
+        config([
+            'healthcheck.route-paths' => null,
+        ]);
+
+        app('router')->setRoutes(app(RouteCollection::class));
+
+        $response = $this->get('/health');
+
+
+        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+
+        $this->setChecks([AlwaysUpCheck::class]);
+
+        $response = $this->get('/health');
 
         $this->assertSame([
             'status' => 'OK',
