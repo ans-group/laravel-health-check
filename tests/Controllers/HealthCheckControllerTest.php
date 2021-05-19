@@ -3,6 +3,7 @@
 namespace Tests\Controllers;
 
 use Illuminate\Http\Response;
+use Illuminate\Routing\RouteCollection;
 use Tests\TestCase;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
 use UKFast\HealthCheck\HealthCheck;
@@ -34,6 +35,14 @@ class HealthCheckControllerTest extends TestCase
      */
     public function overrides_default_ping_path()
     {
+        app('router')->setRoutes(app(RouteCollection::class));
+
+        $response = $this->get('/ping');
+        $response->assertStatus(404);
+
+        $response = $this->get('/pingz');
+        $response->assertStatus(404);
+
         config([
             'healthcheck.route-paths.ping' => '/pingz',
         ]);
@@ -44,8 +53,10 @@ class HealthCheckControllerTest extends TestCase
         $this->setChecks([AlwaysUpCheck::class]);
 
         $response = $this->get('/pingz');
-
         $this->assertSame('pong', $response->getContent());
+
+        $response = $this->get('/ping');
+        $response->assertStatus(404);
     }
 
     /**
@@ -53,6 +64,14 @@ class HealthCheckControllerTest extends TestCase
      */
     public function overrides_default_health_path()
     {
+        app('router')->setRoutes(app(RouteCollection::class));
+
+        $response = $this->get('/health');
+        $response->assertStatus(404);
+
+        $response = $this->get('/healthz');
+        $response->assertStatus(404);
+
         config([
             'healthcheck.route-paths.health' => '/healthz',
         ]);
@@ -63,6 +82,15 @@ class HealthCheckControllerTest extends TestCase
         $this->setChecks([AlwaysUpCheck::class]);
 
         $response = $this->get('/healthz');
+        $this->assertSame([
+            'status' => 'OK',
+            'always-up' => ['status' => 'OK'],
+        ], json_decode($response->getContent(), true));
+
+        $response = $this->get('/health');
+        $response->assertStatus(404);
+    }
+
 
         $this->assertSame([
             'status' => 'OK',
