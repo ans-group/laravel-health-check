@@ -3,6 +3,7 @@
 namespace Tests\Controllers;
 
 use Illuminate\Http\Response;
+use Illuminate\Routing\RouteCollection;
 use Tests\TestCase;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
 use UKFast\HealthCheck\HealthCheck;
@@ -32,8 +33,45 @@ class HealthCheckControllerTest extends TestCase
     /**
      * @test
      */
-    public function overrides_default_path()
+    public function overrides_default_ping_path()
     {
+        app('router')->setRoutes(app(RouteCollection::class));
+
+        $response = $this->get('/ping');
+        $response->assertStatus(404);
+
+        $response = $this->get('/pingz');
+        $response->assertStatus(404);
+
+        config([
+            'healthcheck.route-paths.ping' => '/pingz',
+        ]);
+
+        // Manually re-boot the service provider to override the path
+        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+
+        $this->setChecks([AlwaysUpCheck::class]);
+
+        $response = $this->get('/pingz');
+        $this->assertSame('pong', $response->getContent());
+
+        $response = $this->get('/ping');
+        $response->assertStatus(404);
+    }
+
+    /**
+     * @test
+     */
+    public function overrides_default_health_path()
+    {
+        app('router')->setRoutes(app(RouteCollection::class));
+
+        $response = $this->get('/health');
+        $response->assertStatus(404);
+
+        $response = $this->get('/healthz');
+        $response->assertStatus(404);
+
         config([
             'healthcheck.route-paths.health' => '/healthz',
         ]);
@@ -44,6 +82,58 @@ class HealthCheckControllerTest extends TestCase
         $this->setChecks([AlwaysUpCheck::class]);
 
         $response = $this->get('/healthz');
+        $this->assertSame([
+            'status' => 'OK',
+            'always-up' => ['status' => 'OK'],
+        ], json_decode($response->getContent(), true));
+
+        $response = $this->get('/health');
+        $response->assertStatus(404);
+    }
+
+    /**
+     * @test
+     */
+    public function defaults_the_ping_path_if_config_is_not_set()
+    {
+        app('router')->setRoutes(app(RouteCollection::class));
+
+        $response = $this->get('/ping');
+        $response->assertStatus(404);
+
+        config([
+            'healthcheck.route-paths' => null,
+        ]);
+
+        // Manually re-boot the service provider to override the path
+        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+
+        $this->setChecks([AlwaysUpCheck::class]);
+
+        $response = $this->get('/ping');
+        $this->assertSame('pong', $response->getContent());
+
+    }
+
+    /**
+     * @test
+     */
+    public function defaults_the_health_path_if_config_is_not_set()
+    {
+        config([
+            'healthcheck.route-paths' => null,
+        ]);
+
+        app('router')->setRoutes(app(RouteCollection::class));
+
+        $response = $this->get('/health');
+
+
+        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+
+        $this->setChecks([AlwaysUpCheck::class]);
+
+        $response = $this->get('/health');
 
         $this->assertSame([
             'status' => 'OK',
