@@ -32,7 +32,29 @@ class HealthCheckControllerTest extends TestCase
     /**
      * @test
      */
-    public function overrides_default_path()
+    public function overrides_default_ping_path()
+    {
+        config([
+            'healthcheck.route-paths.health' => '/pingz',
+        ]);
+
+        // Manually re-boot the service provider to override the path
+        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+
+        $this->setChecks([AlwaysUpCheck::class]);
+
+        $response = $this->get('/pingz');
+
+        $this->assertSame([
+            'status' => 'OK',
+            'always-up' => ['status' => 'OK'],
+        ], json_decode($response->getContent(), true));
+    }
+
+    /**
+     * @test
+     */
+    public function overrides_default_health_path()
     {
         config([
             'healthcheck.route-paths.health' => '/healthz',
