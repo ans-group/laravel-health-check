@@ -50,7 +50,7 @@ class EnvHealthCheckTest extends TestCase
     /**
      * @test
      */
-    public function shows_okay_if_required_env_params_is_present_but_null()
+    public function shows_okay_if_required_env_param_is_present_but_null()
     {
         putenv('REDIS_PASSWORD=null');
 
