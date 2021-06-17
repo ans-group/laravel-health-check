@@ -10,8 +10,10 @@ class EnvHealthCheck extends HealthCheck
     
     public function status()
     {
+        $default = config('healthcheck.env-check-key', 'HEALTH_CHECK_ENV_DEFAULT_VALUE');
+
         foreach (config('healthcheck.required-env') as $env) {
-            if (env($env) === null) {
+            if (env($env, $default) === $default) {
                 $missing[] = $env;
             }
         }

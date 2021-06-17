@@ -120,6 +120,13 @@ return [
     ],
 
     /*
+     * Default value for env checks.
+     * For each key, the check will call `env(KEY, config('healthcheck.env-default-key'))` 
+     * to avoid false positives when `env(KEY)` is defined but is null.
+     */
+    'env-check-key' => 'HEALTH_CHECK_ENV_DEFAULT_VALUE',
+
+    /*
      * Additional config can be put here. For example, a health check
      * for your .env file needs to know which keys need to be present.
      * You can pass this information by specifying a new key here then
