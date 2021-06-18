@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.2] - 2021-06-18
+
+### Fixed
+
+- Fix env check default value [#58](https://github.com/ukfast/laravel-health-check/pull/58) by [Michel Tomas](https://github.com/superbiche)
 
 ## [1.12.1] - 2021-05-19
 
