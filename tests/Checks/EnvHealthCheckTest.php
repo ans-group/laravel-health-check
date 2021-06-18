@@ -46,4 +46,19 @@ class EnvHealthCheckTest extends TestCase
 
         $this->assertTrue($status->isOkay());
     }
+
+    /**
+     * @test
+     */
+    public function shows_okay_if_required_env_param_is_present_but_null()
+    {
+        putenv('REDIS_PASSWORD=null');
+
+        config(['healthcheck.required-env' => [
+            'REDIS_PASSWORD',
+        ]]);
+        $status = (new EnvHealthCheck)->status();
+
+        $this->assertTrue($status->isOkay());
+    }
 }
