@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.13.0] - 2021-07-22
+
 ### Added
 
-- FtpHealthCheck [#59](https://github.com/ukfast/laravel-health-check/pull/59) by [@rbibby](https://github.com/rbibby)
+- Add FtpHealthCheck [#59](https://github.com/ukfast/laravel-health-check/pull/59) by [@rbibby](https://github.com/rbibby)
 
 ## [1.12.2] - 2021-06-18
 
@@ -203,7 +206,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.12.1...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.13.0...HEAD
+[1.13.0]: https://github.com/ukfast/laravel-health-check/tree/v1.13.0
 [1.12.2]: https://github.com/ukfast/laravel-health-check/tree/v1.12.2
 [1.12.1]: https://github.com/ukfast/laravel-health-check/tree/v1.12.1
 [1.12.0]: https://github.com/ukfast/laravel-health-check/tree/v1.12.0
