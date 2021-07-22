@@ -11,7 +11,7 @@ use Mockery as m;
 class FtpHealthCheckTest extends TestCase
 {
 
-    public function tearDown(): void
+    public function tearDown()
     {
         m::close();
         parent::tearDown();
