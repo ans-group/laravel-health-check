@@ -10,13 +10,6 @@ use Mockery as m;
 
 class FtpHealthCheckTest extends TestCase
 {
-
-    public function tearDown()
-    {
-        m::close();
-        parent::tearDown();
-    }
-
     /**
      * @test
      */
@@ -30,6 +23,8 @@ class FtpHealthCheckTest extends TestCase
         $status = (new FtpHealthCheck($ftp))->status();
 
         $this->assertTrue($status->isProblem());
+
+        m::close();
     }
 
     /**
@@ -44,5 +39,7 @@ class FtpHealthCheckTest extends TestCase
 
         $status = (new FtpHealthCheck($ftp))->status();
         $this->assertTrue($status->isOkay());
+
+        m::close();
     }
 }
