@@ -22,6 +22,8 @@ class RedisHealthCheckTest extends TestCase
      */
     public function shows_okay_if_can_ping_predis()
     {
+        Config::set("database.redis.client", "predis");
+
         $redis = $this->getMockBuilder(RedisManager::class)
             ->setMethods(['ping'])
             ->disableOriginalConstructor()
@@ -42,6 +44,8 @@ class RedisHealthCheckTest extends TestCase
      */
     public function shows_problem_if_cannot_ping_predis()
     {
+        Config::set("database.redis.client", "predis");
+
         $redis = $this->getMockBuilder(RedisManager::class)
             ->setMethods(['ping'])
             ->disableOriginalConstructor()
@@ -62,6 +66,8 @@ class RedisHealthCheckTest extends TestCase
      */
     public function shows_okay_if_cannot_ping_predis_cluster()
     {
+        Config::set("database.redis.client", "predis");
+
         $redis = $this->getMockBuilder(RedisManager::class)
             ->setMethods(['ping'])
             ->disableOriginalConstructor()
@@ -82,6 +88,8 @@ class RedisHealthCheckTest extends TestCase
      */
     public function shows_problem_if_cannot_ping_predis_cluster()
     {
+        Config::set("database.redis.client", "predis");
+
         $redis = $this->getMockBuilder(RedisManager::class)
             ->setMethods(['ping'])
             ->disableOriginalConstructor()
