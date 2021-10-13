@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.1] - 2021-10-13
+
+### Added
+
+- Add support for clusters in the RedisHealthCheck [#60](https://github.com/ukfast/laravel-health-check/pull/60) by [@adamkirk](https://github.com/adamkirk)
 
 ## [1.13.0] - 2021-07-22
 
@@ -206,7 +211,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.13.0...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.13.1...HEAD
+[1.13.1]: https://github.com/ukfast/laravel-health-check/tree/v1.13.1
 [1.13.0]: https://github.com/ukfast/laravel-health-check/tree/v1.13.0
 [1.12.2]: https://github.com/ukfast/laravel-health-check/tree/v1.12.2
 [1.12.1]: https://github.com/ukfast/laravel-health-check/tree/v1.12.1
