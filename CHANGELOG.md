@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix PackageSecurityHealthCheck by using the `enlightn/security-checker` package instead of the archived `sensiolabs/security-checker` package
+
 ## [1.13.1] - 2021-10-13
 
 ### Added
