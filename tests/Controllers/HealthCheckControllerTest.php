@@ -202,6 +202,25 @@ class HealthCheckControllerTest extends TestCase
                 'context' => ['debug' => 'info'],
             ],
         ], json_decode($response->getContent(), true));
+
+        $this->setChecks([AlwaysUpCheck::class, AlwaysDownCheck::class, AlwaysDegradedCheck::class,]);
+        $response = (new HealthCheckController)->__invoke($this->app);
+
+        $this->assertSame([
+            'status' => 'PROBLEM',
+            'always-up' => ['status' => 'OK'],
+            'always-down' => [
+                'status' => 'PROBLEM',
+                'message' => 'Something went wrong',
+                'context' => ['debug' => 'info'],
+            ],
+            'always-degraded' => [
+                'status' => 'DEGRADED',
+                'message' => 'Something went wrong',
+                'context' => ['debug' => 'info'],
+            ],
+        ], json_decode($response->getContent(), true));
+
     }
 
     protected function setChecks($checks)

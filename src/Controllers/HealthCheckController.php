@@ -2,46 +2,41 @@
 
 namespace UKFast\HealthCheck\Controllers;
 
-use Illuminate\Contracts\Container\Container;
-use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Arr;
 use UKFast\HealthCheck\Status;
+use Illuminate\Contracts\Container\Container;
 
 class HealthCheckController
 {
     public function __invoke(Container $container)
     {
-        $checks = new Collection;
+        Arr::set($body, 'status', Status::OKAY);
+
+        $hasProblem = false;
+
         foreach (config('healthcheck.checks') as $check) {
-            $checks->push($container->make($check));
-        }
+            $status = $container->make($check)->status();
 
-        $statuses = $checks->map(function ($check) {
-            return $check->status();
-        });
-
-        $isProblem = $statuses->contains(function ($status) {
-            return $status->isProblem();
-        });
-
-        $isDegraded = $statuses->contains(function ($status) {
-            return $status->isDegraded();
-        });
-
-        $body = ['status' => ($isProblem ? Status::PROBLEM : ($isDegraded ? Status::DEGRADED : Status::OKAY))];
-        foreach ($statuses as $status) {
-            $body[$status->name()] = [];
-            $body[$status->name()]['status'] = $status->getStatus();
-
+            Arr::set($body, $status->name() . '.status', $status->getStatus());
             if (!$status->isOkay()) {
-                $body[$status->name()]['message'] = $status->message();
+                Arr::set($body, $status->name() . '.message', $status->message());
             }
 
             if (!empty($status->context())) {
-                $body[$status->name()]['context'] = $status->context();
+                Arr::set($body, $status->name() . '.context', $status->context());
+            }
+
+            if ($status->getStatus() == Status::PROBLEM && $hasProblem == false) {
+                $hasProblem = true;
+                Arr::set($body, 'status', Status::PROBLEM);
+            }
+
+            if ($status->getStatus() == Status::DEGRADED && $hasProblem == false) {
+                Arr::set($body, 'status', Status::DEGRADED);
             }
         }
 
-        return new Response($body, $isProblem ? 500 : 200);
+        return response()
+            ->json($body, in_array(Arr::get($body, 'status'), [Status::DEGRADED, Status::OKAY])  ? 200 : 500);
     }
 }
