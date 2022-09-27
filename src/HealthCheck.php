@@ -2,7 +2,7 @@
 
 namespace UKFast\HealthCheck;
 
-use Exception;
+use \Throwable;
 
 abstract class HealthCheck
 {
@@ -39,7 +39,7 @@ abstract class HealthCheck
             ->withName($this->name());
     }
 
-    protected function exceptionContext(Exception $e)
+    protected function exceptionContext(Throwable $e)
     {
         return [
             'error' => $e->getMessage(),
