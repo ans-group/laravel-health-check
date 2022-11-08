@@ -18,7 +18,7 @@ class StorageHealthCheck extends HealthCheck
 
     public function status()
     {
-        $uniqueString = uniqid('laravel-health-check_');
+        $uniqueString = uniqid('laravel-health-check_', true);
 
         foreach (config('healthcheck.storage.disks') as $disk) {
             try {
