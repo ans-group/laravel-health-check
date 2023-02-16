@@ -19,6 +19,9 @@ class Status
     /** @var string */
     protected $message = '';
 
+    /** @var array */
+    protected $context = [];
+
     /**
      * Marks the status as a problem
      * 
