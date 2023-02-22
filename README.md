@@ -71,6 +71,13 @@ If you'd like to tweak the config file (helpful for configuring the `EnvHealthCh
 php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProvider" --tag="config"
 ```
 
+##### Console command
+
+Check all: `php artisan health-check:status`
+
+Only specific checks: `php artisan health-check:status --only=log,cache`
+
+Except specific checks: `php artisan health-check:status --except=cache`
 
 ##### Middleware
 

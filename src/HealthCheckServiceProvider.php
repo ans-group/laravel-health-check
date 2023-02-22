@@ -3,6 +3,7 @@
 namespace UKFast\HealthCheck;
 
 use Illuminate\Support\ServiceProvider;
+use UKFast\HealthCheck\Commands\StatusCommand;
 use UKFast\HealthCheck\Commands\CacheSchedulerRunning;
 use UKFast\HealthCheck\Commands\HealthCheckMakeCommand;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
@@ -33,6 +34,7 @@ class HealthCheckServiceProvider extends ServiceProvider
             $this->commands([
                 CacheSchedulerRunning::class,
                 HealthCheckMakeCommand::class,
+                StatusCommand::class,
             ]);
         }
 
