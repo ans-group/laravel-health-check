@@ -52,7 +52,6 @@ jobs:
 
             - name: Install dependencies
               run: |
-#                  sudo composer self-update
                   composer require "laravel/framework:${{ matrix.laravel }}" --dev --no-interaction --no-update
                   composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
