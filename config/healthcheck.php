@@ -78,6 +78,12 @@ return [
     'default-response-code' => 200,
 
     /*
+     * Default code for HTTP health check when there any problem occured.
+     * Will be used in the HealthCheckController's response.
+     */
+    'default-problem-http-code' => 500,
+    
+    /*
      * Default timeout for cURL requests for HTTP health check.
      */
     'default-curl-timeout' => 2.0,
