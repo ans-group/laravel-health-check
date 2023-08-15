@@ -42,6 +42,6 @@ class HealthCheckController
             }
         }
 
-        return new Response($body, $isProblem ? config('healthcheck.default-problem-http-code') : 200);
+        return new Response($body, $isProblem ? config('healthcheck.default-problem-http-code', 500) : 200);
     }
 }
