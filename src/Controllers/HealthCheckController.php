@@ -37,6 +37,6 @@ class HealthCheckController
         }
 
         return response()
-            ->json($body, in_array(Arr::get($body, 'status'), [Status::DEGRADED, Status::OKAY])  ? 200 : 500);
+            ->json($body, in_array(Arr::get($body, 'status'), [Status::DEGRADED, Status::OKAY])  ? 200 : config('healthcheck.default-problem-http-code', 500));
     }
 }
