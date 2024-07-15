@@ -49,6 +49,8 @@ class StatusCommand extends Command
             $this->table(['name', 'status', 'message'], $problems);
         }
 
+        $this->info('All checks passed successfully');
+
         return $isOkay ? 0 : 1;
     }
 }
