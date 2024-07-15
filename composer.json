@@ -1,5 +1,5 @@
 {
-    "name": "ukfast/laravel-health-check",
+    "name": "ans-group/laravel-health-check",
     "description": "A package for checking the health of your Laravel/Lumen applications.",
     "keywords": [
         "ukfast",
@@ -48,24 +48,27 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        }
     },
     "prefer-stable": true,
     "require": {
         "php": ">=5.6",
         "ext-json": "*",
-        "illuminate/support": "^5.4|^6.0|^7.0|^8.0",
-        "illuminate/http": "^5.4|^6.0|^7.0|^8.0",
-        "illuminate/console": "^5.4|^6.0|^7.0|^8.0",
+        "illuminate/support": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
+        "illuminate/http": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
+        "illuminate/console": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
         "nesbot/carbon": "^1.26.3|^2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": ">=5.0",
-        "orchestra/testbench": "^3.0|^4.0|^5.0|^6.0",
+        "phpunit/phpunit": ">=5.0 <10",
+        "orchestra/testbench": "^3.0|^4.0|^5.0|^6.0|^8.0",
         "mockery/mockery": "^1.0",
-        "illuminate/database": "^5.4|^6.0|^7.0|^8.0",
-        "illuminate/log": "^5.4|^6.0|^7.0|^8.0",
-        "illuminate/redis": "^5.4|^6.0|^7.0|^8.0",
+        "illuminate/database": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
+        "illuminate/log": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
+        "illuminate/redis": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
         "guzzlehttp/guzzle": ">=5.6.3"
     },
     "suggest": {

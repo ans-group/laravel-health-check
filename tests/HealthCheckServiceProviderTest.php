@@ -128,7 +128,7 @@ class HealthCheckServiceProviderTest extends TestCase
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
-        if (substr(phpversion(), 0, 2) === '5.') {
+        if (substr(phpversion(), 0, 2) === '5.' || substr(phpversion(), 0, 3) === '7.0') {
             $this->markTestSkipped('URL::signedRoute does not exists');
         }
 

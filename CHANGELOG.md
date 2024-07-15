@@ -11,6 +11,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix PackageSecurityHealthCheck by using the `enlightn/security-checker` package instead of the archived `sensiolabs/security-checker` package
 
+## [1.13.4] - 2022-07-11
+
+### Added
+
+- Allow plugins for update-helper package [#69](https://github.com/ans-group/laravel-health-check/pull/69) by [@rbibby](https://github.com/rbibby)
+
+## [1.13.3] - 2022-02-22
+
+### Added
+
+- Added support for Laravel 9
+
+## [1.13.2] - 2021-12-21
+
+### Changed
+
+- Updated tests to run on more versions
+ 
 ## [1.13.1] - 2021-10-13
 
 ### Added
@@ -215,7 +233,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit
 
-[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.13.1...HEAD
+[unreleased]: https://github.com/ukfast/laravel-health-check/compare/v1.13.4...HEAD
+[1.13.4]: https://github.com/ukfast/laravel-health-check/tree/v1.13.4
+[1.13.3]: https://github.com/ukfast/laravel-health-check/tree/v1.13.3
+[1.13.2]: https://github.com/ukfast/laravel-health-check/tree/v1.13.2
 [1.13.1]: https://github.com/ukfast/laravel-health-check/tree/v1.13.1
 [1.13.0]: https://github.com/ukfast/laravel-health-check/tree/v1.13.0
 [1.12.2]: https://github.com/ukfast/laravel-health-check/tree/v1.12.2
