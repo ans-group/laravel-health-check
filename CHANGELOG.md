@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.15.0] - 2024-07-17
+
+### Added
+
+- The ability to set a default problem HTTP code [#79](https://github.com/ans-group/laravel-health-check/pull/79) by [@Dziamid-Harbatsevich](https://github.com/Dziamid-Harbatsevich)
+- A healthcheck artisan command [#70](https://github.com/ans-group/laravel-health-check/pull/70) by [@nick322](https://github.com/nick322)
+
+## [1.14.0] - 2023-02-20
+
+### Changed
+
+- Stops PHPUnit 10 being installed [#76](https://github.com/ans-group/laravel-health-check/pull/76) by [@rbibby](https://github.com/rbibby)
+
+## [1.13.5] - 2023-01-04
+
+### Updated
+
+- Tests now run on PHP 8.2 [#74](https://github.com/ans-group/laravel-health-check/pull/74) by [@rbibby](https://github.com/rbibby)
+- `uniqid` now uses the `$more_entropy` flag [#73](https://github.com/ans-group/laravel-health-check/pull/73) by [@Lotykun](https://github.com/Lotykun)
 
 ## [1.13.4] - 2022-07-11
 
