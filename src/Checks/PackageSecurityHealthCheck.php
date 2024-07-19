@@ -3,21 +3,31 @@
 namespace UKFast\HealthCheck\Checks;
 
 use Exception;
+use Illuminate\Support\Collection;
 use SensioLabs\Security\SecurityChecker;
 use UKFast\HealthCheck\HealthCheck;
+use UKFast\HealthCheck\Status;
 
 class PackageSecurityHealthCheck extends HealthCheck
 {
-    protected $name = 'package-security';
+    protected string $name = 'package-security';
 
-    protected $vulnerablePackages = [];
+    /**
+     * @var Collection<int, string> $vulnerablePackages
+     */
+    protected Collection $vulnerablePackages;
 
-    public static function checkDependency()
+    public function __construct()
+    {
+        $this->vulnerablePackages = collect();
+    }
+
+    public static function checkDependency(): bool
     {
         return class_exists(SecurityChecker::class);
     }
 
-    public function status()
+    public function status(): Status
     {
         try {
             if (! static::checkDependency()) {

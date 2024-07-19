@@ -213,7 +213,7 @@ class HealthCheckControllerTest extends TestCase
 
 class AlwaysUpCheck extends HealthCheck
 {
-    protected $name = 'always-up';
+    protected string $name = 'always-up';
 
     public function status(): Status
     {
@@ -223,7 +223,7 @@ class AlwaysUpCheck extends HealthCheck
 
 class AlwaysDegradedCheck extends HealthCheck
 {
-    protected $name = 'always-degraded';
+    protected string $name = 'always-degraded';
 
     public function status(): Status
     {
@@ -235,7 +235,7 @@ class AlwaysDegradedCheck extends HealthCheck
 
 class AlwaysDownCheck extends HealthCheck
 {
-    protected $name = 'always-down';
+    protected string $name = 'always-down';
 
     public function status(): Status
     {

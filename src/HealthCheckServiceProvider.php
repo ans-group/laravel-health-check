@@ -11,7 +11,7 @@ use UKFast\HealthCheck\Controllers\PingController;
 
 class HealthCheckServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         $this->configure();
 
@@ -41,7 +41,7 @@ class HealthCheckServiceProvider extends ServiceProvider
         $this->app->make('router')->get($this->withBasePath(config('healthcheck.route-paths.ping', '/ping')), PingController::class);
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/healthcheck.php', 'healthcheck');
         $configPath = $this->app->basePath().'/config/healthcheck.php';
@@ -55,7 +55,7 @@ class HealthCheckServiceProvider extends ServiceProvider
         }
     }
 
-    private function withBasePath($path)
+    private function withBasePath($path): string
     {
         $path = trim($path, '/');
         $basePath = trim(config('healthcheck.base-path'), '/');

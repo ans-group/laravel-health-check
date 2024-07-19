@@ -7,18 +7,24 @@ use UKFast\HealthCheck\Facade\HealthCheck;
 
 class StatusCommand extends Command
 {
+    /**
+     * @var string
+     */
     protected $signature = '
         health-check:status 
         {--only= : comma separated checks names to run}
         {--except= : comma separated checks names to skip}
     ';
 
+    /**
+     * @var string
+     */
     protected $description = 'Check health status';
 
-    public function handle()
+    public function handle(): int
     {
-        $only = (string)$this->option('only');
-        $except = (string)$this->option('except');
+        $only = (string) $this->option('only');
+        $except = (string) $this->option('except');
 
         if ($only && $except) {
             $this->error('Pass --only OR --except, but not both!');

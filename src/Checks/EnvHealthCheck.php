@@ -3,12 +3,13 @@
 namespace UKFast\HealthCheck\Checks;
 
 use UKFast\HealthCheck\HealthCheck;
+use UKFast\HealthCheck\Status;
 
 class EnvHealthCheck extends HealthCheck
 {
-    protected $name = 'env';
-    
-    public function status()
+    protected string $name = 'env';
+
+    public function status(): Status
     {
         $default = config('healthcheck.env-check-key', 'HEALTH_CHECK_ENV_DEFAULT_VALUE');
 

@@ -7,12 +7,13 @@ use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Container\Container;
 use UKFast\HealthCheck\HealthCheck;
+use UKFast\HealthCheck\Status;
 
 class HttpHealthCheck extends HealthCheck
 {
-    protected $name = 'http';
+    protected string $name = 'http';
 
-    public function status()
+    public function status(): Status
     {
         $container = Container::getInstance();
 

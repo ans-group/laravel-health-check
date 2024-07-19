@@ -4,10 +4,11 @@ namespace UKFast\HealthCheck\Checks;
 
 use League\Flysystem\Adapter\Ftp;
 use UKFast\HealthCheck\HealthCheck;
+use UKFast\HealthCheck\Status;
 
 class FtpHealthCheck extends HealthCheck
 {
-    protected $name = 'ftp';
+    protected string $name = 'ftp';
 
     /**
      * @var \Illuminate\Contracts\Filesystem\Filesystem
@@ -19,7 +20,7 @@ class FtpHealthCheck extends HealthCheck
         $this->ftp = $ftp;
     }
 
-    public function status()
+    public function status(): Status
     {
         try {
             $this->ftp->getConnection();

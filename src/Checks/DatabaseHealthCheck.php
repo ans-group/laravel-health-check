@@ -5,20 +5,20 @@ namespace UKFast\HealthCheck\Checks;
 use Exception;
 use Illuminate\Database\DatabaseManager;
 use UKFast\HealthCheck\HealthCheck;
+use UKFast\HealthCheck\Status;
 
 class DatabaseHealthCheck extends HealthCheck
 {
-    protected $name = 'database';
+    protected string $name = 'database';
 
-    /** @var \Illuminate\Database\DatabaseManager */
-    protected $db;
+    protected DatabaseManager $db;
 
     public function __construct(DatabaseManager $db)
     {
         $this->db = $db;
     }
 
-    public function status()
+    public function status(): Status
     {
         foreach (config('healthcheck.database.connections') as $connection) {
             try {
