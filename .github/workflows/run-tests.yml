@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - v2.0
   pull_request:
   schedule:
       - cron: '0 0 * * *'
@@ -35,4 +36,4 @@ jobs:
 
             - name: Execute tests
               run: vendor/bin/phpunit
-              
+
