@@ -7,7 +7,7 @@ use UKFast\HealthCheck\Facade\HealthCheck;
 
 class AddHeaders
 {
-    public function handle(Request $request, $next)
+    public function handle(Request $request, $next): mixed
     {
         $response = $next($request);
 
@@ -17,7 +17,7 @@ class AddHeaders
 
             $response->headers->set($header, $status);
         });
-        
+
         return $response;
     }
 }

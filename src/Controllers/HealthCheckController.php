@@ -2,13 +2,18 @@
 
 namespace UKFast\HealthCheck\Controllers;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use UKFast\HealthCheck\Status;
 use Illuminate\Contracts\Container\Container;
 
 class HealthCheckController
 {
-    public function __invoke(Container $container)
+    /**
+     * @throws BindingResolutionException
+     */
+    public function __invoke(Container $container): JsonResponse
     {
         Arr::set($body, 'status', Status::OKAY);
 

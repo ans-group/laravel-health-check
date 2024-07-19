@@ -58,7 +58,12 @@ class CrossServiceHealthCheckTest extends TestCase
         $check = new CrossServiceHealthCheck($client, $request);
 
         $this->assertTrue($check->status()->isOkay());
-        $this->assertSame('Skipped, X-Service-Check header is present', $check->status()->context());
+        $this->assertSame(
+            [
+                'message' => 'Skipped, X-Service-Check header is present'
+            ],
+            $check->status()->context(),
+        );
         $this->assertSame(0, count($container));
     }
 

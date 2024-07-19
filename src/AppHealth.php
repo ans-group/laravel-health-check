@@ -2,23 +2,26 @@
 
 namespace UKFast\HealthCheck;
 
+use Exception;
 use Illuminate\Support\Collection;
 use UKFast\HealthCheck\Exceptions\CheckNotFoundException;
 
 class AppHealth
 {
-    /**
-     * @var Collection $checks
-     */
-    protected $checks;
 
-    public function __construct($checks)
-    {
-        $this->checks = $checks;
+    public function __construct(
+        /**
+         * @var Collection<int, class-string>
+         */
+        protected Collection $checks,
+    ) {
     }
 
     public function passes($checkName)
     {
+        /**
+         * @var HealthCheck $check
+         */
         $check = $this->checks->filter(function ($check) use ($checkName) {
             return $check->name() == $checkName;
         })->first();
@@ -29,22 +32,22 @@ class AppHealth
 
         try {
             return $check->status()->isOkay();
-        } catch (\Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }
 
-    public function fails($checkName)
+    public function fails($checkName): bool
     {
         return !$this->passes($checkName);
     }
 
     /**
      * Returns a collection of all health checks
-     * 
-     * @return Illuminate\Support\Collection
+     *
+     * @return Collection<int, class-string>
      */
-    public function all()
+    public function all(): Collection
     {
         return $this->checks;
     }

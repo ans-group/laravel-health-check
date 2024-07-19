@@ -10,50 +10,43 @@ class Status
 
     const OKAY = 'OK';
 
-    /** @var string */
-    protected $status = null;
+    protected string|null $status = null;
 
-    /** @var string */
-    protected $name = '';
+    protected string $name = '';
 
-    /** @var string */
-    protected $message = '';
+    protected string $message = '';
 
-    /** @var array */
-    protected $context = [];
+    /**
+     * @var array<string, string|array|int>
+     */
+    protected array $context = [];
 
     /**
      * Marks the status as a problem
-     * 
-     * @param string? $message Problem message
-     * @return self
      */
-    public function problem($message = '')
+    public function problem(string $message = ''): self
     {
         $this->status = Status::PROBLEM;
         $this->message = $message;
+
         return $this;
     }
 
     /**
      * Marks the status as degraded
-     * 
-     * @param string? $message Degraded message
-     * @return self
      */
-    public function degraded($message = '')
+    public function degraded(string $message = ''): self
     {
         $this->status = Status::DEGRADED;
         $this->message = $message;
+
         return $this;
     }
 
     /**
      * Marks status as okay
-     * 
-     * @return self
      */
-    public function okay()
+    public function okay(): self
     {
         $this->status = Status::OKAY;
         return $this;
@@ -61,52 +54,45 @@ class Status
 
     /**
      * Returns the status string
-     * 
-     * @return string|null
      */
-    public function getStatus()
+    public function getStatus(): string|null
     {
         return $this->status;
     }
 
     /**
      * Returns if the status is a problem
-     * 
-     * @return bool
      */
-    public function isProblem()
+    public function isProblem(): bool
     {
         return $this->status == Status::PROBLEM;
     }
 
     /**
      * Returns if the status is degraded
-     * 
-     * @return bool
      */
-    public function isDegraded()
+    public function isDegraded(): bool
     {
         return $this->status == Status::DEGRADED;
     }
 
     /**
      * Returns if the status is okay
-     * 
-     * @return bool
      */
-    public function isOkay()
+    public function isOkay(): bool
     {
         return $this->status == Status::OKAY;
     }
 
     /**
      * Sets the context for the status
-     * @param $context array
-     * @return self
+     *
+     * @param $context array<string, string|array|int>
      */
-    public function withContext($context)
+    public function withContext(array $context): self
     {
         $this->context = $context;
+
         return $this;
     }
 
@@ -114,10 +100,10 @@ class Status
      * Returns the status context, an array of arbitrary key/value
      * pairs to help with debugging. So long as the array can be
      * json encoded, it'll be outputted
-     * 
-     * @return array
+     *
+     * @return array<string, string|array|int>
      */
-    public function context()
+    public function context(): array
     {
         return $this->context;
     }
@@ -127,13 +113,11 @@ class Status
      * being outputted in the healthcheck endpoint, this
      * is the key that the status and context will fall
      * under
-     * 
-     * @param string $name
-     * @return self
      */
-    public function withName($name)
+    public function withName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -141,12 +125,12 @@ class Status
      * Returns the display name
      * @return string
      */
-    public function name()
+    public function name(): string
     {
         return $this->name;
     }
 
-    public function message()
+    public function message(): string
     {
         return $this->message;
     }
