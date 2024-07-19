@@ -10,9 +10,6 @@ on:
       - cron: '0 0 * * *'
 
 jobs:
-    qa-image-build:
-        runs-on: ubuntu-latest
-
     php-tests:
         runs-on: ubuntu-latest
         container:
