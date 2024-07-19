@@ -13,10 +13,7 @@ use UKFast\HealthCheck\Status;
 
 class StatusCommandTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function running_command_status()
+    public function testRunningCommandStatus()
     {
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
@@ -34,10 +31,7 @@ class StatusCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
-    public function running_command_status_with_only_option()
+    public function testRunningCommandStatusWithOnlyOption()
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
@@ -54,10 +48,7 @@ class StatusCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
-    public function running_command_status_with_except_option()
+    public function testRunningCommandStatusWithExceptOption()
     {
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class, DatabaseHealthCheck::class]]);
@@ -75,10 +66,7 @@ class StatusCommandTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
-    public function running_command_status_with_only_and_except_option()
+    public function testRunningCommandStatusWithOnlyAndExceptOption()
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
@@ -92,11 +80,7 @@ class StatusCommandTest extends TestCase
             $this->assertTrue(true);
         }
     }
-
-    /**
-     * @test
-     */
-    public function running_command_status_with_failure_condition()
+    public function testRunningCommandStatusWithFailureCondition()
     {
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);

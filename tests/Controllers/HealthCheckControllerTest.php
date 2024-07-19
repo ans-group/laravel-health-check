@@ -16,10 +16,7 @@ class HealthCheckControllerTest extends TestCase
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
     }
 
-    /**
-     * @test
-     */
-    public function returns_overall_status_of_okay_when_everything_is_up()
+    public function testReturnsOverallStatusOfOkayWhenEverythingIsUp()
     {
         $this->setChecks([AlwaysUpCheck::class]);
         $response = (new HealthCheckController)->__invoke($this->app);
@@ -30,10 +27,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function overrides_default_ping_path()
+    public function testOverridesDefaultPingPath()
     {
         app('router')->setRoutes(app(RouteCollection::class));
 
@@ -59,10 +53,7 @@ class HealthCheckControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /**
-     * @test
-     */
-    public function overrides_default_health_path()
+    public function testOverridesDefaultHealthPath()
     {
         app('router')->setRoutes(app(RouteCollection::class));
 
@@ -91,10 +82,7 @@ class HealthCheckControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /**
-     * @test
-     */
-    public function defaults_the_ping_path_if_config_is_not_set()
+    public function testDefaultsThePingPathIfConfigIsNotSet()
     {
         app('router')->setRoutes(app(RouteCollection::class));
 
@@ -115,10 +103,7 @@ class HealthCheckControllerTest extends TestCase
 
     }
 
-    /**
-     * @test
-     */
-    public function defaults_the_health_path_if_config_is_not_set()
+    public function testDefaultsTheHealthPathIfConfigIsNotSet()
     {
         config([
             'healthcheck.route-paths' => null,
@@ -141,10 +126,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function returns_degraded_status_with_response_code_200_when_service_is_degraded()
+    public function testReturnsDegradedStatusWithResponseCode200WhenServiceIsDegraded()
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDegradedCheck::class]);
         $response = (new HealthCheckController())->__invoke($this->app);
@@ -161,10 +143,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function returns_status_of_problem_when_a_problem_occurs()
+    public function testReturnsStatusOfProblemWhenAProblemOccurs()
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDownCheck::class]);
         $response = (new HealthCheckController)->__invoke($this->app);
@@ -180,10 +159,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function returns_status_of_problem_when_both_degraded_and_problem_statuses_occur()
+    public function testReturnsStatusOfProblemWhenBothDegradedAndProblemStatusesOccur()
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDegradedCheck::class, AlwaysDownCheck::class]);
         $response = (new HealthCheckController)->__invoke($this->app);

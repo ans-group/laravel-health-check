@@ -14,10 +14,7 @@ class StorageHealthCheckTest extends TestCase
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_cannot_write_to_storage()
+    public function testShowsProblemIfCannotWriteToStorage()
     {
         config([
             'healthcheck.storage.disks' => [
@@ -32,10 +29,7 @@ class StorageHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_incorrect_read_from_storage()
+    public function testShowsProblemIfIncorrectReadFromStorage()
     {
         config([
             'healthcheck.storage.disks' => [
@@ -53,17 +47,14 @@ class StorageHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_can_write_to_storage()
+    public function test_shows_okay_if_can_write_to_storage()
     {
         config([
             'healthcheck.storage.disks' => [
                 'local'
             ]
         ]);
-        
+
         $status = (new StorageHealthCheck($this->app))->status();
 
         $this->assertTrue($status->isOkay());

@@ -14,10 +14,7 @@ class HttpHealthCheckTest extends TestCase
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_response_code_is_incorrect()
+    public function testShowsProblemIfResponseCodeIsIncorrect()
     {
         config([
             'healthcheck.addresses' => [
@@ -41,10 +38,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_connection_is_unreachable()
+    public function testShowsProblemIfConnectionIsUnreachable()
     {
         config([
             'healthcheck.addresses' => [
@@ -68,10 +62,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_on_connect_exception()
+    public function testShowsProblemOnConnectException()
     {
         config([
             'healthcheck.addresses' => [
@@ -95,10 +86,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_on_general_exception()
+    public function testShowsProblemOnGeneralException()
     {
         config([
             'healthcheck.addresses' => [
@@ -122,10 +110,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_all_connections_are_reachable()
+    public function testShowsOkayIfAllConnectionsAreReachable()
     {
         config([
             'healthcheck.addresses' => [

@@ -14,10 +14,7 @@ class SchedulerHealthCheckTest extends TestCase
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_no_item_found_in_cache()
+    public function testShowsProblemIfNoItemFoundInCache()
     {
         config([
             'healthcheck.scheduler.cache-key' => 'laravel-scheduler-health-check',
@@ -32,16 +29,13 @@ class SchedulerHealthCheckTest extends TestCase
         $this->assertEquals('Scheduler has not ran in the last 5 minutes', $status->message());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_item_found_in_cache()
+    public function testShowsOkayIfItemFoundInCache()
     {
         config([
             'healthcheck.scheduler.cache-key' => 'laravel-scheduler-health-check',
             'healthcheck.scheduler.minutes-between-checks' => 5,
         ]);
-        
+
         Cache::shouldReceive('has')->andReturn(true);
 
         $status = (new SchedulerHealthCheck($this->app))->status();

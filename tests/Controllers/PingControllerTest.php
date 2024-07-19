@@ -13,18 +13,12 @@ class PingControllerTest extends TestCase
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
     }
 
-    /**
-     * @test
-     */
-    public function returns_pong()
+    public function testReturnsPong()
     {
         $this->assertSame('pong', (new PingController)->__invoke());
     }
 
-    /**
-     * @test
-     */
-    public function overrides_default_path()
+    public function testOverridesDefaultPath()
     {
         config([
             'healthcheck.route-paths.ping' => '/pingz',

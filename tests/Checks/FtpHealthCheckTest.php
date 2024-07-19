@@ -10,10 +10,7 @@ use Mockery as m;
 
 class FtpHealthCheckTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function shows_problem_when_cant_connect_to_ftp_server()
+    public function testShowsProblemWhenCantConnectToFtpServer()
     {
         $ftp = m::mock(Ftp::class)
             ->expects('getConnection')
@@ -27,10 +24,7 @@ class FtpHealthCheckTest extends TestCase
         m::close();
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_when_can_connect_to_ftp_server()
+    public function testShowsOkayWhenCanConnectToFtpServer()
     {
         $ftp = m::mock(Ftp::class)
             ->expects('getConnection')

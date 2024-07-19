@@ -14,10 +14,7 @@ class CacheHealthCheckTest extends TestCase
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_cannot_write_to_cache()
+    public function testShowsProblemIfCannotWriteToCache()
     {
         config([
             'healthcheck.cache.stores' => [
@@ -32,10 +29,7 @@ class CacheHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_incorrect_read_from_cache()
+    public function testShowsProblemIfIncorrectReadFromCache()
     {
         config([
             'healthcheck.cache.stores' => [
@@ -52,17 +46,14 @@ class CacheHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_can_write_to_cache()
+    public function showsOkayIfCanWriteToCache()
     {
         config([
             'healthcheck.cache.stores' => [
                 'array'
             ]
         ]);
-        
+
         $status = (new CacheHealthCheck($this->app))->status();
 
         $this->assertTrue($status->isOkay());

@@ -15,10 +15,7 @@ class DatabaseHealthCheckTest extends TestCase
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_when_cant_connect_to_db()
+    public function testShowsProblemWhenCantConnectToDb()
     {
         config([
             'healthcheck.database.connections' => ['default'],
@@ -32,10 +29,7 @@ class DatabaseHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_when_can_connect_to_db()
+    public function testShowsOkayWhenCanConnectToDb()
     {
         config([
             'healthcheck.database.connections' => ['default'],
@@ -49,10 +43,7 @@ class DatabaseHealthCheckTest extends TestCase
         $this->assertTrue($status->isOkay());
     }
 
-    /**
-     * @test
-     */
-    public function shows_which_connection_failed()
+    public function testShowsWhichConnectionFailed()
     {
         config([
             'healthcheck.database.connections' => ['healthy', 'bad'],
@@ -106,7 +97,7 @@ class DatabaseManager extends \Illuminate\Database\DatabaseManager
         if (!$name) {
             return $this->connection('default');
         }
-        
+
         if (!isset($this->connections[$name])) {
             throw new \InvalidArgumentException("Database [$name] not configured.");
         }

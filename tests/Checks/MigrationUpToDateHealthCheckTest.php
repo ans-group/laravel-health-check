@@ -53,11 +53,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
             ->willReturn($this->migratorMock);
     }
 
-    /**
-     * @test
-     * @return void
-     */
-    public function can_return_false_when_schema_is_outdated()
+    public function testCanReturnFalseWhenSchemaIsOutdated()
     {
         $this->prepare();
         $this->migratorMock->expects($this->once())
@@ -76,11 +72,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
 
     }
 
-    /**
-     * @test
-     * @return void
-     */
-    public function can_return_false_when_ran_migration_could_not_be_retrieved()
+    public function testCanReturnFalseWhenRanMigrationCouldNotBeRetrieved()
     {
         $this->prepare();
         $this->migratorMock->expects($this->once())
@@ -100,11 +92,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
         $this->assertFalse($this->healthCheck->status()->isOkay());
     }
 
-    /**
-     * @test
-     * @return void
-     */
-    public function can_return_true_when_migrations_are_upToDate()
+    public function testCanReturnTrueWhenMigrationsAreUpToDate()
     {
         $this->prepare();
         $this->migratorMock->expects($this->once())

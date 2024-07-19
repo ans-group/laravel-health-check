@@ -27,19 +27,13 @@ class PackageSecurityHealthCheckTest extends TestCase
         return $this->instance($abstract, Mockery::mock(...array_filter(func_get_args()))->makePartial());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_required_package_not_loaded()
+    public function testShowsProblemIfRequiredPackageNotLoaded()
     {
         $status = (new PackageSecurityHealthCheck($this->app))->status();
 
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
     public function shows_problem_if_cannot_check_packages()
     {
         $this->partialMock('overload:SensioLabs\Security\SecurityChecker', function ($mock) {
@@ -51,10 +45,7 @@ class PackageSecurityHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_package_has_vulnerability()
+    public function testShowsProblemIfPackageHasVulnerability()
     {
         $this->partialMock('overload:SensioLabs\Security\SecurityChecker', function ($mock) {
             $mock->shouldReceive('check')
@@ -66,10 +57,7 @@ class PackageSecurityHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function ignores_package_if_in_config()
+    public function testIgnoresPackageIfInConfig()
     {
         config([
             'healthcheck.package-security.ignore' => [
@@ -87,10 +75,7 @@ class PackageSecurityHealthCheckTest extends TestCase
         $this->assertTrue($status->isOkay());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_no_packages_have_vulnerabilities()
+    public function testShowsOkayIfNoPackagesHaveVulnerabilities()
     {
         $this->partialMock('overload:SensioLabs\Security\SecurityChecker', function ($mock) {
             $mock->shouldReceive('check')

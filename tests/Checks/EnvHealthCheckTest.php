@@ -12,10 +12,7 @@ class EnvHealthCheckTest extends TestCase
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_missing_a_dotenv_file()
+    public function testShowsProblemIfMissingADotenvFile()
     {
         putenv('REDIS_HOST=here');
         putenv('MYSQL_HOST=here');
@@ -28,11 +25,7 @@ class EnvHealthCheckTest extends TestCase
 
         $this->assertTrue($status->isProblem());
     }
-
-    /**
-     * @test
-     */
-    public function shows_okay_if_all_required_env_params_are_present()
+ function testShowsOkayIfAllRequiredEnvParamsArePresent()
     {
         putenv('REDIS_HOST=here');
         putenv('MYSQL_HOST=here');
@@ -47,10 +40,7 @@ class EnvHealthCheckTest extends TestCase
         $this->assertTrue($status->isOkay());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_required_env_param_is_present_but_null()
+    public function testShowsOkayIfRequiredEnvParamIsPresentButNull()
     {
         putenv('REDIS_PASSWORD=null');
 

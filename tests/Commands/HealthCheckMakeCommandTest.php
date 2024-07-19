@@ -14,11 +14,8 @@ class HealthCheckMakeCommandTest extends TestCase
         return [HealthCheckServiceProvider::class];
     }
 
-    /**
-     * @test
-     */
-    public function creates_a_new_check()
-    {   
+    public function testCreatesANewCheck()
+    {
         $checkName = "TestCheck";
         $checkClassFile = $this->app->basePath("app/Checks/{$checkName}.php");
 
@@ -35,10 +32,7 @@ class HealthCheckMakeCommandTest extends TestCase
         unlink($checkClassFile);
     }
 
-    /**
-     * @test
-     */
-    public function php_reserved_name_check_does_not_get_created()
+    public function testPhpReservedNameCheckDoesNotGetCreated()
     {
         if (!property_exists(GeneratorCommand::class, 'reservedNames')) {
             $this->markTestSkipped('GeneratorCommand does not support reservedNames.');

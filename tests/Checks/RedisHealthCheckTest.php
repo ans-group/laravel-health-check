@@ -17,10 +17,7 @@ class RedisHealthCheckTest extends TestCase
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_can_ping_predis()
+    public function testShowsOkayIfCanPingPredis()
     {
         Config::set("database.redis.client", "predis");
 
@@ -39,10 +36,7 @@ class RedisHealthCheckTest extends TestCase
         $this->assertTrue($status->isOkay());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_cannot_ping_predis()
+    public function testShowsProblemIfCannotPingPredis()
     {
         Config::set("database.redis.client", "predis");
 
@@ -61,10 +55,7 @@ class RedisHealthCheckTest extends TestCase
         $this->assertFalse($status->isOkay());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_cannot_ping_predis_cluster()
+    public function testShowsOkayIfCannotPingPredisCluster()
     {
         Config::set("database.redis.client", "predis");
 
@@ -83,10 +74,7 @@ class RedisHealthCheckTest extends TestCase
         $this->assertTrue($status->isOkay());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_cannot_ping_predis_cluster()
+    public function testShowsProblemIfCannotPingPredisCluster()
     {
         Config::set("database.redis.client", "predis");
 
@@ -107,10 +95,8 @@ class RedisHealthCheckTest extends TestCase
 
     /**
      * Scenario: phpredis connection for single instance is healthy
-     *
-     * @test
      */
-    public function shows_okay_if_can_ping_phpredis()
+    public function testShowsOkayIfCanPingPhpredis()
     {
         Config::set("database.redis.client", "phpredis");
 
@@ -137,10 +123,8 @@ class RedisHealthCheckTest extends TestCase
 
     /**
      * Scenerio: phpredis connection for single instance is not healthy
-     *
-     * @test
      */
-    public function shows_problem_if_cannot_ping_phpredis()
+    public function testShowsProblemIfCannotPingPhpredis()
     {
         Config::set("database.redis.client", "phpredis");
 
@@ -167,10 +151,8 @@ class RedisHealthCheckTest extends TestCase
 
     /**
      * Scenario: phpredis connection to cluster with 3 masters that are all healthy
-     *
-     * @test
      */
-    public function shows_okay_if_can_ping_phpredis_cluster()
+    public function testShowsOkayIfCanPingPhpredisCluster()
     {
         Config::set("database.redis.client", "phpredis");
 
@@ -213,10 +195,8 @@ class RedisHealthCheckTest extends TestCase
 
     /**
      * Scenario: phpredis connection to cluster with 3 masters; first is unhealthy
-     *
-     * @test
      */
-    public function shows_problem_if_cannot_ping_first_phpredis_cluster_master()
+    public function testShowsProblemIfCannotPingFirstPhpredisClusterMaster()
     {
         Config::set("database.redis.client", "phpredis");
 
@@ -259,7 +239,7 @@ class RedisHealthCheckTest extends TestCase
      * Scenario: phpredis connection to cluster with 3 masters; last is unhealthy
      */
 
-    public function test_shows_problem_if_cannot_ping_third_phpredis_cluster_master()
+    public function testShowsProblemIfCannotPingThirdPhpredisClusterMaster()
     {
         Config::set("database.redis.client", "phpredis");
 

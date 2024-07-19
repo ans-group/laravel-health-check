@@ -10,10 +10,7 @@ use UKFast\HealthCheck\Middleware\AddHeaders;
 
 class AddHeadersTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function adds_headers_for_each_check()
+    public function testAddsHeadersForEachCheck()
     {
         $this->app->bind('app-health', function () {
             return new AppHealth(collect([

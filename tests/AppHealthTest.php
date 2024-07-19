@@ -8,10 +8,7 @@ use UKFast\HealthCheck\HealthCheck;
 
 class AppHealthTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function can_see_if_a_check_passes_by_name()
+    public function testCanSeeIfACheckPassesByName()
     {
         $appHealth = new AppHealth(collect([new AlwaysUpCheck, new AlwaysDownCheck]));
 
@@ -19,34 +16,25 @@ class AppHealthTest extends TestCase
         $this->assertFalse($appHealth->passes('always-down'));
     }
 
-    /**
-     * @test
-     */
-    public function can_see_if_a_check_fails_by_name()
+    public function testCanSeeIfACheckFailsByName()
     {
         $appHealth = new AppHealth(collect([new AlwaysUpCheck, new AlwaysDownCheck]));
 
         $this->assertFalse($appHealth->fails('always-up'));
-        $this->assertTrue($appHealth->fails('always-down')); 
+        $this->assertTrue($appHealth->fails('always-down'));
     }
 
-    /**
-     * @test
-     */
-    public function returns_false_if_check_throws_exception()
+    public function testReturnsFalseIfCheckThrowsException()
     {
         $appHealth = new AppHealth(collect([new UnreliableCheck]));
 
         $this->assertFalse($appHealth->passes('unreliable'));
     }
 
-    /**
-     * @test
-     */
-    public function throws_exception_if_check_does_not_exist()
+    public function testThrowsExceptionIfCheckDoesNotExist()
     {
         $appHealth = new AppHealth(collect([new AlwaysUpCheck, new AlwaysDownCheck]));
-    
+
         $this->expectException(CheckNotFoundException::class);
 
         $appHealth->passes('does-not-exist');

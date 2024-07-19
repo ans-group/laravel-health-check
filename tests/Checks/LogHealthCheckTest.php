@@ -13,10 +13,7 @@ class LogHealthCheckTest extends TestCase
         return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_cannot_write_to_logs()
+    public function testShowsProblemIfCannotWriteToLogs()
     {
         $this->app->bind('log', function () {
             return new BadLogger;
@@ -26,10 +23,7 @@ class LogHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_can_write_to_logs()
+    public function testShowsOkayIfCanWriteToLogs()
     {
         $this->app->bind('log', function () {
             return new NullLogger;

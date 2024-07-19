@@ -8,10 +8,7 @@ use UKFast\HealthCheck\Facade\HealthCheck;
 
 class HealthCheckTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function can_use_app_health_from_facade()
+    public function testCanUseAppHealthFromFacade()
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
