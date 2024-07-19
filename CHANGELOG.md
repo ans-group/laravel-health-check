@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dropped support for < Laravel 10 **(breaking change)**
 - The `context` property for `UKFast\HealthCheck\Checks\CrossServiceHealthCheck` is now an array, not a string, matching other checks **(breaking change)**
 
+### Fixed
+
+- Fix PackageSecurityHealthCheck by using the `enlightn/security-checker` package instead of the archived `sensiolabs/security-checker` package **(breaking change)**
+
 ## [1.15.0] - 2024-07-17
 
 ### Added

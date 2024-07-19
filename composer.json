@@ -57,6 +57,7 @@
     "require": {
         "php": "^8.1",
         "ext-json": "*",
+        "enlightn/security-checker": "^2.0",
         "illuminate/console": "^10.0|^11.0",
         "illuminate/http": "^10.0|^11.0",
         "illuminate/support": "^10.0|^11.0"
@@ -76,6 +77,6 @@
         "illuminate/redis": "Allows the redis health check to function.",
         "league/flysystem": "Allows the ftp health check to function.",
         "guzzlehttp/guzzle": "Allows the http health check to function.",
-        "sensiolabs/security-checker": "Allows the package security health check to function."
+        "enlightn/security-checker": "Allows the package security health check to function."
     }
 }

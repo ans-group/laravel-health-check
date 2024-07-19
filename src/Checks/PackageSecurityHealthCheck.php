@@ -4,7 +4,7 @@ namespace UKFast\HealthCheck\Checks;
 
 use Exception;
 use Illuminate\Support\Collection;
-use SensioLabs\Security\SecurityChecker;
+use Enlightn\SecurityChecker\SecurityChecker;
 use UKFast\HealthCheck\HealthCheck;
 use UKFast\HealthCheck\Status;
 
@@ -22,23 +22,33 @@ class PackageSecurityHealthCheck extends HealthCheck
         $this->vulnerablePackages = collect();
     }
 
-    public static function checkDependency(): bool
+    /**
+     * @param class-string $class
+     */
+    public static function checkDependency(string $class): bool
     {
-        return class_exists(SecurityChecker::class);
+        return class_exists($class);
     }
 
     public function status(): Status
     {
         try {
-            if (! static::checkDependency()) {
-                throw new Exception('You need to install the sensiolabs/security-checker package to use this check.');
+            if (! static::checkDependency(SecurityChecker::class)) {
+                if (static::checkDependency('SensioLabs\Security\SecurityChecker')) {
+                    throw new Exception('The sensiolabs/security-checker package has been archived. Install enlightn/security-checker instead.');
+                }
+                throw new Exception('You need to install the enlightn/security-checker package to use this check.');
             }
 
             $checker = new SecurityChecker();
-            $result = $checker->check(base_path('composer.lock'), 'json');
+            $result = $checker->check(
+                base_path('composer.lock'),
+                config('healthcheck.package-security.exclude-dev', false),
+            );
 
-            if ($result->count() > 0) {
-                $vulnerabilities = collect(json_decode((string) $result, true));
+            $vulnerabilities = collect($result);
+
+            if ($vulnerabilities->count() > 0) {
                 $this->vulnerablePackages = $vulnerabilities->reject(function ($vulnerability, $package) {
                     return in_array($package, config('healthcheck.package-security.ignore'));
                 });
