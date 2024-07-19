@@ -6,20 +6,15 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use UKFast\HealthCheck\HealthCheck;
+use UKFast\HealthCheck\Status;
 
 class CrossServiceHealthCheck extends HealthCheck
 {
-    protected $name = 'x-service-checks';
+    protected string $name = 'x-service-checks';
 
-    /**
-     * @var \GuzzleHttp\Client
-     */
-    protected $http;
+    protected Client $http;
 
-    /**
-     * @var \Illuminate\Http\Request
-     */
-    protected $request;
+    protected Request $request;
 
     public function __construct(Client $http, Request $request)
     {
@@ -27,10 +22,7 @@ class CrossServiceHealthCheck extends HealthCheck
         $this->request = $request;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function status()
+    public function status(): Status
     {
         if ($this->request->headers->has('X-Service-Check')) {
             return $this->okay('Skipped, X-Service-Check header is present');

@@ -6,12 +6,13 @@ use Illuminate\Redis\Connections\PhpRedisClusterConnection;
 use Illuminate\Support\Facades\Redis;
 use UKFast\HealthCheck\HealthCheck;
 use Exception;
+use UKFast\HealthCheck\Status;
 
 class RedisHealthCheck extends HealthCheck
 {
-    protected $name = 'redis';
+    protected string $name = 'redis';
 
-    public function status()
+    public function status(): Status
     {
         try {
             if ($this->isUsingPhpRedis()) {
@@ -28,12 +29,12 @@ class RedisHealthCheck extends HealthCheck
         return $this->okay();
     }
 
-    protected function isUsingPhpRedis()
+    protected function isUsingPhpRedis(): bool
     {
         return config('database.redis.client') == 'phpredis';
     }
 
-    protected function handlePhpRedisPing()
+    protected function handlePhpRedisPing(): void
     {
         $redis = Redis::connection();
 

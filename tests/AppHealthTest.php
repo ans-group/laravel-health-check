@@ -45,7 +45,7 @@ class AppHealthTest extends TestCase
 
 class AlwaysUpCheck extends HealthCheck
 {
-    protected $name = 'always-up';
+    protected string $name = 'always-up';
 
     public function status(): Status
     {
@@ -55,7 +55,7 @@ class AlwaysUpCheck extends HealthCheck
 
 class AlwaysDownCheck extends HealthCheck
 {
-    protected $name = 'always-down';
+    protected string $name = 'always-down';
 
     public function status(): Status
     {
@@ -68,7 +68,7 @@ class AlwaysDownCheck extends HealthCheck
 
 class UnreliableCheck extends HealthCheck
 {
-    protected $name = 'unreliable';
+    protected string $name = 'unreliable';
 
     /**
      * @throws RuntimeException

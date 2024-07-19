@@ -3,21 +3,27 @@
 namespace UKFast\HealthCheck\Checks;
 
 use Exception;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Container\Container;
+use Psr\Log\LoggerInterface;
 use UKFast\HealthCheck\HealthCheck;
+use UKFast\HealthCheck\Status;
 
 class LogHealthCheck extends HealthCheck
 {
-    protected $name = 'log';
+    protected string $name = 'log';
 
-    protected $logger;
+    protected LoggerInterface $logger;
 
+    /**
+     * @throws BindingResolutionException
+     */
     public function __construct(Container $container)
     {
         $this->logger = $container->make('log');
     }
 
-    public function status()
+    public function status(): Status
     {
         try {
             $this->logger->info('Checking if logs are writable');

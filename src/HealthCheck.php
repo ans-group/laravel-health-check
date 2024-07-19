@@ -6,16 +6,16 @@ use Exception;
 
 abstract class HealthCheck
 {
-    protected $name;
+    protected string $name;
 
-    abstract public function status();
+    abstract public function status(): Status;
 
-    public function name()
+    public function name(): string
     {
         return $this->name;
     }
 
-    public function problem($message = '', $context = [])
+    public function problem($message = '', $context = []): Status
     {
         return (new Status)
             ->problem($message)
@@ -23,7 +23,7 @@ abstract class HealthCheck
             ->withName($this->name());
     }
 
-    public function degraded($message = '', $context = [])
+    public function degraded($message = '', $context = []): Status
     {
         return (new Status)
             ->degraded($message)
@@ -31,7 +31,7 @@ abstract class HealthCheck
             ->withName($this->name());
     }
 
-    public function okay($context = [])
+    public function okay($context = []): Status
     {
         return (new Status)
             ->okay()
@@ -39,7 +39,10 @@ abstract class HealthCheck
             ->withName($this->name());
     }
 
-    protected function exceptionContext(Exception $e)
+    /**
+     * @return array<string, string|array|int>
+     */
+    protected function exceptionContext(Exception $e): array
     {
         return [
             'error' => $e->getMessage(),

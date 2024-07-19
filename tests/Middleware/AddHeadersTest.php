@@ -32,7 +32,7 @@ class AddHeadersTest extends TestCase
 
 class AlwaysUpCheck extends HealthCheck
 {
-    protected $name = 'always-up';
+    protected string $name = 'always-up';
 
     public function status(): Status
     {
@@ -42,7 +42,7 @@ class AlwaysUpCheck extends HealthCheck
 
 class AlwaysDownCheck extends HealthCheck
 {
-    protected $name = 'always-down';
+    protected string $name = 'always-down';
 
     public function status(): Status
     {
