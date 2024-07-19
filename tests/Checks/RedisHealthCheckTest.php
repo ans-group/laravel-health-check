@@ -2,13 +2,13 @@
 
 namespace Tests\Checks;
 
-use Tests\TestCase;
-use Illuminate\Redis\RedisManager;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redis;
+use Tests\Stubs\Redis\Connections\PhpRedisClusterConnection;
+use Tests\Stubs\Redis\Connections\PhpRedisConnection;
+use Tests\Stubs\Redis\RedisManager;
+use Tests\TestCase;
 use UKFast\HealthCheck\Checks\RedisHealthCheck;
-use Illuminate\Redis\Connections\PhpRedisConnection;
-use Illuminate\Redis\Connections\PhpRedisClusterConnection;
 
 class RedisHealthCheckTest extends TestCase
 {
@@ -25,13 +25,13 @@ class RedisHealthCheckTest extends TestCase
         Config::set("database.redis.client", "predis");
 
         $redis = $this->getMockBuilder(RedisManager::class)
-            ->setMethods(['ping'])
+            ->onlyMethods(['ping'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $redis->expects($this->exactly(1))
             ->method('ping')
-            ->willReturn(null);
+            ->willReturn('pong');
 
         Redis::swap($redis);
 
@@ -47,7 +47,7 @@ class RedisHealthCheckTest extends TestCase
         Config::set("database.redis.client", "predis");
 
         $redis = $this->getMockBuilder(RedisManager::class)
-            ->setMethods(['ping'])
+            ->onlyMethods(['ping'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -69,13 +69,13 @@ class RedisHealthCheckTest extends TestCase
         Config::set("database.redis.client", "predis");
 
         $redis = $this->getMockBuilder(RedisManager::class)
-            ->setMethods(['ping'])
+            ->onlyMethods(['ping'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $redis->expects($this->exactly(1))
             ->method('ping')
-            ->willReturn(null);
+            ->willReturn(false);
 
         Redis::swap($redis);
 
@@ -91,7 +91,7 @@ class RedisHealthCheckTest extends TestCase
         Config::set("database.redis.client", "predis");
 
         $redis = $this->getMockBuilder(RedisManager::class)
-            ->setMethods(['ping'])
+            ->onlyMethods(['ping'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -115,13 +115,13 @@ class RedisHealthCheckTest extends TestCase
         Config::set("database.redis.client", "phpredis");
 
         $redisConn = $this->getMockBuilder(PhpRedisConnection::class)
-            ->setMethods(['ping'])
+            ->onlyMethods(['ping'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $redisConn->expects($this->exactly(1))
             ->method('ping')
-            ->willReturn(null);
+            ->willReturn('pong');
 
         $redis = $this->createMock(RedisManager::class);
 
@@ -145,7 +145,7 @@ class RedisHealthCheckTest extends TestCase
         Config::set("database.redis.client", "phpredis");
 
         $redisConn = $this->getMockBuilder(PhpRedisConnection::class)
-            ->setMethods(['ping'])
+            ->onlyMethods(['ping'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -175,7 +175,7 @@ class RedisHealthCheckTest extends TestCase
         Config::set("database.redis.client", "phpredis");
 
         $redisConn = $this->getMockBuilder(PhpRedisClusterConnection::class)
-            ->setMethods(['ping', '_masters'])
+            ->onlyMethods(['ping', '_masters'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -187,14 +187,17 @@ class RedisHealthCheckTest extends TestCase
                 ['master3', '6379'],
             ]);
 
-        $redisConn->expects($this->exactly(3))
+        $matcher = $this->exactly(3);
+        $redisConn->expects($matcher)
             ->method('ping')
-            ->withConsecutive(
-                [['master1', '6379']], 
-                [['master2', '6379']], 
-                [['master3', '6379']]
-            )
-            ->willReturn(null);
+            ->willReturnCallback(function () use ($matcher) {
+                return match ($matcher->numberOfInvocations()) {
+                    1 => [['master1', '6379']],
+                    2 => [['master2', '6379']],
+                    3 => [['master3', '6379']],
+                };
+            })
+            ->willReturn('pong');
 
         $redis = $this->createMock(RedisManager::class);
 
@@ -218,7 +221,7 @@ class RedisHealthCheckTest extends TestCase
         Config::set("database.redis.client", "phpredis");
 
         $redisConn = $this->getMockBuilder(PhpRedisClusterConnection::class)
-            ->setMethods(['ping', '_masters'])
+            ->onlyMethods(['ping', '_masters'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -230,9 +233,14 @@ class RedisHealthCheckTest extends TestCase
                 ['master3', '6379'],
             ]);
 
-        $redisConn->expects($this->exactly(1))
+        $matcher = $this->exactly(1);
+        $redisConn->expects($matcher)
             ->method('ping')
-            ->withConsecutive([['master1', '6379']])
+            ->willReturnCallback(function() use ($matcher) {
+                return match ($matcher->numberOfInvocations()) {
+                    1 => [['master1', '6379']],
+                };
+            })
             ->willThrowException(new \Exception("cannot connect to master1:6379"));
 
         $redis = $this->createMock(RedisManager::class);
@@ -249,15 +257,14 @@ class RedisHealthCheckTest extends TestCase
 
     /**
      * Scenario: phpredis connection to cluster with 3 masters; last is unhealthy
-     *
-     * @test
      */
-    public function shows_problem_if_cannot_ping_third_phpredis_cluster_master()
+
+    public function test_shows_problem_if_cannot_ping_third_phpredis_cluster_master()
     {
         Config::set("database.redis.client", "phpredis");
 
         $redisConn = $this->getMockBuilder(PhpRedisClusterConnection::class)
-            ->setMethods(['ping', '_masters'])
+            ->onlyMethods(['ping', '_masters'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -269,19 +276,15 @@ class RedisHealthCheckTest extends TestCase
                 ['master3', '6379'],
             ]);
 
-        $redisConn->expects($this->exactly(3))
+        $matcher = $this->exactly(3);
+        $redisConn->expects($matcher)
             ->method('ping')
-            ->withConsecutive(
-                [['master1', '6379']], 
-                [['master2', '6379']], 
-                [['master3', '6379']]
-            )
-            ->willReturnCallback(function($node) {
-                if($node[0] == 'master3') {
-                    throw new \Exception("cannot connect to master3:6379");
-                }
-
-                return null;
+            ->willReturnCallback(function () use ($matcher) {
+                return match ($matcher->numberOfInvocations()) {
+                    1 => 'pong',
+                    2 => 'pong',
+                    3 => throw new \Exception("cannot connect to master3:6379"),
+                };
             });
 
         $redis = $this->createMock(RedisManager::class);

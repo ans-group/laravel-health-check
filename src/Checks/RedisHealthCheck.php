@@ -39,11 +39,11 @@ class RedisHealthCheck extends HealthCheck
 
         if (! $redis instanceof PhpRedisClusterConnection) {
             $redis->ping();
-            
+
             return;
         }
 
-        
+
         foreach ($redis->_masters() as $master) {
             $redis->ping($master);
         }

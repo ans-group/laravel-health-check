@@ -29,10 +29,10 @@ class MigrationUpToDateHealthCheckTest extends TestCase
     public function prepare()
     {
         $this->healthCheck = $this->getMockBuilder(MigrationUpToDateHealthCheck::class)
-            ->setMethods(['getMigrator', 'getMigrationPath'])->getMock();
+            ->onlyMethods(['getMigrator', 'getMigrationPath'])->getMock();
 
         $this->migratorMock = $this->getMockBuilder(Migrator::class)
-            ->setMethods(['getRepository','repositoryExists','getMigrationFiles'])
+            ->onlyMethods(['getRepository','repositoryExists','getMigrationFiles'])
             ->disableOriginalConstructor()
             ->getMock();
 
