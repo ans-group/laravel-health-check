@@ -25,7 +25,9 @@ class CrossServiceHealthCheck extends HealthCheck
     public function status(): Status
     {
         if ($this->request->headers->has('X-Service-Check')) {
-            return $this->okay('Skipped, X-Service-Check header is present');
+            return $this->okay([
+                'message' => 'Skipped, X-Service-Check header is present',
+            ]);
         }
 
         $failedServices = [];

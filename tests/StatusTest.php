@@ -24,9 +24,16 @@ class StatusTest extends TestCase
 
     public function testCanInjectAContext(): void
     {
-        $status = (new Status)->withContext('arbitrary context');
+        $status = (new Status)->withContext([
+            'context' => 'arbitrary context',
+        ]);
 
-        $this->assertSame('arbitrary context', $status->context());
+        $this->assertSame(
+            [
+                'context' => 'arbitrary context',
+            ],
+            $status->context()
+        );
     }
 
     public function testCanSetANameForAStatus(): void
