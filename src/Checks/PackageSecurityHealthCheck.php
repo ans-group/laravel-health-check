@@ -48,7 +48,7 @@ class PackageSecurityHealthCheck extends HealthCheck
 
             $vulnerabilities = collect($result);
 
-            if ($vulnerabilities->count() > 0) {
+            if ($vulnerabilities->isNotEmpty()) {
                 $this->vulnerablePackages = $vulnerabilities->reject(function ($vulnerability, $package) {
                     return in_array($package, config('healthcheck.package-security.ignore'));
                 });
