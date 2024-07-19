@@ -26,7 +26,7 @@ jobs:
                     - php_version: 8.3
                       laravel_version: 11
 
-        name: PHP${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }} - ubuntu-latest
+        name: PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }} - ubuntu-latest
 
         steps:
             - name: Checkout code
@@ -42,8 +42,8 @@ jobs:
               run: |
                   rm -f composer.lock
                   sudo composer self-update
-                  composer install
                   composer require laravel/framework:^${{ matrix.environment.laravel_version }}.0 -W
+                  composer install
 
             - name: Execute tests
               run: vendor/bin/phpunit
