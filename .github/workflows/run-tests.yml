@@ -43,7 +43,7 @@ jobs:
                   rm -f composer.lock
                   sudo composer self-update
                   composer install
-                  composer require laravel/framework:^${{ matrix.environment.laravel_version }}.0
+                  composer require laravel/framework:^${{ matrix.environment.laravel_version }}.0 -W
 
             - name: Execute tests
               run: vendor/bin/phpunit
