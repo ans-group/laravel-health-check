@@ -3,18 +3,24 @@
 namespace Tests\Checks;
 
 use Exception;
+use Illuminate\Foundation\Application;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
 use UKFast\HealthCheck\Checks\SchedulerHealthCheck;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class SchedulerHealthCheckTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    public function testShowsProblemIfNoItemFoundInCache()
+    public function testShowsProblemIfNoItemFoundInCache(): void
     {
         config([
             'healthcheck.scheduler.cache-key' => 'laravel-scheduler-health-check',
@@ -29,7 +35,7 @@ class SchedulerHealthCheckTest extends TestCase
         $this->assertEquals('Scheduler has not ran in the last 5 minutes', $status->message());
     }
 
-    public function testShowsOkayIfItemFoundInCache()
+    public function testShowsOkayIfItemFoundInCache(): void
     {
         config([
             'healthcheck.scheduler.cache-key' => 'laravel-scheduler-health-check',

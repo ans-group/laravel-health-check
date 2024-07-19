@@ -10,23 +10,14 @@ use UKFast\HealthCheck\Checks\MigrationUpToDateHealthCheck;
 
 class MigrationUpToDateHealthCheckTest extends TestCase
 {
-    /**
-     * @var MigrationUpToDateHealthCheck|MockObject
-     */
-    protected $healthCheck;
+    protected MockObject $healthCheck;
 
-    /**
-     * @var Migrator|MockObject
-     */
-    protected $migratorMock;
+    protected MockObject $migratorMock;
 
-    /**
-     * @var MigrationRepositoryInterface|MockObject
-     */
-    protected $migrationRepositoryMock;
+    protected MockObject $migrationRepositoryMock;
 
 
-    public function prepare()
+    public function prepare(): void
     {
         $this->healthCheck = $this->getMockBuilder(MigrationUpToDateHealthCheck::class)
             ->onlyMethods(['getMigrator', 'getMigrationPath'])->getMock();
@@ -53,7 +44,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
             ->willReturn($this->migratorMock);
     }
 
-    public function testCanReturnFalseWhenSchemaIsOutdated()
+    public function testCanReturnFalseWhenSchemaIsOutdated(): void
     {
         $this->prepare();
         $this->migratorMock->expects($this->once())
@@ -72,7 +63,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
 
     }
 
-    public function testCanReturnFalseWhenRanMigrationCouldNotBeRetrieved()
+    public function testCanReturnFalseWhenRanMigrationCouldNotBeRetrieved(): void
     {
         $this->prepare();
         $this->migratorMock->expects($this->once())
@@ -92,7 +83,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
         $this->assertFalse($this->healthCheck->status()->isOkay());
     }
 
-    public function testCanReturnTrueWhenMigrationsAreUpToDate()
+    public function testCanReturnTrueWhenMigrationsAreUpToDate(): void
     {
         $this->prepare();
         $this->migratorMock->expects($this->once())

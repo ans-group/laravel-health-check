@@ -13,7 +13,7 @@ use UKFast\HealthCheck\Status;
 
 class StatusCommandTest extends TestCase
 {
-    public function testRunningCommandStatus()
+    public function testRunningCommandStatus(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
@@ -31,7 +31,7 @@ class StatusCommandTest extends TestCase
         }
     }
 
-    public function testRunningCommandStatusWithOnlyOption()
+    public function testRunningCommandStatusWithOnlyOption(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
@@ -48,7 +48,7 @@ class StatusCommandTest extends TestCase
         }
     }
 
-    public function testRunningCommandStatusWithExceptOption()
+    public function testRunningCommandStatusWithExceptOption(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class, DatabaseHealthCheck::class]]);
@@ -66,7 +66,7 @@ class StatusCommandTest extends TestCase
         }
     }
 
-    public function testRunningCommandStatusWithOnlyAndExceptOption()
+    public function testRunningCommandStatusWithOnlyAndExceptOption(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
@@ -80,7 +80,7 @@ class StatusCommandTest extends TestCase
             $this->assertTrue(true);
         }
     }
-    public function testRunningCommandStatusWithFailureCondition()
+    public function testRunningCommandStatusWithFailureCondition(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
@@ -99,7 +99,7 @@ class StatusCommandTest extends TestCase
         }
     }
 
-    private function mockLogHealthCheck(Status $status)
+    private function mockLogHealthCheck(Status $status): void
     {
         $this->instance(
             LogHealthCheck::class,

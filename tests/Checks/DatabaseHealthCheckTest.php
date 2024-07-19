@@ -5,17 +5,25 @@ namespace Tests\Checks;
 use Exception;
 use Illuminate\Database\Connection;
 use Illuminate\Database\ConnectionResolver;
+use Illuminate\Database\DatabaseManager as IlluminateDatabaseManager;
+use Illuminate\Foundation\Application;
+use InvalidArgumentException;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\DatabaseHealthCheck;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class DatabaseHealthCheckTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    public function testShowsProblemWhenCantConnectToDb()
+    public function testShowsProblemWhenCantConnectToDb(): void
     {
         config([
             'healthcheck.database.connections' => ['default'],
@@ -29,7 +37,7 @@ class DatabaseHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    public function testShowsOkayWhenCanConnectToDb()
+    public function testShowsOkayWhenCanConnectToDb(): void
     {
         config([
             'healthcheck.database.connections' => ['default'],
@@ -43,7 +51,7 @@ class DatabaseHealthCheckTest extends TestCase
         $this->assertTrue($status->isOkay());
     }
 
-    public function testShowsWhichConnectionFailed()
+    public function testShowsWhichConnectionFailed(): void
     {
         config([
             'healthcheck.database.connections' => ['healthy', 'bad'],
@@ -66,7 +74,7 @@ class HealthyConnection extends Connection
     {
     }
 
-    public function getPdo()
+    public function getPdo(): bool
     {
         return true;
     }
@@ -78,13 +86,16 @@ class BadConnection extends Connection
     {
     }
 
-    public function getPdo()
+    /**
+     * @throws Exception
+     */
+    public function getPdo(): never
     {
         throw new Exception;
     }
 }
 
-class DatabaseManager extends \Illuminate\Database\DatabaseManager
+class DatabaseManager extends IlluminateDatabaseManager
 {
     protected $connections = [];
 
@@ -92,6 +103,9 @@ class DatabaseManager extends \Illuminate\Database\DatabaseManager
     {
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function connection($name = null)
     {
         if (!$name) {
@@ -99,7 +113,7 @@ class DatabaseManager extends \Illuminate\Database\DatabaseManager
         }
 
         if (!isset($this->connections[$name])) {
-            throw new \InvalidArgumentException("Database [$name] not configured.");
+            throw new InvalidArgumentException("Database [$name] not configured.");
         }
 
         return $this->connections[$name];

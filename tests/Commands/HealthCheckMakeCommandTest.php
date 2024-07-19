@@ -3,18 +3,23 @@
 namespace Tests\Commands;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\File;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 use Tests\TestCase;
 
 class HealthCheckMakeCommandTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
         return [HealthCheckServiceProvider::class];
     }
 
-    public function testCreatesANewCheck()
+    public function testCreatesANewCheck(): void
     {
         $checkName = "TestCheck";
         $checkClassFile = $this->app->basePath("app/Checks/{$checkName}.php");
@@ -32,7 +37,7 @@ class HealthCheckMakeCommandTest extends TestCase
         unlink($checkClassFile);
     }
 
-    public function testPhpReservedNameCheckDoesNotGetCreated()
+    public function testPhpReservedNameCheckDoesNotGetCreated(): void
     {
         if (!property_exists(GeneratorCommand::class, 'reservedNames')) {
             $this->markTestSkipped('GeneratorCommand does not support reservedNames.');

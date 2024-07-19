@@ -8,7 +8,7 @@ use UKFast\HealthCheck\Middleware\BasicAuth;
 
 class BasicAuthTest extends TestCase
 {
-    public function testOnlyShowsStatusCodeIfFailsBasicAuth()
+    public function testOnlyShowsStatusCodeIfFailsBasicAuth(): void
     {
         config([
             'healthcheck.auth.user' => 'correct-user',
@@ -28,7 +28,7 @@ class BasicAuthTest extends TestCase
         $this->assertSame(500, $response->status());
     }
 
-    public function testOnlyShowsStatusCodeIfNoAuthCredentialsArePassed()
+    public function testOnlyShowsStatusCodeIfNoAuthCredentialsArePassed(): void
     {
         config([
             'healthcheck.auth.user' => 'correct-user',
@@ -45,7 +45,7 @@ class BasicAuthTest extends TestCase
         $this->assertSame(500, $response->status());
     }
 
-    public function testShowsFullResponseIfPassesBasicAuth()
+    public function testShowsFullResponseIfPassesBasicAuth(): void
     {
         config([
             'healthcheck.auth.user' => 'correct-user',

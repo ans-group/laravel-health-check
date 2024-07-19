@@ -2,13 +2,15 @@
 
 namespace Tests;
 
+use RuntimeException;
 use UKFast\HealthCheck\AppHealth;
 use UKFast\HealthCheck\Exceptions\CheckNotFoundException;
 use UKFast\HealthCheck\HealthCheck;
+use UKFast\HealthCheck\Status;
 
 class AppHealthTest extends TestCase
 {
-    public function testCanSeeIfACheckPassesByName()
+    public function testCanSeeIfACheckPassesByName(): void
     {
         $appHealth = new AppHealth(collect([new AlwaysUpCheck, new AlwaysDownCheck]));
 
@@ -16,7 +18,7 @@ class AppHealthTest extends TestCase
         $this->assertFalse($appHealth->passes('always-down'));
     }
 
-    public function testCanSeeIfACheckFailsByName()
+    public function testCanSeeIfACheckFailsByName(): void
     {
         $appHealth = new AppHealth(collect([new AlwaysUpCheck, new AlwaysDownCheck]));
 
@@ -24,14 +26,14 @@ class AppHealthTest extends TestCase
         $this->assertTrue($appHealth->fails('always-down'));
     }
 
-    public function testReturnsFalseIfCheckThrowsException()
+    public function testReturnsFalseIfCheckThrowsException(): void
     {
         $appHealth = new AppHealth(collect([new UnreliableCheck]));
 
         $this->assertFalse($appHealth->passes('unreliable'));
     }
 
-    public function testThrowsExceptionIfCheckDoesNotExist()
+    public function testThrowsExceptionIfCheckDoesNotExist(): void
     {
         $appHealth = new AppHealth(collect([new AlwaysUpCheck, new AlwaysDownCheck]));
 
@@ -45,7 +47,7 @@ class AlwaysUpCheck extends HealthCheck
 {
     protected $name = 'always-up';
 
-    public function status()
+    public function status(): Status
     {
         return $this->okay();
     }
@@ -55,7 +57,7 @@ class AlwaysDownCheck extends HealthCheck
 {
     protected $name = 'always-down';
 
-    public function status()
+    public function status(): Status
     {
         return $this->problem('Something went wrong', [
             'debug' => 'info',
@@ -68,8 +70,11 @@ class UnreliableCheck extends HealthCheck
 {
     protected $name = 'unreliable';
 
-    public function status()
+    /**
+     * @throws RuntimeException
+     */
+    public function status(): never
     {
-        throw new \RuntimeException('Something went badly wrong');
+        throw new RuntimeException('Something went badly wrong');
     }
 }

@@ -14,7 +14,7 @@ use UKFast\HealthCheck\Checks\CrossServiceHealthCheck;
 
 class CrossServiceHealthCheckTest extends TestCase
 {
-    public function testReturnsOkayIfAllRelatedServicesAreUp()
+    public function testReturnsOkayIfAllRelatedServicesAreUp(): void
     {
         config(['healthcheck.x-service-checks' => ['http://api.example.com/health']]);
 
@@ -30,7 +30,7 @@ class CrossServiceHealthCheckTest extends TestCase
         $this->assertTrue(isset($container[0]['request']->getHeaders()['X-Service-Check']));
     }
 
-    public function testReturnsProblemIfAtLeastOneServiceIsDown()
+    public function testReturnsProblemIfAtLeastOneServiceIsDown(): void
     {
         config(['healthcheck.x-service-checks' => ['http://api.example.com/health']]);
 
@@ -46,7 +46,7 @@ class CrossServiceHealthCheckTest extends TestCase
         $this->assertTrue(isset($container[0]['request']->getHeaders()['X-Service-Check']));
     }
 
-    public function testSkipsCheckIfXServiceCheckHeaderIsPresent()
+    public function testSkipsCheckIfXServiceCheckHeaderIsPresent(): void
     {
         config(['healthcheck.x-service-checks' => ['http://api.example.com/health']]);
 
@@ -62,7 +62,7 @@ class CrossServiceHealthCheckTest extends TestCase
         $this->assertSame(0, count($container));
     }
 
-    private function mockClient($responses, &$container)
+    private function mockClient($responses, &$container): Client
     {
         $container = [];
         $history = Middleware::history($container);

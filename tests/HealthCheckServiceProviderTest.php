@@ -10,14 +10,14 @@ use URL;
 
 class HealthCheckServiceProviderTest extends TestCase
 {
-    public function testConfiguresHealthcheckPackage()
+    public function testConfiguresHealthcheckPackage(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
         $this->assertNotNull(config('healthcheck'));
     }
 
-    public function testRegistersHealthCheckRoute()
+    public function testRegistersHealthCheckRoute(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
@@ -27,7 +27,7 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertSame('{"status":"OK"}', $response->getContent());
     }
 
-    public function testRegistersPingRoute()
+    public function testRegistersPingRoute(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
@@ -37,21 +37,21 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertSame('pong', $response->getContent());
     }
 
-    public function testRegistersSchedulerHealthCheckCommand()
+    public function testRegistersSchedulerHealthCheckCommand(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
         $this->assertArrayHasKey('health-check:cache-scheduler-running', Artisan::all());
     }
 
-    public function testRegistersHealthCheckMakeCommand()
+    public function testRegistersHealthCheckMakeCommand(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
         $this->assertArrayHasKey('make:check', Artisan::all());
     }
 
-    public function testBindsAppHealth()
+    public function testBindsAppHealth(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
@@ -76,7 +76,7 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertNull($routes->match(Request::create('/health')));
     }
 
-    public function testBasePathDefaultsToNothing()
+    public function testBasePathDefaultsToNothing(): void
     {
         config(['healthcheck.base-path' => '']);
         $this->app->register(HealthCheckServiceProvider::class);
@@ -87,14 +87,14 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertNotNull($routes->match(Request::create('/health')));
     }
 
-    public function testRegisteredRouteHasAName()
+    public function testRegisteredRouteHasAName(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
         $routes = $this->app->make('router')->getRoutes();
         $this->assertEquals(config('healthcheck.route-name'), $routes->match(Request::create('/health'))->getName());
     }
 
-    public function testHealthNameCanBeUsedForRouteGeneration()
+    public function testHealthNameCanBeUsedForRouteGeneration(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 

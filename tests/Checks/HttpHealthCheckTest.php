@@ -4,17 +4,23 @@ namespace Tests\Checks;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
+use Illuminate\Foundation\Application;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\HttpHealthCheck;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class HttpHealthCheckTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    public function testShowsProblemIfResponseCodeIsIncorrect()
+    public function testShowsProblemIfResponseCodeIsIncorrect(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -38,7 +44,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    public function testShowsProblemIfConnectionIsUnreachable()
+    public function testShowsProblemIfConnectionIsUnreachable(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -62,7 +68,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    public function testShowsProblemOnConnectException()
+    public function testShowsProblemOnConnectException(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -86,7 +92,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    public function testShowsProblemOnGeneralException()
+    public function testShowsProblemOnGeneralException(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -110,7 +116,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    public function testShowsOkayIfAllConnectionsAreReachable()
+    public function testShowsOkayIfAllConnectionsAreReachable(): void
     {
         config([
             'healthcheck.addresses' => [
