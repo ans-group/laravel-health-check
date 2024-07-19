@@ -12,12 +12,21 @@ on:
 jobs:
     php-tests:
         runs-on: ubuntu-latest
+        container:
 
         strategy:
             matrix:
-                php: [8.2, 8.1, 8.0, 7.4, 7.3, 7.2, 7.1, 7.0, 5.6]
+                environment:
+                    - php_version: 8.1
+                      laravel_version: 10
+                    - php_version: 8.2
+                      laravel_version: 10
+                    - php_version: 8.2
+                      laravel_version: 11
+                    - php_version: 8.3
+                      laravel_version: 11
 
-        name: PHP${{ matrix.php }} - ubuntu-latest
+        name: PHP${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }} - ubuntu-latest
 
         steps:
             - name: Checkout code
@@ -26,13 +35,15 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: ${{ matrix.php }}
+                  php-version: ${{ matrix.environment.php_version }}
                   coverage: none
 
             - name: Install dependencies
               run: |
+                  rm -f composer.lock
                   sudo composer self-update
-                  composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
+                  composer install
+                  composer require laravel/framework:^${{ matrix.environment.laravel_version }}.0
 
             - name: Execute tests
               run: vendor/bin/phpunit
