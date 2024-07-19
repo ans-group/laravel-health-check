@@ -6,10 +6,7 @@ use UKFast\HealthCheck\Status;
 
 class StatusTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function can_create_an_okay_status()
+    public function testCanCreateAnOkayStatus(): void
     {
         $status = (new Status)->okay();
 
@@ -17,10 +14,7 @@ class StatusTest extends TestCase
         $this->assertFalse($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function can_create_a_problem_status()
+    public function testCanCreateAProblemStatus(): void
     {
         $status = (new Status)->problem();
 
@@ -28,30 +22,21 @@ class StatusTest extends TestCase
         $this->assertFalse($status->isOkay());
     }
 
-    /**
-     * @test
-     */
-    public function can_inject_a_context()
+    public function testCanInjectAContext(): void
     {
         $status = (new Status)->withContext('arbitrary context');
 
         $this->assertSame('arbitrary context', $status->context());
     }
 
-    /**
-     * @test
-     */
-    public function can_set_a_name_for_a_status()
+    public function testCanSetANameForAStatus(): void
     {
         $status = (new Status)->withName('redis');
 
         $this->assertSame('redis', $status->name());
     }
 
-    /**
-     * @test
-     */
-    public function when_creating_a_problem_can_attach_a_message()
+    public function testWhenCreatingAProblemCanAttachAMessage(): void
     {
         $status = (new Status)->problem('My thing doesnt work');
 

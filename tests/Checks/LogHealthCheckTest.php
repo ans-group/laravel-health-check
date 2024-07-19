@@ -2,21 +2,24 @@
 
 namespace Tests\Checks;
 
+use Illuminate\Foundation\Application;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\LogHealthCheck;
 use Exception;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class LogHealthCheckTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_cannot_write_to_logs()
+    public function testShowsProblemIfCannotWriteToLogs(): void
     {
         $this->app->bind('log', function () {
             return new BadLogger;
@@ -26,10 +29,7 @@ class LogHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_can_write_to_logs()
+    public function testShowsOkayIfCanWriteToLogs(): void
     {
         $this->app->bind('log', function () {
             return new NullLogger;
@@ -42,7 +42,10 @@ class LogHealthCheckTest extends TestCase
 
 class BadLogger
 {
-    public function __call($name, $args)
+    /**
+     * @throws Exception
+     */
+    public function __call($name, $args): never
     {
         throw new Exception('Failed to log');
     }
@@ -50,7 +53,7 @@ class BadLogger
 
 class NullLogger
 {
-    public function __call($name, $args)
+    public function __call($name, $args): VOID
     {
     }
 }

@@ -4,20 +4,23 @@ namespace Tests\Checks;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
+use Illuminate\Foundation\Application;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\HttpHealthCheck;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class HttpHealthCheckTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_response_code_is_incorrect()
+    public function testShowsProblemIfResponseCodeIsIncorrect(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -41,10 +44,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_connection_is_unreachable()
+    public function testShowsProblemIfConnectionIsUnreachable(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -68,10 +68,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_on_connect_exception()
+    public function testShowsProblemOnConnectException(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -95,10 +92,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_on_general_exception()
+    public function testShowsProblemOnGeneralException(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -122,10 +116,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_all_connections_are_reachable()
+    public function testShowsOkayIfAllConnectionsAreReachable(): void
     {
         config([
             'healthcheck.addresses' => [

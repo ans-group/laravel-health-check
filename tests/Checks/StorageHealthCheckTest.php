@@ -3,21 +3,24 @@
 namespace Tests\Checks;
 
 use Exception;
+use Illuminate\Foundation\Application;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Storage;
 use UKFast\HealthCheck\Checks\StorageHealthCheck;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class StorageHealthCheckTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_cannot_write_to_storage()
+    public function testShowsProblemIfCannotWriteToStorage(): void
     {
         config([
             'healthcheck.storage.disks' => [
@@ -32,10 +35,7 @@ class StorageHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_incorrect_read_from_storage()
+    public function testShowsProblemIfIncorrectReadFromStorage(): void
     {
         config([
             'healthcheck.storage.disks' => [
@@ -53,17 +53,14 @@ class StorageHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_can_write_to_storage()
+    public function test_shows_okay_if_can_write_to_storage(): void
     {
         config([
             'healthcheck.storage.disks' => [
                 'local'
             ]
         ]);
-        
+
         $status = (new StorageHealthCheck($this->app))->status();
 
         $this->assertTrue($status->isOkay());
@@ -72,7 +69,10 @@ class StorageHealthCheckTest extends TestCase
 
 class BadDisk
 {
-    public function __call($name, $arguments)
+    /**
+     * @throws Exception
+     */
+    public function __call($name, $arguments): never
     {
         throw new Exception();
     }

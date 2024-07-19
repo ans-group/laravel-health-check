@@ -3,21 +3,24 @@
 namespace Tests\Checks;
 
 use Exception;
+use Illuminate\Foundation\Application;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
 use UKFast\HealthCheck\Checks\CacheHealthCheck;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class CacheHealthCheckTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_cannot_write_to_cache()
+    public function testShowsProblemIfCannotWriteToCache(): void
     {
         config([
             'healthcheck.cache.stores' => [
@@ -32,10 +35,7 @@ class CacheHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_incorrect_read_from_cache()
+    public function testShowsProblemIfIncorrectReadFromCache(): void
     {
         config([
             'healthcheck.cache.stores' => [
@@ -52,17 +52,14 @@ class CacheHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_can_write_to_cache()
+    public function testShowsOkayIfCanWriteToCache(): void
     {
         config([
             'healthcheck.cache.stores' => [
                 'array'
             ]
         ]);
-        
+
         $status = (new CacheHealthCheck($this->app))->status();
 
         $this->assertTrue($status->isOkay());
@@ -71,7 +68,10 @@ class CacheHealthCheckTest extends TestCase
 
 class BadStore
 {
-    public function __call($name, $arguments)
+    /**
+     * @throws Exception
+     */
+    public function __call($name, $arguments): never
     {
         throw new Exception();
     }

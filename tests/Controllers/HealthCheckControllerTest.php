@@ -2,24 +2,27 @@
 
 namespace Tests\Controllers;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
 use Illuminate\Routing\RouteCollection;
 use Tests\TestCase;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
 use UKFast\HealthCheck\HealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
+use UKFast\HealthCheck\Status;
 
 class HealthCheckControllerTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    /**
-     * @test
-     */
-    public function returns_overall_status_of_okay_when_everything_is_up()
+    public function testReturnsOverallStatusOfOkayWhenEverythingIsUp(): void
     {
         $this->setChecks([AlwaysUpCheck::class]);
         $response = (new HealthCheckController)->__invoke($this->app);
@@ -30,10 +33,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function overrides_default_ping_path()
+    public function testOverridesDefaultPingPath(): void
     {
         app('router')->setRoutes(app(RouteCollection::class));
 
@@ -59,10 +59,7 @@ class HealthCheckControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /**
-     * @test
-     */
-    public function overrides_default_health_path()
+    public function testOverridesDefaultHealthPath(): void
     {
         app('router')->setRoutes(app(RouteCollection::class));
 
@@ -91,10 +88,7 @@ class HealthCheckControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /**
-     * @test
-     */
-    public function defaults_the_ping_path_if_config_is_not_set()
+    public function testDefaultsThePingPathIfConfigIsNotSet(): void
     {
         app('router')->setRoutes(app(RouteCollection::class));
 
@@ -115,10 +109,7 @@ class HealthCheckControllerTest extends TestCase
 
     }
 
-    /**
-     * @test
-     */
-    public function defaults_the_health_path_if_config_is_not_set()
+    public function testDefaultsTheHealthPathIfConfigIsNotSet(): void
     {
         config([
             'healthcheck.route-paths' => null,
@@ -141,10 +132,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function returns_degraded_status_with_response_code_200_when_service_is_degraded()
+    public function testReturnsDegradedStatusWithResponseCode200WhenServiceIsDegraded(): void
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDegradedCheck::class]);
         $response = (new HealthCheckController())->__invoke($this->app);
@@ -161,10 +149,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function returns_status_of_problem_when_a_problem_occurs()
+    public function testReturnsStatusOfProblemWhenAProblemOccurs(): void
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDownCheck::class]);
         $response = (new HealthCheckController)->__invoke($this->app);
@@ -180,10 +165,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function returns_status_of_problem_when_both_degraded_and_problem_statuses_occur()
+    public function testReturnsStatusOfProblemWhenBothDegradedAndProblemStatusesOccur(): void
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDegradedCheck::class, AlwaysDownCheck::class]);
         $response = (new HealthCheckController)->__invoke($this->app);
@@ -223,7 +205,7 @@ class HealthCheckControllerTest extends TestCase
 
     }
 
-    protected function setChecks($checks)
+    protected function setChecks($checks): void
     {
         config(['healthcheck.checks' => $checks]);
     }
@@ -233,7 +215,7 @@ class AlwaysUpCheck extends HealthCheck
 {
     protected $name = 'always-up';
 
-    public function status()
+    public function status(): Status
     {
         return $this->okay();
     }
@@ -243,7 +225,7 @@ class AlwaysDegradedCheck extends HealthCheck
 {
     protected $name = 'always-degraded';
 
-    public function status()
+    public function status(): Status
     {
         return $this->degraded('Something went wrong', [
             'debug' => 'info',
@@ -255,7 +237,7 @@ class AlwaysDownCheck extends HealthCheck
 {
     protected $name = 'always-down';
 
-    public function status()
+    public function status(): Status
     {
         return $this->problem('Something went wrong', [
             'debug' => 'info',

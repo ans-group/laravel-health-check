@@ -7,13 +7,11 @@ use Tests\TestCase;
 use UKFast\HealthCheck\AppHealth;
 use UKFast\HealthCheck\HealthCheck;
 use UKFast\HealthCheck\Middleware\AddHeaders;
+use UKFast\HealthCheck\Status;
 
 class AddHeadersTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function adds_headers_for_each_check()
+    public function testAddsHeadersForEachCheck(): void
     {
         $this->app->bind('app-health', function () {
             return new AppHealth(collect([
@@ -36,7 +34,7 @@ class AlwaysUpCheck extends HealthCheck
 {
     protected $name = 'always-up';
 
-    public function status()
+    public function status(): Status
     {
         return $this->okay();
     }
@@ -46,7 +44,7 @@ class AlwaysDownCheck extends HealthCheck
 {
     protected $name = 'always-down';
 
-    public function status()
+    public function status(): Status
     {
         return $this->problem('Something went wrong', [
             'debug' => 'info',
