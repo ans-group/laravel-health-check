@@ -42,14 +42,14 @@ abstract class HealthCheck
     /**
      * @return array<string, string|array|int>
      */
-    protected function exceptionContext(Exception $e): array
+    protected function exceptionContext(Exception $exception): array
     {
         return [
-            'error' => $e->getMessage(),
-            'class' => get_class($e),
-            'line' => $e->getLine(),
-            'file' => $e->getFile(),
-            'trace' => explode("\n", $e->getTraceAsString()),
+            'error' => $exception->getMessage(),
+            'class' => get_class($exception),
+            'line' => $exception->getLine(),
+            'file' => $exception->getFile(),
+            'trace' => explode("\n", $exception->getTraceAsString()),
         ];
     }
 }
