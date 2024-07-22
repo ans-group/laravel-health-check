@@ -2,38 +2,44 @@
 
 namespace Tests\Unit\HealthCheck;
 
+use League\Flysystem\Ftp\FtpAdapter;
+use League\Flysystem\Ftp\UnableToConnectToFtpHost;
 use UKFast\HealthCheck\Checks\FtpHealthCheck;
-use RuntimeException;
-use League\Flysystem\Adapter\Ftp;
 use Tests\TestCase;
-use Mockery as m;
+use Mockery;
 
 class FtpHealthCheckTest extends TestCase
 {
     public function testShowsProblemWhenCantConnectToFtpServer(): void
     {
-        $ftp = m::mock(Ftp::class)
-            ->expects('getConnection')
-            ->andThrow(new RuntimeException('uwu'))
+        $ftp = Mockery::mock(FtpAdapter::class)
+            ->expects('listContents')
+            ->andThrow(new  UnableToConnectToFtpHost('uwu'))
             ->getMock();
 
         $status = (new FtpHealthCheck($ftp))->status();
 
         $this->assertTrue($status->isProblem());
 
-        m::close();
+        Mockery::close();
     }
 
     public function testShowsOkayWhenCanConnectToFtpServer(): void
     {
-        $ftp = m::mock(Ftp::class)
-            ->expects('getConnection')
-            ->andReturn(true)
+        function generator(): iterable {
+            yield 'foo';
+            yield 'bar';
+            yield 'baz';
+        };
+
+        $ftp = Mockery::mock(FtpAdapter::class)
+            ->expects('listContents')
+            ->andReturn(generator())
             ->getMock();
 
         $status = (new FtpHealthCheck($ftp))->status();
         $this->assertTrue($status->isOkay());
 
-        m::close();
+        Mockery::close();
     }
 }

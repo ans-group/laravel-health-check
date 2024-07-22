@@ -2,7 +2,8 @@
 
 namespace UKFast\HealthCheck\Checks;
 
-use League\Flysystem\Adapter\Ftp;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\Ftp\FtpAdapter;
 use UKFast\HealthCheck\HealthCheck;
 use UKFast\HealthCheck\Status;
 
@@ -10,23 +11,18 @@ class FtpHealthCheck extends HealthCheck
 {
     protected string $name = 'ftp';
 
-    /**
-     * @var \Illuminate\Contracts\Filesystem\Filesystem
-     */
-    protected $ftp;
-
-    public function __construct(Ftp $ftp)
-    {
-        $this->ftp = $ftp;
+    public function __construct(
+        protected FtpAdapter $ftpAdapter,
+    ) {
     }
 
     public function status(): Status
     {
         try {
-            $this->ftp->getConnection();
-        } catch (\RuntimeException $e) {
+            $this->ftpAdapter->listContents('', false);
+        } catch (FilesystemException $exception) {
             return $this->problem('Could not connect to FTP server', [
-                'exception' => $this->exceptionContext($e),
+                'exception' => $this->exceptionContext($exception),
             ]);
         }
 
