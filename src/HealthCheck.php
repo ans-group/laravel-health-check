@@ -2,7 +2,7 @@
 
 namespace UKFast\HealthCheck;
 
-use Exception;
+use Throwable;
 
 abstract class HealthCheck
 {
@@ -42,7 +42,7 @@ abstract class HealthCheck
     /**
      * @return array<string, string|array|int>
      */
-    protected function exceptionContext(Exception $exception): array
+    protected function exceptionContext(Throwable $exception): array
     {
         return [
             'error' => $exception->getMessage(),
