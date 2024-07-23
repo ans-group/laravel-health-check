@@ -60,7 +60,6 @@ class MigrationUpToDateHealthCheckTest extends TestCase
         $status = $this->healthCheck->status();
         $this->assertFalse($status->isOkay());
         $this->assertSame(['pending_migrations' => ['missing_migration.php']], $status->context());
-
     }
 
     public function testCanReturnFalseWhenRanMigrationCouldNotBeRetrieved(): void

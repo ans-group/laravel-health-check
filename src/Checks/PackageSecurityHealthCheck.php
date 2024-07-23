@@ -35,7 +35,10 @@ class PackageSecurityHealthCheck extends HealthCheck
         try {
             if (! static::checkDependency(SecurityChecker::class)) {
                 if (static::checkDependency('SensioLabs\Security\SecurityChecker')) {
-                    throw new Exception('The sensiolabs/security-checker package has been archived. Install enlightn/security-checker instead.');
+                    throw new Exception(
+                        'The sensiolabs/security-checker package has been archived.'
+                            . ' Install enlightn/security-checker instead.'
+                    );
                 }
                 throw new Exception('You need to install the enlightn/security-checker package to use this check.');
             }

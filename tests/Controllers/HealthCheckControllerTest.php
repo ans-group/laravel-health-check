@@ -5,11 +5,12 @@ namespace Tests\Controllers;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
 use Illuminate\Routing\RouteCollection;
+use Tests\Stubs\Checks\AlwaysDegradedCheck;
+use Tests\Stubs\Checks\AlwaysDownCheck;
+use Tests\Stubs\Checks\AlwaysUpCheck;
 use Tests\TestCase;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
-use UKFast\HealthCheck\HealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
-use UKFast\HealthCheck\Status;
 
 class HealthCheckControllerTest extends TestCase
 {
@@ -25,7 +26,7 @@ class HealthCheckControllerTest extends TestCase
     public function testReturnsOverallStatusOfOkayWhenEverythingIsUp(): void
     {
         $this->setChecks([AlwaysUpCheck::class]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'OK',
@@ -106,7 +107,6 @@ class HealthCheckControllerTest extends TestCase
 
         $response = $this->get('/ping');
         $this->assertSame('pong', $response->getContent());
-
     }
 
     public function testDefaultsTheHealthPathIfConfigIsNotSet(): void
@@ -152,7 +152,7 @@ class HealthCheckControllerTest extends TestCase
     public function testReturnsStatusOfProblemWhenAProblemOccurs(): void
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDownCheck::class]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'PROBLEM',
@@ -168,7 +168,7 @@ class HealthCheckControllerTest extends TestCase
     public function testReturnsStatusOfProblemWhenBothDegradedAndProblemStatusesOccur(): void
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDegradedCheck::class, AlwaysDownCheck::class]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'PROBLEM',
@@ -186,7 +186,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
 
         $this->setChecks([AlwaysUpCheck::class, AlwaysDownCheck::class, AlwaysDegradedCheck::class,]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'PROBLEM',
@@ -202,45 +202,10 @@ class HealthCheckControllerTest extends TestCase
                 'context' => ['debug' => 'info'],
             ],
         ], json_decode($response->getContent(), true));
-
     }
 
     protected function setChecks($checks): void
     {
         config(['healthcheck.checks' => $checks]);
-    }
-}
-
-class AlwaysUpCheck extends HealthCheck
-{
-    protected string $name = 'always-up';
-
-    public function status(): Status
-    {
-        return $this->okay();
-    }
-}
-
-class AlwaysDegradedCheck extends HealthCheck
-{
-    protected string $name = 'always-degraded';
-
-    public function status(): Status
-    {
-        return $this->degraded('Something went wrong', [
-            'debug' => 'info',
-        ]);
-    }
-}
-
-class AlwaysDownCheck extends HealthCheck
-{
-    protected string $name = 'always-down';
-
-    public function status(): Status
-    {
-        return $this->problem('Something went wrong', [
-            'debug' => 'info',
-        ]);
     }
 }

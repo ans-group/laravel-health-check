@@ -2,8 +2,8 @@
 
 namespace Tests\Checks;
 
-use Exception;
 use Illuminate\Foundation\Application;
+use Tests\Stubs\Storage\BadDisk;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Storage;
 use UKFast\HealthCheck\Checks\StorageHealthCheck;
@@ -53,7 +53,7 @@ class StorageHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    public function test_shows_okay_if_can_write_to_storage(): void
+    public function testShowsOkayIfCanWriteToStorage(): void
     {
         config([
             'healthcheck.storage.disks' => [
@@ -64,16 +64,5 @@ class StorageHealthCheckTest extends TestCase
         $status = (new StorageHealthCheck($this->app))->status();
 
         $this->assertTrue($status->isOkay());
-    }
-}
-
-class BadDisk
-{
-    /**
-     * @throws Exception
-     */
-    public function __call($name, $arguments): never
-    {
-        throw new Exception();
     }
 }

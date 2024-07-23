@@ -20,7 +20,7 @@ class PingControllerTest extends TestCase
 
     public function testReturnsPong(): void
     {
-        $this->assertSame('pong', (new PingController)->__invoke());
+        $this->assertSame('pong', (new PingController())->__invoke());
     }
 
     public function testOverridesDefaultPath(): void

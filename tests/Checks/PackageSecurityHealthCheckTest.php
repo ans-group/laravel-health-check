@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Foundation\Application;
 use Mockery;
 use Mockery\MockInterface;
+use Tests\Stubs\Checks\PackageSecurityHealthCheck as StubPackageSecurityHealthCheck;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\PackageSecurityHealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
@@ -36,31 +37,36 @@ class PackageSecurityHealthCheckTest extends TestCase
 
     public function testShowsProblemIfRequiredPackageNotLoaded()
     {
-        $status = (new MockedPackageSecurityHealthCheck)->status();
+        $status = (new StubPackageSecurityHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
-        $this->assertSame('You need to install the enlightn/security-checker package to use this check.', $status->context()['exception']['error']);
+        $this->assertSame(
+            'You need to install the enlightn/security-checker package to use this check.',
+            $status->context()['exception']['error']
+        );
     }
 
     public function testShowsProblemIfIncorrectPackageLoaded(): void
     {
-        MockedPackageSecurityHealthCheck::$classResults = [
+        StubPackageSecurityHealthCheck::$classResults = [
             'Enlightn\SecurityChecker\SecurityChecker' => false,
             'SensioLabs\Security\SecurityChecker' => true,
         ];
-        $status = (new MockedPackageSecurityHealthCheck)->status();
+        $status = (new StubPackageSecurityHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
-        $this->assertSame('The sensiolabs/security-checker package has been archived. Install enlightn/security-checker instead.', $status->context()['exception']['error']);
+        $this->assertSame(
+            'The sensiolabs/security-checker package has been archived. Install enlightn/security-checker instead.',
+            $status->context()['exception']['error']
+        );
     }
 
     public function testShowsProblemIfCannotCheckPackages(): void
     {
         $this->partialMock('overload:Enlightn\SecurityChecker\SecurityChecker', fn (MockInterface $mock) =>
-            $mock->shouldReceive('check')->andThrow(new Exception('File not found at [/tmp/composer.lock]'))
-        );
+            $mock->shouldReceive('check')->andThrow(new Exception('File not found at [/tmp/composer.lock]')));
 
-        $status = (new PackageSecurityHealthCheck)->status();
+        $status = (new PackageSecurityHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
     }
@@ -69,10 +75,12 @@ class PackageSecurityHealthCheckTest extends TestCase
     {
         $this->partialMock('overload:Enlightn\SecurityChecker\SecurityChecker', fn (MockInterface $mock) =>
             $mock->shouldReceive('check')
-                ->andReturn(json_decode(file_get_contents('tests/json/securityCheckerPackageHasVulnerability.json'), true))
-        );
+                ->andReturn(json_decode(
+                    file_get_contents('tests/json/securityCheckerPackageHasVulnerability.json'),
+                    true
+                )));
 
-        $status = (new PackageSecurityHealthCheck)->status();
+        $status = (new PackageSecurityHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
     }
@@ -87,10 +95,12 @@ class PackageSecurityHealthCheckTest extends TestCase
 
         $this->partialMock('overload:Enlightn\SecurityChecker\SecurityChecker', fn (MockInterface $mock) =>
             $mock->shouldReceive('check')
-                ->andReturn(json_decode(file_get_contents('tests/json/securityCheckerPackageHasVulnerability.json'), true))
-        );
+                ->andReturn(json_decode(
+                    file_get_contents('tests/json/securityCheckerPackageHasVulnerability.json'),
+                    true
+                )));
 
-        $status = (new PackageSecurityHealthCheck)->status();
+        $status = (new PackageSecurityHealthCheck())->status();
 
         $this->assertTrue($status->isOkay());
     }
@@ -99,27 +109,10 @@ class PackageSecurityHealthCheckTest extends TestCase
     {
         $this->partialMock('overload:Enlightn\SecurityChecker\SecurityChecker', fn(MockInterface $mock) =>
             $mock->shouldReceive('check')
-                ->andReturn([])
-        );
+                ->andReturn([]));
 
-        $status = (new PackageSecurityHealthCheck)->status();
+        $status = (new PackageSecurityHealthCheck())->status();
 
         $this->assertTrue($status->isOkay());
-    }
-}
-
-class MockedPackageSecurityHealthCheck extends PackageSecurityHealthCheck
-{
-    /**
-     * @var array<string, bool>
-     */
-    public static array $classResults = [
-        'Enlightn\SecurityChecker\SecurityChecker' => false,
-        'SensioLabs\Security\SecurityChecker' => false,
-    ];
-
-    public static function checkDependency(string $class): bool
-    {
-        return static::$classResults[$class];
     }
 }

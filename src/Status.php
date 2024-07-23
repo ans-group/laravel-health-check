@@ -4,11 +4,11 @@ namespace UKFast\HealthCheck;
 
 class Status
 {
-    const PROBLEM = 'PROBLEM';
+    public const PROBLEM = 'PROBLEM';
 
-    const DEGRADED = 'DEGRADED';
+    public const DEGRADED = 'DEGRADED';
 
-    const OKAY = 'OK';
+    public const OKAY = 'OK';
 
     protected string|null $status = null;
 
