@@ -1,0 +1,41 @@
+name: Pull Request
+
+on:
+  push:
+    branches:
+      - master
+      - v2.0
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  php-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        environment:
+          - php_version: 8.1
+            laravel_version: 10
+          - php_version: 8.2
+            laravel_version: 10
+          - php_version: 8.2
+            laravel_version: 11
+          - php_version: 8.3
+            laravel_version: 11
+
+    name: PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }} - ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          php_version: ${{ matrix.environment.php_version }}
+          laravel_version: ${{ matrix.environment.laravel_version }}
+
+      - name: Execute tests
+        run: vendor/bin/phpunit
