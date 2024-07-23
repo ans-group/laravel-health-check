@@ -43,11 +43,11 @@ class HealthCheckServiceProvider extends ServiceProvider
 
     protected function configure(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/healthcheck.php', 'healthcheck');
-        $configPath = $this->app->basePath().'/config/healthcheck.php';
+        $this->mergeConfigFrom(__DIR__ . '/../config/healthcheck.php', 'healthcheck');
+        $configPath = $this->app->basePath() . '/config/healthcheck.php';
 
         $this->publishes([
-            __DIR__.'/../config/healthcheck.php' => $configPath,
+            __DIR__ . '/../config/healthcheck.php' => $configPath,
         ], 'config');
 
         if ($this->app instanceof \Laravel\Lumen\Application) {

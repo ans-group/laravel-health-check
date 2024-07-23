@@ -12,7 +12,7 @@ class AppHealthTest extends TestCase
 {
     public function testCanSeeIfACheckPassesByName(): void
     {
-        $appHealth = new AppHealth(collect([new AlwaysUpCheck, new AlwaysDownCheck]));
+        $appHealth = new AppHealth(collect([new AlwaysUpCheck(), new AlwaysDownCheck()]));
 
         $this->assertTrue($appHealth->passes('always-up'));
         $this->assertFalse($appHealth->passes('always-down'));
@@ -20,7 +20,7 @@ class AppHealthTest extends TestCase
 
     public function testCanSeeIfACheckFailsByName(): void
     {
-        $appHealth = new AppHealth(collect([new AlwaysUpCheck, new AlwaysDownCheck]));
+        $appHealth = new AppHealth(collect([new AlwaysUpCheck(), new AlwaysDownCheck()]));
 
         $this->assertFalse($appHealth->fails('always-up'));
         $this->assertTrue($appHealth->fails('always-down'));
@@ -28,14 +28,14 @@ class AppHealthTest extends TestCase
 
     public function testReturnsFalseIfCheckThrowsException(): void
     {
-        $appHealth = new AppHealth(collect([new UnreliableCheck]));
+        $appHealth = new AppHealth(collect([new UnreliableCheck()]));
 
         $this->assertFalse($appHealth->passes('unreliable'));
     }
 
     public function testThrowsExceptionIfCheckDoesNotExist(): void
     {
-        $appHealth = new AppHealth(collect([new AlwaysUpCheck, new AlwaysDownCheck]));
+        $appHealth = new AppHealth(collect([new AlwaysUpCheck(), new AlwaysDownCheck()]));
 
         $this->expectException(CheckNotFoundException::class);
 

@@ -27,11 +27,11 @@ class EnvHealthCheckTest extends TestCase
             'REDIS_HOST',
             'MYSQL_PASSWORD'
         ]]);
-        $status = (new EnvHealthCheck)->status();
+        $status = (new EnvHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
     }
- function testShowsOkayIfAllRequiredEnvParamsArePresent(): void
+    function testShowsOkayIfAllRequiredEnvParamsArePresent(): void
     {
         putenv('REDIS_HOST=here');
         putenv('MYSQL_HOST=here');
@@ -41,9 +41,9 @@ class EnvHealthCheckTest extends TestCase
             'REDIS_HOST',
             'MYSQL_PASSWORD'
         ]]);
-        $status = (new EnvHealthCheck)->status();
+           $status = (new EnvHealthCheck())->status();
 
-        $this->assertTrue($status->isOkay());
+           $this->assertTrue($status->isOkay());
     }
 
     public function testShowsOkayIfRequiredEnvParamIsPresentButNull(): void
@@ -53,7 +53,7 @@ class EnvHealthCheckTest extends TestCase
         config(['healthcheck.required-env' => [
             'REDIS_PASSWORD',
         ]]);
-        $status = (new EnvHealthCheck)->status();
+        $status = (new EnvHealthCheck())->status();
 
         $this->assertTrue($status->isOkay());
     }

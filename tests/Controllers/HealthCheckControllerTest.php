@@ -25,7 +25,7 @@ class HealthCheckControllerTest extends TestCase
     public function testReturnsOverallStatusOfOkayWhenEverythingIsUp(): void
     {
         $this->setChecks([AlwaysUpCheck::class]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'OK',
@@ -106,7 +106,6 @@ class HealthCheckControllerTest extends TestCase
 
         $response = $this->get('/ping');
         $this->assertSame('pong', $response->getContent());
-
     }
 
     public function testDefaultsTheHealthPathIfConfigIsNotSet(): void
@@ -152,7 +151,7 @@ class HealthCheckControllerTest extends TestCase
     public function testReturnsStatusOfProblemWhenAProblemOccurs(): void
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDownCheck::class]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'PROBLEM',
@@ -168,7 +167,7 @@ class HealthCheckControllerTest extends TestCase
     public function testReturnsStatusOfProblemWhenBothDegradedAndProblemStatusesOccur(): void
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDegradedCheck::class, AlwaysDownCheck::class]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'PROBLEM',
@@ -186,7 +185,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
 
         $this->setChecks([AlwaysUpCheck::class, AlwaysDownCheck::class, AlwaysDegradedCheck::class,]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'PROBLEM',
@@ -202,7 +201,6 @@ class HealthCheckControllerTest extends TestCase
                 'context' => ['debug' => 'info'],
             ],
         ], json_decode($response->getContent(), true));
-
     }
 
     protected function setChecks($checks): void

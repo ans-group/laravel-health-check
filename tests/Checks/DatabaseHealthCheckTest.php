@@ -29,8 +29,8 @@ class DatabaseHealthCheckTest extends TestCase
             'healthcheck.database.connections' => ['default'],
         ]);
 
-        $db = new DatabaseManager;
-        $db->addConnection('default', new BadConnection);
+        $db = new DatabaseManager();
+        $db->addConnection('default', new BadConnection());
 
         $status = (new DatabaseHealthCheck($db))->status();
 
@@ -43,8 +43,8 @@ class DatabaseHealthCheckTest extends TestCase
             'healthcheck.database.connections' => ['default'],
         ]);
 
-        $db = new DatabaseManager;
-        $db->addConnection('default', new HealthyConnection);
+        $db = new DatabaseManager();
+        $db->addConnection('default', new HealthyConnection());
 
         $status = (new DatabaseHealthCheck($db))->status();
 
@@ -57,9 +57,9 @@ class DatabaseHealthCheckTest extends TestCase
             'healthcheck.database.connections' => ['healthy', 'bad'],
         ]);
 
-        $db = new DatabaseManager;
-        $db->addConnection('healthy', new HealthyConnection);
-        $db->addConnection('bad', new BadConnection);
+        $db = new DatabaseManager();
+        $db->addConnection('healthy', new HealthyConnection());
+        $db->addConnection('bad', new BadConnection());
 
         $status = (new DatabaseHealthCheck($db))->status();
 
@@ -91,7 +91,7 @@ class BadConnection extends Connection
      */
     public function getPdo(): never
     {
-        throw new Exception;
+        throw new Exception();
     }
 }
 

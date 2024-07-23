@@ -8,7 +8,7 @@ class StatusTest extends TestCase
 {
     public function testCanCreateAnOkayStatus(): void
     {
-        $status = (new Status)->okay();
+        $status = (new Status())->okay();
 
         $this->assertTrue($status->isOkay());
         $this->assertFalse($status->isProblem());
@@ -16,7 +16,7 @@ class StatusTest extends TestCase
 
     public function testCanCreateAProblemStatus(): void
     {
-        $status = (new Status)->problem();
+        $status = (new Status())->problem();
 
         $this->assertTrue($status->isProblem());
         $this->assertFalse($status->isOkay());
@@ -24,7 +24,7 @@ class StatusTest extends TestCase
 
     public function testCanInjectAContext(): void
     {
-        $status = (new Status)->withContext([
+        $status = (new Status())->withContext([
             'context' => 'arbitrary context',
         ]);
 
@@ -38,14 +38,14 @@ class StatusTest extends TestCase
 
     public function testCanSetANameForAStatus(): void
     {
-        $status = (new Status)->withName('redis');
+        $status = (new Status())->withName('redis');
 
         $this->assertSame('redis', $status->name());
     }
 
     public function testWhenCreatingAProblemCanAttachAMessage(): void
     {
-        $status = (new Status)->problem('My thing doesnt work');
+        $status = (new Status())->problem('My thing doesnt work');
 
         $this->assertSame('My thing doesnt work', $status->message());
     }

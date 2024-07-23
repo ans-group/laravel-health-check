@@ -24,7 +24,7 @@ class LogHealthCheckTest extends TestCase
     public function testShowsProblemIfCannotWriteToLogs(): void
     {
         $this->app->bind('log', function () {
-            return new BadLogger;
+            return new BadLogger();
         });
 
         $status = (new LogHealthCheck($this->app))->status();
@@ -34,7 +34,7 @@ class LogHealthCheckTest extends TestCase
     public function testShowsOkayIfCanWriteToLogs(): void
     {
         $this->app->bind('log', function () {
-            return new NullLogger;
+            return new NullLogger();
         });
 
         $status = (new LogHealthCheck($this->app))->status();
@@ -119,7 +119,6 @@ class BadLogger implements LoggerInterface
 
 class NullLogger implements LoggerInterface
 {
-
     public function emergency(Stringable | string $message, array $context = []): void
     {
     }

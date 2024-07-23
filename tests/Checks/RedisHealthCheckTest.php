@@ -19,7 +19,6 @@ class RedisHealthCheckTest extends TestCase
      * @return array<int, class-string>
      */
     public function getPackageProviders($app): array
-
     {
         return [HealthCheckServiceProvider::class];
     }
@@ -39,7 +38,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck)->status();
+        $status = (new RedisHealthCheck())->status();
         $this->assertTrue($status->isOkay());
     }
 
@@ -58,7 +57,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck)->status();
+        $status = (new RedisHealthCheck())->status();
         $this->assertFalse($status->isOkay());
     }
 
@@ -77,7 +76,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck)->status();
+        $status = (new RedisHealthCheck())->status();
         $this->assertTrue($status->isOkay());
     }
 
@@ -96,7 +95,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck)->status();
+        $status = (new RedisHealthCheck())->status();
         $this->assertFalse($status->isOkay());
     }
 
@@ -124,7 +123,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck)->status();
+        $status = (new RedisHealthCheck())->status();
         $this->assertTrue($status->isOkay());
     }
 
@@ -152,7 +151,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck)->status();
+        $status = (new RedisHealthCheck())->status();
         $this->assertFalse($status->isOkay());
     }
 
@@ -196,7 +195,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck)->status();
+        $status = (new RedisHealthCheck())->status();
         $this->assertTrue($status->isOkay());
     }
 
@@ -223,7 +222,7 @@ class RedisHealthCheckTest extends TestCase
         $matcher = $this->exactly(1);
         $redisConn->expects($matcher)
             ->method('ping')
-            ->willReturnCallback(function() use ($matcher) {
+            ->willReturnCallback(function () use ($matcher) {
                 return match ($matcher->numberOfInvocations()) {
                     1 => [['master1', '6379']],
                 };
@@ -238,7 +237,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck)->status();
+        $status = (new RedisHealthCheck())->status();
         $this->assertFalse($status->isOkay());
     }
 
@@ -282,7 +281,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck)->status();
+        $status = (new RedisHealthCheck())->status();
         $this->assertFalse($status->isOkay());
     }
 }

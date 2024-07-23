@@ -15,13 +15,13 @@ class AddHeadersTest extends TestCase
     {
         $this->app->bind('app-health', function () {
             return new AppHealth(collect([
-                new AlwaysUpCheck,
-                new AlwaysDownCheck,
+                new AlwaysUpCheck(),
+                new AlwaysDownCheck(),
             ]));
         });
 
         $request = Request::create('/health', 'GET');
-        $response = (new AddHeaders)->handle($request, function ($request) {
+        $response = (new AddHeaders())->handle($request, function ($request) {
             return response()->json(null, 500);
         });
 
