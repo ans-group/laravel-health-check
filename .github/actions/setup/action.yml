@@ -1,0 +1,28 @@
+name: Run tests
+description: Run tests on different PHP and Laravel versions
+
+inputs:
+  php_version:
+    description: 'PHP version'
+    required: true
+  laravel_version:
+    description: 'Laravel version'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ inputs.php_version }}
+        coverage: none
+
+    - name: Remove the composer lock file
+      run: rm -f composer.lock
+
+    - name: Install Laravel & dependencies
+      run:  composer require laravel/framework:^${{ inputs.laravel_version }}.0 -W
+
+    - name: Install optional dependencies
+      run:  composer require enlightn/security-checker
