@@ -20,9 +20,12 @@ runs:
 
     - name: Remove the composer lock file
       run: rm -f composer.lock
+      shell: bash
 
     - name: Install Laravel & dependencies
       run:  composer require laravel/framework:^${{ inputs.laravel_version }}.0 -W
+      shell: bash
 
     - name: Install optional dependencies
       run:  composer require enlightn/security-checker
+      shell: bash
