@@ -2,6 +2,7 @@
 
 namespace Tests\Checks;
 
+use Exception;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redis;
@@ -53,7 +54,7 @@ class RedisHealthCheckTest extends TestCase
 
         $redis->expects($this->exactly(1))
             ->method('ping')
-            ->willThrowException(new \Exception("cannot ping"));
+            ->willThrowException(new Exception("cannot ping"));
 
         Redis::swap($redis);
 
@@ -91,7 +92,7 @@ class RedisHealthCheckTest extends TestCase
 
         $redis->expects($this->exactly(1))
             ->method('ping')
-            ->willThrowException(new \Exception("cannot ping"));
+            ->willThrowException(new Exception("cannot ping"));
 
         Redis::swap($redis);
 
@@ -141,7 +142,7 @@ class RedisHealthCheckTest extends TestCase
 
         $redisConn->expects($this->exactly(1))
             ->method('ping')
-            ->willThrowException(new \Exception("cannot ping"));
+            ->willThrowException(new Exception("cannot ping"));
 
         $redis = $this->createMock(RedisManager::class);
 
@@ -227,7 +228,7 @@ class RedisHealthCheckTest extends TestCase
                     1 => [['master1', '6379']],
                 };
             })
-            ->willThrowException(new \Exception("cannot connect to master1:6379"));
+            ->willThrowException(new Exception("cannot connect to master1:6379"));
 
         $redis = $this->createMock(RedisManager::class);
 
@@ -269,7 +270,7 @@ class RedisHealthCheckTest extends TestCase
                 return match ($matcher->numberOfInvocations()) {
                     1 => 'pong',
                     2 => 'pong',
-                    3 => throw new \Exception("cannot connect to master3:6379"),
+                    3 => throw new Exception("cannot connect to master3:6379"),
                 };
             });
 

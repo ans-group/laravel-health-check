@@ -2,6 +2,7 @@
 
 namespace UKFast\HealthCheck\Checks;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ConnectException;
@@ -37,7 +38,7 @@ class HttpHealthCheck extends HealthCheck
                 continue;
             } catch (BadResponseException $e) {
                 $response = $e->getResponse();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $generalFailures[$address] = $this->exceptionContext($e);
                 continue;
             }
