@@ -31,7 +31,8 @@ class EnvHealthCheckTest extends TestCase
 
         $this->assertTrue($status->isProblem());
     }
-    function testShowsOkayIfAllRequiredEnvParamsArePresent(): void
+
+    public function testShowsOkayIfAllRequiredEnvParamsArePresent(): void
     {
         putenv('REDIS_HOST=here');
         putenv('MYSQL_HOST=here');
