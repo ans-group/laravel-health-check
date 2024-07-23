@@ -89,7 +89,7 @@
             "@phpcs:fix"
         ],
         "test": "phpunit",
-        "phpcs": "./vendor/bin/phpcs --standard=PSR12 src/ tests/",
-        "phpcs:fix": "./vendor/bin/phpcbf --standard=PSR12 src/ tests/"
+        "phpcs": "./vendor/bin/phpcs --standard=PSR12 --ignore=vendor .",
+        "phpcs:fix": "./vendor/bin/phpcbf --standard=PSR12 --ignore=vendor ."
     }
 }
