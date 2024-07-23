@@ -15,12 +15,7 @@ class RedisHealthCheck extends HealthCheck
     public function status(): Status
     {
         try {
-            if ($this->isUsingPhpRedis()) {
-                $this->handlePhpRedisPing();
-            } else {
-                // Think this is all we can do for predis
-                Redis::ping();
-            }
+            $this->handlePing();
         } catch (Exception $e) {
             return $this->problem('Failed to connect to redis', [
                 'exception' => $this->exceptionContext($e),
@@ -48,5 +43,17 @@ class RedisHealthCheck extends HealthCheck
         foreach ($redis->_masters() as $master) {
             $redis->ping($master);
         }
+    }
+
+    protected function handlePing(): void
+    {
+        if ($this->isUsingPhpRedis()) {
+            $this->handlePhpRedisPing();
+
+            return;
+        }
+
+        // Think this is all we can do for predis
+        Redis::ping();
     }
 }
