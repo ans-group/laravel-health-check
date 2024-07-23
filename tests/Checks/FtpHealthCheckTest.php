@@ -26,11 +26,12 @@ class FtpHealthCheckTest extends TestCase
 
     public function testShowsOkayWhenCanConnectToFtpServer(): void
     {
-        function generator(): iterable {
+        function generator(): iterable
+        {
             yield 'foo';
             yield 'bar';
             yield 'baz';
-        };
+        }
 
         $ftp = Mockery::mock(FtpAdapter::class)
             ->expects('listContents')

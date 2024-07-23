@@ -1,4 +1,4 @@
-name: Pull Request
+name: Checks
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
           - php_version: 8.3
             laravel_version: 11
 
-    name: PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }} - ubuntu-latest
+    name: PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }}
 
     steps:
       - name: Checkout code
@@ -38,4 +38,21 @@ jobs:
           laravel_version: ${{ matrix.environment.laravel_version }}
 
       - name: Execute tests
-        run: vendor/bin/phpunit
+        run: composer test
+
+  php-codesniffer:
+    runs-on: ubuntu-latest
+    name: PHP Codesniffer
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          php_version: 8.3
+          laravel_version: 11
+
+      - name: Run codesniffer
+        run: composer phpcs

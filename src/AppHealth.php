@@ -8,7 +8,6 @@ use UKFast\HealthCheck\Exceptions\CheckNotFoundException;
 
 class AppHealth
 {
-
     public function __construct(
         /**
          * @var Collection<int, class-string>

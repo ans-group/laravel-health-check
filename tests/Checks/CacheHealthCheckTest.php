@@ -2,8 +2,8 @@
 
 namespace Tests\Checks;
 
-use Exception;
 use Illuminate\Foundation\Application;
+use Tests\Stubs\Cache\BadStore;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Cache;
 use UKFast\HealthCheck\Checks\CacheHealthCheck;
@@ -63,16 +63,5 @@ class CacheHealthCheckTest extends TestCase
         $status = (new CacheHealthCheck($this->app))->status();
 
         $this->assertTrue($status->isOkay());
-    }
-}
-
-class BadStore
-{
-    /**
-     * @throws Exception
-     */
-    public function __call($name, $arguments): never
-    {
-        throw new Exception();
     }
 }

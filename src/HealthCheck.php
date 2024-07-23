@@ -17,7 +17,7 @@ abstract class HealthCheck
 
     public function problem($message = '', $context = []): Status
     {
-        return (new Status)
+        return (new Status())
             ->problem($message)
             ->withContext($context)
             ->withName($this->name());
@@ -25,7 +25,7 @@ abstract class HealthCheck
 
     public function degraded($message = '', $context = []): Status
     {
-        return (new Status)
+        return (new Status())
             ->degraded($message)
             ->withContext($context)
             ->withName($this->name());
@@ -33,7 +33,7 @@ abstract class HealthCheck
 
     public function okay($context = []): Status
     {
-        return (new Status)
+        return (new Status())
             ->okay()
             ->withContext($context)
             ->withName($this->name());
