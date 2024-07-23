@@ -24,11 +24,8 @@ class StatusCommandTest extends TestCase
 
         $result = $this->artisan('health-check:status');
 
-        if ($result instanceof PendingCommand) {
-            $result->assertExitCode(0);
-        } else {
-            $this->assertTrue(true);
-        }
+        $this->assertInstanceof(PendingCommand::class, $result);
+        $result->assertExitCode(0);
     }
 
     public function testRunningCommandStatusWithOnlyOption(): void
@@ -41,11 +38,8 @@ class StatusCommandTest extends TestCase
 
         $result = $this->artisan('health-check:status', ['--only' => 'log']);
 
-        if ($result instanceof PendingCommand) {
-            $result->assertExitCode(0);
-        } else {
-            $this->assertTrue(true);
-        }
+        $this->assertInstanceof(PendingCommand::class, $result);
+        $result->assertExitCode(0);
     }
 
     public function testRunningCommandStatusWithExceptOption(): void
@@ -59,11 +53,8 @@ class StatusCommandTest extends TestCase
 
         $result = $this->artisan('health-check:status', ['--except' => 'database']);
 
-        if ($result instanceof PendingCommand) {
-            $result->assertExitCode(0);
-        } else {
-            $this->assertTrue(true);
-        }
+        $this->assertInstanceof(PendingCommand::class, $result);
+        $result->assertExitCode(0);
     }
 
     public function testRunningCommandStatusWithOnlyAndExceptOption(): void
@@ -72,14 +63,11 @@ class StatusCommandTest extends TestCase
 
         $result = $this->artisan('health-check:status', ['--only' => 'log', '--except' => 'log']);
 
-        if ($result instanceof PendingCommand) {
-            $result
-                ->assertExitCode(1)
-                ->expectsOutput('Pass --only OR --except, but not both!');
-        } else {
-            $this->assertTrue(true);
-        }
+        $this->assertInstanceof(PendingCommand::class, $result);
+        $result->assertExitCode(1)
+            ->expectsOutput('Pass --only OR --except, but not both!');
     }
+
     public function testRunningCommandStatusWithFailureCondition(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
@@ -90,13 +78,9 @@ class StatusCommandTest extends TestCase
 
         $result = $this->artisan('health-check:status');
 
-        if ($result instanceof PendingCommand) {
-            $result->assertExitCode(1);
-            //for laravel 5.*
-            if (method_exists($result, 'expectsTable')) {
-                $result->expectsTable(['name', 'status', 'message'], [['log', 'statusName', 'statusMessage']]);
-            }
-        }
+        $this->assertInstanceof(PendingCommand::class, $result);
+        $result->assertExitCode(1);
+        $result->expectsTable(['name', 'status', 'message'], [['log', 'statusName', 'statusMessage']]);
     }
 
     private function mockLogHealthCheck(Status $status): void
