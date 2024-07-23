@@ -3,7 +3,10 @@
 namespace Tests\Checks;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\TooManyRedirectsException;
 use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Foundation\Application;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\HttpHealthCheck;
@@ -80,7 +83,7 @@ class HttpHealthCheckTest extends TestCase
 
         $this->app->bind(Client::class, function ($app, $args) {
             $exceptions = [
-                (new \GuzzleHttp\Exception\ConnectException('Connection refused', new \GuzzleHttp\Psr7\Request('GET', 'test'))),
+                (new ConnectException('Connection refused', new Request('GET', 'test'))),
             ];
             $mockHandler = new MockHandler($exceptions);
 
@@ -104,7 +107,7 @@ class HttpHealthCheckTest extends TestCase
 
         $this->app->bind(Client::class, function ($app, $args) {
             $exceptions = [
-                (new \GuzzleHttp\Exception\TooManyRedirectsException('Will not follow more than 5 redirects', new \GuzzleHttp\Psr7\Request('GET', 'test'))),
+                (new TooManyRedirectsException('Will not follow more than 5 redirects', new Request('GET', 'test'))),
             ];
             $mockHandler = new MockHandler($exceptions);
 

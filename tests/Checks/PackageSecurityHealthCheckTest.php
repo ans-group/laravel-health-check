@@ -40,7 +40,10 @@ class PackageSecurityHealthCheckTest extends TestCase
         $status = (new StubPackageSecurityHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
-        $this->assertSame('You need to install the enlightn/security-checker package to use this check.', $status->context()['exception']['error']);
+        $this->assertSame(
+            'You need to install the enlightn/security-checker package to use this check.',
+            $status->context()['exception']['error']
+        );
     }
 
     public function testShowsProblemIfIncorrectPackageLoaded(): void
@@ -52,7 +55,10 @@ class PackageSecurityHealthCheckTest extends TestCase
         $status = (new StubPackageSecurityHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
-        $this->assertSame('The sensiolabs/security-checker package has been archived. Install enlightn/security-checker instead.', $status->context()['exception']['error']);
+        $this->assertSame(
+            'The sensiolabs/security-checker package has been archived. Install enlightn/security-checker instead.',
+            $status->context()['exception']['error']
+        );
     }
 
     public function testShowsProblemIfCannotCheckPackages(): void
@@ -69,7 +75,10 @@ class PackageSecurityHealthCheckTest extends TestCase
     {
         $this->partialMock('overload:Enlightn\SecurityChecker\SecurityChecker', fn (MockInterface $mock) =>
             $mock->shouldReceive('check')
-                ->andReturn(json_decode(file_get_contents('tests/json/securityCheckerPackageHasVulnerability.json'), true)));
+                ->andReturn(json_decode(
+                    file_get_contents('tests/json/securityCheckerPackageHasVulnerability.json'),
+                    true
+                )));
 
         $status = (new PackageSecurityHealthCheck())->status();
 
@@ -86,7 +95,10 @@ class PackageSecurityHealthCheckTest extends TestCase
 
         $this->partialMock('overload:Enlightn\SecurityChecker\SecurityChecker', fn (MockInterface $mock) =>
             $mock->shouldReceive('check')
-                ->andReturn(json_decode(file_get_contents('tests/json/securityCheckerPackageHasVulnerability.json'), true)));
+                ->andReturn(json_decode(
+                    file_get_contents('tests/json/securityCheckerPackageHasVulnerability.json'),
+                    true
+                )));
 
         $status = (new PackageSecurityHealthCheck())->status();
 
