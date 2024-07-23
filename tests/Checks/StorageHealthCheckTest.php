@@ -53,7 +53,7 @@ class StorageHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    public function test_shows_okay_if_can_write_to_storage(): void
+    public function testShowsOkayIfCanWriteToStorage(): void
     {
         config([
             'healthcheck.storage.disks' => [
