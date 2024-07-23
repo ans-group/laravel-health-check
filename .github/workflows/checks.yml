@@ -38,7 +38,7 @@ jobs:
           laravel_version: ${{ matrix.environment.laravel_version }}
 
       - name: Execute tests
-        run: vendor/bin/phpunit
+        run: composer test
 
   php-codesniffer:
     runs-on: ubuntu-latest
