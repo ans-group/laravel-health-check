@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Foundation\Application;
 use Mockery;
 use Mockery\MockInterface;
+use Tests\Stubs\Checks\PackageSecurityHealthCheck as StubPackageSecurityHealthCheck;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\PackageSecurityHealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
@@ -36,7 +37,7 @@ class PackageSecurityHealthCheckTest extends TestCase
 
     public function testShowsProblemIfRequiredPackageNotLoaded()
     {
-        $status = (new MockedPackageSecurityHealthCheck())->status();
+        $status = (new StubPackageSecurityHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
         $this->assertSame('You need to install the enlightn/security-checker package to use this check.', $status->context()['exception']['error']);
@@ -44,11 +45,11 @@ class PackageSecurityHealthCheckTest extends TestCase
 
     public function testShowsProblemIfIncorrectPackageLoaded(): void
     {
-        MockedPackageSecurityHealthCheck::$classResults = [
+        StubPackageSecurityHealthCheck::$classResults = [
             'Enlightn\SecurityChecker\SecurityChecker' => false,
             'SensioLabs\Security\SecurityChecker' => true,
         ];
-        $status = (new MockedPackageSecurityHealthCheck())->status();
+        $status = (new StubPackageSecurityHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
         $this->assertSame('The sensiolabs/security-checker package has been archived. Install enlightn/security-checker instead.', $status->context()['exception']['error']);
@@ -101,21 +102,5 @@ class PackageSecurityHealthCheckTest extends TestCase
         $status = (new PackageSecurityHealthCheck())->status();
 
         $this->assertTrue($status->isOkay());
-    }
-}
-
-class MockedPackageSecurityHealthCheck extends PackageSecurityHealthCheck
-{
-    /**
-     * @var array<string, bool>
-     */
-    public static array $classResults = [
-        'Enlightn\SecurityChecker\SecurityChecker' => false,
-        'SensioLabs\Security\SecurityChecker' => false,
-    ];
-
-    public static function checkDependency(string $class): bool
-    {
-        return static::$classResults[$class];
     }
 }

@@ -5,11 +5,12 @@ namespace Tests\Controllers;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
 use Illuminate\Routing\RouteCollection;
+use Tests\Stubs\Checks\AlwaysDegradedCheck;
+use Tests\Stubs\Checks\AlwaysDownCheck;
+use Tests\Stubs\Checks\AlwaysUpCheck;
 use Tests\TestCase;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
-use UKFast\HealthCheck\HealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
-use UKFast\HealthCheck\Status;
 
 class HealthCheckControllerTest extends TestCase
 {
@@ -206,39 +207,5 @@ class HealthCheckControllerTest extends TestCase
     protected function setChecks($checks): void
     {
         config(['healthcheck.checks' => $checks]);
-    }
-}
-
-class AlwaysUpCheck extends HealthCheck
-{
-    protected string $name = 'always-up';
-
-    public function status(): Status
-    {
-        return $this->okay();
-    }
-}
-
-class AlwaysDegradedCheck extends HealthCheck
-{
-    protected string $name = 'always-degraded';
-
-    public function status(): Status
-    {
-        return $this->degraded('Something went wrong', [
-            'debug' => 'info',
-        ]);
-    }
-}
-
-class AlwaysDownCheck extends HealthCheck
-{
-    protected string $name = 'always-down';
-
-    public function status(): Status
-    {
-        return $this->problem('Something went wrong', [
-            'debug' => 'info',
-        ]);
     }
 }

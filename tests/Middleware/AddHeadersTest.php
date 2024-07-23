@@ -3,11 +3,11 @@
 namespace Tests\Middleware;
 
 use Illuminate\Http\Request;
+use Tests\Stubs\Checks\AlwaysDownCheck;
+use Tests\Stubs\Checks\AlwaysUpCheck;
 use Tests\TestCase;
 use UKFast\HealthCheck\AppHealth;
-use UKFast\HealthCheck\HealthCheck;
 use UKFast\HealthCheck\Middleware\AddHeaders;
-use UKFast\HealthCheck\Status;
 
 class AddHeadersTest extends TestCase
 {
@@ -27,27 +27,5 @@ class AddHeadersTest extends TestCase
 
         $this->assertSame('1', $response->headers->get('X-always-up-status'));
         $this->assertSame('0', $response->headers->get('X-always-down-status'));
-    }
-}
-
-class AlwaysUpCheck extends HealthCheck
-{
-    protected string $name = 'always-up';
-
-    public function status(): Status
-    {
-        return $this->okay();
-    }
-}
-
-class AlwaysDownCheck extends HealthCheck
-{
-    protected string $name = 'always-down';
-
-    public function status(): Status
-    {
-        return $this->problem('Something went wrong', [
-            'debug' => 'info',
-        ]);
     }
 }

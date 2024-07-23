@@ -2,11 +2,11 @@
 
 namespace Tests;
 
-use RuntimeException;
+use Tests\Stubs\Checks\AlwaysDownCheck;
+use Tests\Stubs\Checks\AlwaysUpCheck;
+use Tests\Stubs\Checks\UnreliableCheck;
 use UKFast\HealthCheck\AppHealth;
 use UKFast\HealthCheck\Exceptions\CheckNotFoundException;
-use UKFast\HealthCheck\HealthCheck;
-use UKFast\HealthCheck\Status;
 
 class AppHealthTest extends TestCase
 {
@@ -40,41 +40,5 @@ class AppHealthTest extends TestCase
         $this->expectException(CheckNotFoundException::class);
 
         $appHealth->passes('does-not-exist');
-    }
-}
-
-class AlwaysUpCheck extends HealthCheck
-{
-    protected string $name = 'always-up';
-
-    public function status(): Status
-    {
-        return $this->okay();
-    }
-}
-
-class AlwaysDownCheck extends HealthCheck
-{
-    protected string $name = 'always-down';
-
-    public function status(): Status
-    {
-        return $this->problem('Something went wrong', [
-            'debug' => 'info',
-        ]);
-    }
-}
-
-
-class UnreliableCheck extends HealthCheck
-{
-    protected string $name = 'unreliable';
-
-    /**
-     * @throws RuntimeException
-     */
-    public function status(): never
-    {
-        throw new RuntimeException('Something went badly wrong');
     }
 }
