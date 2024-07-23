@@ -15,6 +15,8 @@ class HealthCheckController
      */
     public function __invoke(Container $container): JsonResponse
     {
+        $body = [];
+
         Arr::set($body, 'status', Status::OKAY);
 
         $hasProblem = false;
