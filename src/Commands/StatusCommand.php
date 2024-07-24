@@ -51,7 +51,9 @@ class StatusCommand extends Command
             }
         }
 
-        if (!$isOkay = empty($problems)) {
+        $isOkay = empty($problems);
+
+        if ($isOkay === false) {
             $this->table(['name', 'status', 'message'], $problems);
         }
 

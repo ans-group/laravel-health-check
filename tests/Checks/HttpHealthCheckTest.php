@@ -7,6 +7,7 @@ use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\TooManyRedirectsException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Application;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\HttpHealthCheck;
@@ -35,7 +36,7 @@ class HttpHealthCheckTest extends TestCase
 
         $this->app->bind(Client::class, function ($app, $args) {
             $responses = [
-                (new \GuzzleHttp\Psr7\Response(500)),
+                (new Response(500)),
             ];
             $mockHandler = new MockHandler($responses);
 
@@ -59,7 +60,7 @@ class HttpHealthCheckTest extends TestCase
 
         $this->app->bind(Client::class, function ($app, $args) {
             $responses = [
-                (new \GuzzleHttp\Psr7\Response(500)),
+                (new Response(500)),
             ];
             $mockHandler = MockHandler::createWithMiddleware($responses);
 
@@ -131,7 +132,7 @@ class HttpHealthCheckTest extends TestCase
 
         $this->app->bind(Client::class, function ($app, $args) {
             $responses = [
-                (new \GuzzleHttp\Psr7\Response(200)),
+                (new Response(200)),
             ];
             $mockHandler = new MockHandler($responses);
 

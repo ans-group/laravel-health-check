@@ -13,6 +13,7 @@ class EnvHealthCheck extends HealthCheck
     {
         $default = config('healthcheck.env-check-key', 'HEALTH_CHECK_ENV_DEFAULT_VALUE');
 
+        $missing = [];
         foreach (config('healthcheck.required-env') as $env) {
             if (env($env, $default) === $default) {
                 $missing[] = $env;
