@@ -184,6 +184,7 @@ class RedisHealthCheckTest extends TestCase
                 1 => [['master1', '6379']],
                 2 => [['master2', '6379']],
                 3 => [['master3', '6379']],
+                default => throw new Exception("unexpected invocation"),
             })
             ->willReturn('pong');
 
@@ -224,6 +225,7 @@ class RedisHealthCheckTest extends TestCase
             ->method('ping')
             ->willReturnCallback(fn(): array => match ($matcher->numberOfInvocations()) {
                 1 => [['master1', '6379']],
+                default => throw new Exception("unexpected invocation"),
             })
             ->willThrowException(new Exception("cannot connect to master1:6379"));
 
@@ -267,6 +269,7 @@ class RedisHealthCheckTest extends TestCase
                 1 => 'pong',
                 2 => 'pong',
                 3 => throw new Exception("cannot connect to master3:6379"),
+                default => throw new Exception("unexpected invocation"),
             });
 
         $redis = $this->createMock(RedisManager::class);

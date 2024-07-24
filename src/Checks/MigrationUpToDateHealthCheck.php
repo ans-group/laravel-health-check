@@ -10,7 +10,7 @@ class MigrationUpToDateHealthCheck extends HealthCheck
 {
     protected string $name = 'migration';
 
-    protected Migrator $migrator;
+    protected Migrator|null $migrator;
 
     public function status(): Status
     {
