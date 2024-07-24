@@ -26,8 +26,7 @@ class FtpHealthCheckTest extends TestCase
 
     public function testShowsOkayWhenCanConnectToFtpServer(): void
     {
-        $generator = function (): iterable
-        {
+        $generator = function (): iterable {
             yield 'foo';
             yield 'bar';
             yield 'baz';
