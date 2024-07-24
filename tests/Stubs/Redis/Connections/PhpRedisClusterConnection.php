@@ -16,8 +16,9 @@ class PhpRedisClusterConnection extends IlluminatePhpRedisClusterConnection
     }
 
     /**
-     * This cannot be changed for PSR 12 compliance as it is stubbing a dependency
+     * This cannot be changed for PSR 12 or PHPMD compliance as it is stubbing a dependency
      * @return array<string, string|int>
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     // phpcs:disable PSR2.Methods.MethodDeclaration.Underscore
     public function _masters(): array
