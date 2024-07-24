@@ -3,6 +3,7 @@
 namespace Tests\Checks;
 
 use Closure;
+use Enlightn\SecurityChecker\SecurityChecker;
 use Exception;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
@@ -59,7 +60,7 @@ class PackageSecurityHealthCheckTest extends TestCase
     public function testShowsProblemIfIncorrectPackageLoaded(): void
     {
         StubPackageSecurityHealthCheck::$classResults = [
-            'Enlightn\SecurityChecker\SecurityChecker' => false,
+            SecurityChecker::class => false,
             'SensioLabs\Security\SecurityChecker' => true,
         ];
         $status = (new StubPackageSecurityHealthCheck())->status();
