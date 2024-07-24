@@ -56,3 +56,20 @@ jobs:
 
       - name: Run codesniffer
         run: composer phpcs
+
+  php-mess-detector:
+    runs-on: ubuntu-latest
+    name: PHP Mess Detector
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          php_version: 8.3
+          laravel_version: 11
+
+      - name: Run mess detector
+        run: composer phpmd
