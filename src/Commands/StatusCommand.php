@@ -3,7 +3,10 @@
 namespace UKFast\HealthCheck\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use UKFast\HealthCheck\Facade\HealthCheck;
+use UKFast\HealthCheck\HealthCheck as Check;
 
 class StatusCommand extends Command
 {
@@ -32,33 +35,58 @@ class StatusCommand extends Command
             return 1;
         }
 
-        $onlyChecks = array_map('trim', explode(',', $only));
-        $exceptChecks = array_map('trim', explode(',', $except));
+        $onlyChecks = Str::of($only)->explode(',')
+            ->map(fn(string $check) => trim($check))
+            ->filter();
 
-        $problems = [];
-        /** @var \UKFast\HealthCheck\HealthCheck $check */
+        $exceptChecks = Str::of($except)->explode(',')
+            ->map(fn(string $check) => trim($check))
+            ->filter();
+
+        /**
+         * @var Collection<string, array<int, string>> $problems
+         */
+        $problems = collect();
+
+        /**
+         * @var Check $check
+         */
         foreach (HealthCheck::all() as $check) {
-            if ($only && !in_array($check->name(), $onlyChecks)) {
-                continue;
-            } elseif ($except && in_array($check->name(), $exceptChecks)) {
+            if ($this->shouldSkipHealthCheck($check, $onlyChecks, $exceptChecks)) {
                 continue;
             }
 
             $status = $check->status();
 
             if ($status->isProblem()) {
-                $problems[] = [$check->name(), $status->name(), $status->message()];
+                $problems->push([
+                    $check->name(),
+                    $status->name(),
+                    $status->message(),
+                ]);
             }
         }
 
-        $isOkay = empty($problems);
-
-        if ($isOkay === false) {
+        if ($problems->isEmpty() === false) {
             $this->table(['name', 'status', 'message'], $problems);
+
+            return 1;
         }
 
         $this->info('All checks passed successfully');
 
-        return $isOkay ? 0 : 1;
+        return 0;
+    }
+
+    private function shouldSkipHealthCheck(Check $check, Collection $onlyChecks, Collection $exceptChecks): bool
+    {
+        if ($onlyChecks->isNotEmpty() && $onlyChecks->contains($check->name()) === false) {
+            return true;
+        }
+
+        if ($exceptChecks->isNotEmpty() && $exceptChecks->contains($check->name())) {
+            return true;
+        }
+        return false;
     }
 }
