@@ -180,12 +180,10 @@ class RedisHealthCheckTest extends TestCase
         $matcher = $this->exactly(3);
         $redisConn->expects($matcher)
             ->method('ping')
-            ->willReturnCallback(function () use ($matcher) {
-                return match ($matcher->numberOfInvocations()) {
-                    1 => [['master1', '6379']],
-                    2 => [['master2', '6379']],
-                    3 => [['master3', '6379']],
-                };
+            ->willReturnCallback(fn(): array => match ($matcher->numberOfInvocations()) {
+                1 => [['master1', '6379']],
+                2 => [['master2', '6379']],
+                3 => [['master3', '6379']],
             })
             ->willReturn('pong');
 
@@ -224,10 +222,8 @@ class RedisHealthCheckTest extends TestCase
         $matcher = $this->exactly(1);
         $redisConn->expects($matcher)
             ->method('ping')
-            ->willReturnCallback(function () use ($matcher) {
-                return match ($matcher->numberOfInvocations()) {
-                    1 => [['master1', '6379']],
-                };
+            ->willReturnCallback(fn(): array => match ($matcher->numberOfInvocations()) {
+                1 => [['master1', '6379']],
             })
             ->willThrowException(new Exception("cannot connect to master1:6379"));
 
@@ -267,12 +263,10 @@ class RedisHealthCheckTest extends TestCase
         $matcher = $this->exactly(3);
         $redisConn->expects($matcher)
             ->method('ping')
-            ->willReturnCallback(function () use ($matcher) {
-                return match ($matcher->numberOfInvocations()) {
-                    1 => 'pong',
-                    2 => 'pong',
-                    3 => throw new Exception("cannot connect to master3:6379"),
-                };
+            ->willReturnCallback(fn(): string => match ($matcher->numberOfInvocations()) {
+                1 => 'pong',
+                2 => 'pong',
+                3 => throw new Exception("cannot connect to master3:6379"),
             });
 
         $redis = $this->createMock(RedisManager::class);

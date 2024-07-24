@@ -18,9 +18,8 @@ class AppHealth
 
     public function passes($checkName)
     {
-        $check = $this->checks->filter(function ($check) use ($checkName) {
-            return $check->name() == $checkName;
-        })->first();
+        $check = $this->checks->filter(fn($check): bool => $check->name() == $checkName)
+            ->first();
 
         if (!$check) {
             throw new CheckNotFoundException($checkName);

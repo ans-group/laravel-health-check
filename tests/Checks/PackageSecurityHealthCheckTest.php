@@ -30,8 +30,6 @@ class PackageSecurityHealthCheckTest extends TestCase
      * Mock a partial instance of an object in the container.
      *
      * @param  string  $abstract
-     * @param  \Closure|null  $mock
-     * @return MockInterface
      */
     protected function partialMock($abstract, ?Closure $mock = null): MockInterface
     {
@@ -47,7 +45,7 @@ class PackageSecurityHealthCheckTest extends TestCase
         return $this->instance($abstract, Mockery::mock(...$arguments)->makePartial());
     }
 
-    public function testShowsProblemIfRequiredPackageNotLoaded()
+    public function testShowsProblemIfRequiredPackageNotLoaded(): void
     {
         $status = (new StubPackageSecurityHealthCheck())->status();
 

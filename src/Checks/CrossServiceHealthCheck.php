@@ -12,14 +12,10 @@ class CrossServiceHealthCheck extends HealthCheck
 {
     protected string $name = 'x-service-checks';
 
-    protected Client $http;
-
-    protected Request $request;
-
-    public function __construct(Client $http, Request $request)
-    {
-        $this->http = $http;
-        $this->request = $request;
+    public function __construct(
+        protected Client $http,
+        protected Request $request
+    ) {
     }
 
     public function status(): Status
@@ -44,7 +40,7 @@ class CrossServiceHealthCheck extends HealthCheck
             }
         }
 
-        if ($failedServices) {
+        if ($failedServices !== []) {
             return $this->problem("Some services failed", $failedServices);
         }
 

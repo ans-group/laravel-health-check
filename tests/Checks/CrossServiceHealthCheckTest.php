@@ -67,7 +67,7 @@ class CrossServiceHealthCheckTest extends TestCase
         $this->assertSame(0, count($container));
     }
 
-    private function mockClient($responses, &$container): Client
+    private function mockClient(Response $responses, array &$container): Client
     {
         $container = [];
         $history = Middleware::history($container);

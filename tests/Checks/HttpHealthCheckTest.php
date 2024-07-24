@@ -35,7 +35,7 @@ class HttpHealthCheckTest extends TestCase
             'default-curl-timeout' => 1
         ]);
 
-        $this->app->bind(Client::class, function () {
+        $this->app->bind(Client::class, function (): Client {
             $responses = [
                 (new Response(500)),
             ];
@@ -59,7 +59,7 @@ class HttpHealthCheckTest extends TestCase
             'default-curl-timeout' => 1
         ]);
 
-        $this->app->bind(Client::class, function () {
+        $this->app->bind(Client::class, function (): Client {
             $responses = [
                 (new Response(500)),
             ];
@@ -83,7 +83,7 @@ class HttpHealthCheckTest extends TestCase
             'default-curl-timeout' => 1
         ]);
 
-        $this->app->bind(Client::class, function () {
+        $this->app->bind(Client::class, function (): Client {
             $exceptions = [
                 (new ConnectException('Connection refused', new Request('GET', 'test'))),
             ];
@@ -107,7 +107,7 @@ class HttpHealthCheckTest extends TestCase
             'default-curl-timeout' => 1
         ]);
 
-        $this->app->bind(Client::class, function () {
+        $this->app->bind(Client::class, function (): Client {
             $exceptions = [
                 (new TooManyRedirectsException('Will not follow more than 5 redirects', new Request('GET', 'test'))),
             ];
@@ -131,7 +131,7 @@ class HttpHealthCheckTest extends TestCase
             'default-curl-timeout' => 1,
         ]);
 
-        $this->app->bind(Client::class, function () {
+        $this->app->bind(Client::class, function (): Client {
             $responses = [
                 (new Response(200)),
             ];

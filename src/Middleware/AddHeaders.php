@@ -11,7 +11,7 @@ class AddHeaders
     {
         $response = $next($request);
 
-        HealthCheck::all()->each(function ($check) use ($response) {
+        HealthCheck::all()->each(function ($check) use ($response): void {
             $header = "X-{$check->name()}-status";
             $status = $check->status()->isOkay() ? 1 : 0;
 

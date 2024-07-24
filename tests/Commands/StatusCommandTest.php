@@ -87,7 +87,7 @@ class StatusCommandTest extends TestCase
     {
         $this->instance(
             LogHealthCheck::class,
-            Mockery::mock(LogHealthCheck::class, function (MockInterface $mock) use ($status) {
+            Mockery::mock(LogHealthCheck::class, function (MockInterface $mock) use ($status): void {
                 $mock->shouldReceive('name')->andReturn('log');
                 $mock->shouldReceive('status')->andReturn($status);
             })

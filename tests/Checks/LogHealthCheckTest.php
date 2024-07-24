@@ -23,9 +23,7 @@ class LogHealthCheckTest extends TestCase
 
     public function testShowsProblemIfCannotWriteToLogs(): void
     {
-        $this->app->bind('log', function () {
-            return new BadLogger();
-        });
+        $this->app->bind('log', fn(): BadLogger => new BadLogger());
 
         $status = (new LogHealthCheck($this->app))->status();
         $this->assertTrue($status->isProblem());
@@ -33,9 +31,7 @@ class LogHealthCheckTest extends TestCase
 
     public function testShowsOkayIfCanWriteToLogs(): void
     {
-        $this->app->bind('log', function () {
-            return new NullLogger();
-        });
+        $this->app->bind('log', fn(): \Tests\Stubs\Log\NullLogger => new NullLogger());
 
         $status = (new LogHealthCheck($this->app))->status();
         $this->assertTrue($status->isOkay());

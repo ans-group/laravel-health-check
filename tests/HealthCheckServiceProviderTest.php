@@ -60,7 +60,7 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertInstanceOf(\UKFast\HealthCheck\AppHealth::class, $this->app->make('app-health'));
     }
 
-    public function testUsesBasePathForHealthCheckRoutes()
+    public function testUsesBasePathForHealthCheckRoutes(): void
     {
         config(['healthcheck.base-path' => '/test/']);
         $this->app->register(HealthCheckServiceProvider::class);
@@ -98,7 +98,7 @@ class HealthCheckServiceProviderTest extends TestCase
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
-        if (substr(phpversion(), 0, 2) === '5.' || substr(phpversion(), 0, 3) === '7.0') {
+        if (str_starts_with(phpversion(), '5.') || str_starts_with(phpversion(), '7.0')) {
             $this->markTestSkipped('URL::signedRoute does not exists');
         }
 

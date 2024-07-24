@@ -11,11 +11,9 @@ class DatabaseHealthCheck extends HealthCheck
 {
     protected string $name = 'database';
 
-    protected DatabaseManager $database;
-
-    public function __construct(DatabaseManager $database)
-    {
-        $this->database = $database;
+    public function __construct(
+        protected DatabaseManager $database,
+    ) {
     }
 
     public function status(): Status

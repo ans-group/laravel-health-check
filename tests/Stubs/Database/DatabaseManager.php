@@ -29,7 +29,7 @@ class DatabaseManager extends IlluminateDatabaseManager
         return $this->connections[$name];
     }
 
-    public function addConnection($name, $connection)
+    public function addConnection($name, $connection): void
     {
         $this->connections[$name] = $connection;
     }
