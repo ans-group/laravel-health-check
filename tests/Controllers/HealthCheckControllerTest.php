@@ -49,8 +49,11 @@ class HealthCheckControllerTest extends TestCase
             'healthcheck.route-paths.ping' => '/pingz',
         ]);
 
-        // Manually re-boot the service provider to override the path
-        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+        /**
+         * @var HealthCheckServiceProvider $provider
+         */
+        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
+        $provider->boot();
 
         $this->setChecks([AlwaysUpCheck::class]);
 
@@ -75,8 +78,11 @@ class HealthCheckControllerTest extends TestCase
             'healthcheck.route-paths.health' => '/healthz',
         ]);
 
-        // Manually re-boot the service provider to override the path
-        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+        /**
+         * @var HealthCheckServiceProvider $provider
+         */
+        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
+        $provider->boot();
 
         $this->setChecks([AlwaysUpCheck::class]);
 
@@ -101,8 +107,11 @@ class HealthCheckControllerTest extends TestCase
             'healthcheck.route-paths' => null,
         ]);
 
-        // Manually re-boot the service provider to override the path
-        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+        /**
+         * @var HealthCheckServiceProvider $provider
+         */
+        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
+        $provider->boot();
 
         $this->setChecks([AlwaysUpCheck::class]);
 
@@ -121,7 +130,11 @@ class HealthCheckControllerTest extends TestCase
         $response = $this->get('/health');
 
 
-        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+        /**
+         * @var HealthCheckServiceProvider $provider
+         */
+        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
+        $provider->boot();
 
         $this->setChecks([AlwaysUpCheck::class]);
 

@@ -25,7 +25,7 @@ class CrossServiceHealthCheckTest extends TestCase
         $check = new CrossServiceHealthCheck($client, $request);
 
         $this->assertTrue($check->status()->isOkay());
-        $this->assertSame(1, count($container));
+        $this->assertCount(1, $container);
         $this->assertSame('http://api.example.com/health', (string) $container[0]['request']->getUri());
         $this->assertTrue(isset($container[0]['request']->getHeaders()['X-Service-Check']));
     }
@@ -41,7 +41,7 @@ class CrossServiceHealthCheckTest extends TestCase
         $check = new CrossServiceHealthCheck($client, $request);
 
         $this->assertTrue($check->status()->isProblem());
-        $this->assertSame(1, count($container));
+        $this->assertCount(1, $container);
         $this->assertSame('http://api.example.com/health', (string) $container[0]['request']->getUri());
         $this->assertTrue(isset($container[0]['request']->getHeaders()['X-Service-Check']));
     }
@@ -64,7 +64,7 @@ class CrossServiceHealthCheckTest extends TestCase
             ],
             $check->status()->context(),
         );
-        $this->assertSame(0, count($container));
+        $this->assertCount(0, $container);
     }
 
     private function mockClient(Response $responses, array &$container): Client

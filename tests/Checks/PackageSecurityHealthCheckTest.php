@@ -35,7 +35,7 @@ class PackageSecurityHealthCheckTest extends TestCase
     protected function partialMock($abstract, ?Closure $mock = null): MockInterface
     {
         /**
-         * @var Collection<int, string|Closure,null> $arguments
+         * @var Collection<int, string|Closure|null> $arguments
          */
         $arguments = collect([
             $abstract,

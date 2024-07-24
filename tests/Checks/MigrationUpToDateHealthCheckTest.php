@@ -10,7 +10,7 @@ use UKFast\HealthCheck\Checks\MigrationUpToDateHealthCheck;
 
 class MigrationUpToDateHealthCheckTest extends TestCase
 {
-    protected MockObject $healthCheck;
+    protected MockObject&MigrationUpToDateHealthCheck $healthCheck;
 
     protected MockObject $migratorMock;
 
