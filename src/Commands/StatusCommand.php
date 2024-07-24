@@ -3,7 +3,10 @@
 namespace UKFast\HealthCheck\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use UKFast\HealthCheck\Facade\HealthCheck;
+use UKFast\HealthCheck\HealthCheck as Check;
 
 class StatusCommand extends Command
 {
@@ -32,15 +35,16 @@ class StatusCommand extends Command
             return 1;
         }
 
-        $onlyChecks = array_map('trim', explode(',', $only));
-        $exceptChecks = array_map('trim', explode(',', $except));
+        $onlyChecks = Str::of($only)->explode(',')
+            ->map(fn($check) => trim($check));
+
+        $exceptChecks = Str::of($except)->explode(',')
+            ->map(fn($check) => trim($check));
 
         $problems = [];
         /** @var \UKFast\HealthCheck\HealthCheck $check */
         foreach (HealthCheck::all() as $check) {
-            if ($only && !in_array($check->name(), $onlyChecks)) {
-                continue;
-            } elseif ($except && in_array($check->name(), $exceptChecks)) {
+            if ($this->shouldSkipHealthCheck($check, $onlyChecks, $exceptChecks)) {
                 continue;
             }
 
@@ -60,5 +64,18 @@ class StatusCommand extends Command
         $this->info('All checks passed successfully');
 
         return $isOkay ? 0 : 1;
+    }
+
+    private function shouldSkipHealthCheck(Check $check, Collection $onlyChecks, Collection $exceptChecks): bool
+    {
+        if ($onlyChecks->isNotEmpty() && $onlyChecks->contains($check->name())) {
+            return true;
+        }
+
+        if ($exceptChecks->isNotEmpty() && $exceptChecks->contains($check->name())) {
+            return true;
+        }
+
+        return false;
     }
 }
