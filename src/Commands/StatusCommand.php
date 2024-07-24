@@ -36,10 +36,12 @@ class StatusCommand extends Command
         }
 
         $onlyChecks = Str::of($only)->explode(',')
-            ->map(fn(string $check) => trim($check));
+            ->map(fn(string $check) => trim($check))
+            ->filter();
 
         $exceptChecks = Str::of($except)->explode(',')
-            ->map(fn(string $check) => trim($check));
+            ->map(fn(string $check) => trim($check))
+            ->filter();
 
         $problems = [];
         /** @var \UKFast\HealthCheck\HealthCheck $check */
@@ -75,7 +77,6 @@ class StatusCommand extends Command
         if ($exceptChecks->isNotEmpty() && $exceptChecks->contains($check->name())) {
             return true;
         }
-
         return false;
     }
 }
