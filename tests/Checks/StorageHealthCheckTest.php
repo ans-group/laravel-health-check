@@ -31,7 +31,7 @@ class StorageHealthCheckTest extends TestCase
 
         Storage::shouldReceive('disk')->andReturn(new BadDisk());
 
-        $status = (new StorageHealthCheck($this->app))->status();
+        $status = (new StorageHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
     }
@@ -49,7 +49,7 @@ class StorageHealthCheckTest extends TestCase
             ->shouldReceive('get')->once()->andReturn('incorrect-string')
             ->shouldReceive('delete')->once();
 
-        $status = (new StorageHealthCheck($this->app))->status();
+        $status = (new StorageHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
     }
@@ -62,7 +62,7 @@ class StorageHealthCheckTest extends TestCase
             ]
         ]);
 
-        $status = (new StorageHealthCheck($this->app))->status();
+        $status = (new StorageHealthCheck())->status();
 
         $this->assertTrue($status->isOkay());
     }
