@@ -20,4 +20,6 @@
     <rule ref="rulesets/design.xml">
         <exclude name="NumberOfChildren" />
     </rule>
+
+    <rule ref="rulesets/naming.xml" />
 </ruleset>

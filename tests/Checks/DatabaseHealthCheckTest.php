@@ -27,10 +27,10 @@ class DatabaseHealthCheckTest extends TestCase
             'healthcheck.database.connections' => ['default'],
         ]);
 
-        $db = new DatabaseManager();
-        $db->addConnection('default', new BadConnection());
+        $database = new DatabaseManager();
+        $database->addConnection('default', new BadConnection());
 
-        $status = (new DatabaseHealthCheck($db))->status();
+        $status = (new DatabaseHealthCheck($database))->status();
 
         $this->assertTrue($status->isProblem());
     }
@@ -41,10 +41,10 @@ class DatabaseHealthCheckTest extends TestCase
             'healthcheck.database.connections' => ['default'],
         ]);
 
-        $db = new DatabaseManager();
-        $db->addConnection('default', new HealthyConnection());
+        $database = new DatabaseManager();
+        $database->addConnection('default', new HealthyConnection());
 
-        $status = (new DatabaseHealthCheck($db))->status();
+        $status = (new DatabaseHealthCheck($database))->status();
 
         $this->assertTrue($status->isOkay());
     }
@@ -55,11 +55,11 @@ class DatabaseHealthCheckTest extends TestCase
             'healthcheck.database.connections' => ['healthy', 'bad'],
         ]);
 
-        $db = new DatabaseManager();
-        $db->addConnection('healthy', new HealthyConnection());
-        $db->addConnection('bad', new BadConnection());
+        $database = new DatabaseManager();
+        $database->addConnection('healthy', new HealthyConnection());
+        $database->addConnection('bad', new BadConnection());
 
-        $status = (new DatabaseHealthCheck($db))->status();
+        $status = (new DatabaseHealthCheck($database))->status();
 
         $this->assertTrue($status->isProblem());
         $this->assertSame('bad', $status->context()['connection']);
