@@ -52,14 +52,15 @@ class PackageSecurityHealthCheck extends HealthCheck
             $vulnerabilities = collect($result);
 
             if ($vulnerabilities->isNotEmpty()) {
-                $this->vulnerablePackages = $vulnerabilities->reject(function ($vulnerability, $package) {
-                    return in_array($package, config('healthcheck.package-security.ignore'));
-                });
+                $this->vulnerablePackages = $vulnerabilities->reject(
+                    fn($vulnerability, $package): bool =>
+                        in_array($package, config('healthcheck.package-security.ignore'))
+                );
 
                 if ($this->vulnerablePackages->count()) {
-                    $this->vulnerablePackages->transform(function ($vulnerability, $package) {
-                        return $vulnerability['version'];
-                    });
+                    $this->vulnerablePackages->transform(
+                        fn($vulnerability, $package): string => $vulnerability['version']
+                    );
 
                     return $this->problem(
                         'Some packages have security vulnerabilities',

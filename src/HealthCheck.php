@@ -15,7 +15,7 @@ abstract class HealthCheck
         return $this->name;
     }
 
-    public function problem($message = '', $context = []): Status
+    public function problem(string $message = '', array $context = []): Status
     {
         return (new Status())
             ->problem($message)
@@ -23,7 +23,7 @@ abstract class HealthCheck
             ->withName($this->name());
     }
 
-    public function degraded($message = '', $context = []): Status
+    public function degraded(string $message = '', array $context = []): Status
     {
         return (new Status())
             ->degraded($message)
@@ -31,7 +31,7 @@ abstract class HealthCheck
             ->withName($this->name());
     }
 
-    public function okay($context = []): Status
+    public function okay(array $context = []): Status
     {
         return (new Status())
             ->okay()
@@ -46,7 +46,7 @@ abstract class HealthCheck
     {
         return [
             'error' => $exception->getMessage(),
-            'class' => get_class($exception),
+            'class' => $exception::class,
             'line' => $exception->getLine(),
             'file' => $exception->getFile(),
             'trace' => explode("\n", $exception->getTraceAsString()),

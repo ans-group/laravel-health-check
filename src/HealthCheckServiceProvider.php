@@ -22,7 +22,7 @@ class HealthCheckServiceProvider extends ServiceProvider
                 'as' => config('healthcheck.route-name')
             ]);
 
-        $this->app->bind('app-health', function ($app) {
+        $this->app->bind('app-health', function ($app): AppHealth {
             $checks = collect();
             foreach ($app->config->get('healthcheck.checks') as $classPath) {
                 $checks->push($app->make($classPath));
@@ -59,10 +59,10 @@ class HealthCheckServiceProvider extends ServiceProvider
 
     private function withBasePath($path): string
     {
-        $path = trim($path, '/');
-        $basePath = trim(config('healthcheck.base-path'), '/');
+        $path = trim((string) $path, '/');
+        $basePath = trim((string) config('healthcheck.base-path'), '/');
 
-        if ($basePath == '') {
+        if ($basePath === '') {
             return "/$path";
         }
 

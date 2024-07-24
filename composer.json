@@ -71,6 +71,7 @@
         "orchestra/testbench": "^8.0|^9.0",
         "phpmd/phpmd": "^2.15",
         "phpunit/phpunit": "^10.0|^11.0",
+        "rector/rector": "^1.2",
         "squizlabs/php_codesniffer": "^3.10"
     },
     "suggest": {
@@ -85,14 +86,18 @@
     "scripts": {
         "standards:check": [
             "@phpcs",
-            "@phpmd"
+            "@phpmd",
+            "@rector"
         ],
         "standards:fix": [
-            "@phpcs:fix"
+            "@phpcs:fix",
+            "@rector:fix"
         ],
         "test": "phpunit",
         "phpcs": "./vendor/bin/phpcs --standard=PSR12 --ignore=vendor .",
         "phpcs:fix": "./vendor/bin/phpcbf --standard=PSR12 --ignore=vendor .",
-        "phpmd": "./vendor/bin/phpmd . github .phpmd/ruleset.xml --color"
+        "phpmd": "./vendor/bin/phpmd . github .phpmd/ruleset.xml --color",
+        "rector": "./vendor/bin/rector process --dry-run",
+        "rector:fix": "./vendor/bin/rector process"
     }
 }

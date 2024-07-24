@@ -20,9 +20,7 @@ class BasicAuthTest extends TestCase
             'PHP_AUTH_PW' => 'wrong-password',
         ]);
 
-        $response = (new BasicAuth())->handle($request, function () {
-            return response('body', 500);
-        });
+        $response = (new BasicAuth())->handle($request, fn() => response('body', 500));
 
         $this->assertSame('', $response->getContent());
         $this->assertSame(500, $response->status());
@@ -37,9 +35,7 @@ class BasicAuthTest extends TestCase
 
         $request = Request::create('/health', 'GET');
 
-        $response = (new BasicAuth())->handle($request, function () {
-            return response('body', 500);
-        });
+        $response = (new BasicAuth())->handle($request, fn() => response('body', 500));
 
         $this->assertSame('', $response->getContent());
         $this->assertSame(500, $response->status());
@@ -57,9 +53,7 @@ class BasicAuthTest extends TestCase
             'PHP_AUTH_PW' => 'correct-password',
         ]);
 
-        $response = (new BasicAuth())->handle($request, function () {
-            return response('body', 500);
-        });
+        $response = (new BasicAuth())->handle($request, fn() => response('body', 500));
 
         $this->assertSame('body', $response->getContent());
         $this->assertSame(500, $response->status());

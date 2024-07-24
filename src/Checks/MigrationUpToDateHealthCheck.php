@@ -15,8 +15,8 @@ class MigrationUpToDateHealthCheck extends HealthCheck
     public function status(): Status
     {
         try {
-            $pendingMigrations = (array)$this->getPendingMigrations();
-            $isDatabaseUptoDate = count($pendingMigrations) === 0;
+            $pendingMigrations = $this->getPendingMigrations();
+            $isDatabaseUptoDate = $pendingMigrations === [];
             if (!$isDatabaseUptoDate) {
                 return $this->problem(
                     'Not all migrations have been executed',

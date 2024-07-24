@@ -73,3 +73,20 @@ jobs:
 
       - name: Run mess detector
         run: composer phpmd
+
+  rector:
+      runs-on: ubuntu-latest
+      name: Rector
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup
+          uses: ./.github/actions/setup
+          with:
+            php_version: 8.3
+            laravel_version: 11
+
+        - name: Run Rector
+          run: composer rector

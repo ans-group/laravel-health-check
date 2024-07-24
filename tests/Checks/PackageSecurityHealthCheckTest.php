@@ -3,6 +3,7 @@
 namespace Tests\Checks;
 
 use Closure;
+use Enlightn\SecurityChecker\SecurityChecker;
 use Exception;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
@@ -30,8 +31,6 @@ class PackageSecurityHealthCheckTest extends TestCase
      * Mock a partial instance of an object in the container.
      *
      * @param  string  $abstract
-     * @param  \Closure|null  $mock
-     * @return MockInterface
      */
     protected function partialMock($abstract, ?Closure $mock = null): MockInterface
     {
@@ -47,7 +46,7 @@ class PackageSecurityHealthCheckTest extends TestCase
         return $this->instance($abstract, Mockery::mock(...$arguments)->makePartial());
     }
 
-    public function testShowsProblemIfRequiredPackageNotLoaded()
+    public function testShowsProblemIfRequiredPackageNotLoaded(): void
     {
         $status = (new StubPackageSecurityHealthCheck())->status();
 
@@ -61,7 +60,7 @@ class PackageSecurityHealthCheckTest extends TestCase
     public function testShowsProblemIfIncorrectPackageLoaded(): void
     {
         StubPackageSecurityHealthCheck::$classResults = [
-            'Enlightn\SecurityChecker\SecurityChecker' => false,
+            SecurityChecker::class => false,
             'SensioLabs\Security\SecurityChecker' => true,
         ];
         $status = (new StubPackageSecurityHealthCheck())->status();

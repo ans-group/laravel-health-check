@@ -36,11 +36,11 @@ class StatusCommand extends Command
         }
 
         $onlyChecks = Str::of($only)->explode(',')
-            ->map(fn(string $check) => trim($check))
+            ->map(fn(string $check): string => trim($check))
             ->filter();
 
         $exceptChecks = Str::of($except)->explode(',')
-            ->map(fn(string $check) => trim($check))
+            ->map(fn(string $check): string => trim($check))
             ->filter();
 
         /**
@@ -83,10 +83,6 @@ class StatusCommand extends Command
         if ($onlyChecks->isNotEmpty() && $onlyChecks->contains($check->name()) === false) {
             return true;
         }
-
-        if ($exceptChecks->isNotEmpty() && $exceptChecks->contains($check->name())) {
-            return true;
-        }
-        return false;
+        return $exceptChecks->isNotEmpty() && $exceptChecks->contains($check->name());
     }
 }

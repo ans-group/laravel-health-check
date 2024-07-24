@@ -123,7 +123,6 @@ class Status
 
     /**
      * Returns the display name
-     * @return string
      */
     public function name(): string
     {
