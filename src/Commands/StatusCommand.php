@@ -68,7 +68,7 @@ class StatusCommand extends Command
 
     private function shouldSkipHealthCheck(Check $check, Collection $onlyChecks, Collection $exceptChecks): bool
     {
-        if ($onlyChecks->isNotEmpty() && $onlyChecks->contains($check->name())) {
+        if ($onlyChecks->isNotEmpty() && $onlyChecks->contains($check->name()) === false) {
             return true;
         }
 
