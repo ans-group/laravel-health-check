@@ -44,10 +44,10 @@ class StorageHealthCheckTest extends TestCase
             ]
         ]);
 
-        Storage::shouldReceive('disk')->with('local')->once()->andReturnSelf()
-            ->shouldReceive('put')->once()
-            ->shouldReceive('get')->once()->andReturn('incorrect-string')
-            ->shouldReceive('delete')->once();
+        Storage::shouldReceive('disk')->with('local')->once()->andReturnSelf();
+        Storage::shouldReceive('put')->once();
+        Storage::shouldReceive('get')->once()->andReturn('incorrect-string');
+        Storage::shouldReceive('delete')->once();
 
         $status = (new StorageHealthCheck())->status();
 

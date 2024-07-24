@@ -1,10 +1,11 @@
 includes:
     - vendor/larastan/larastan/extension.neon
     - vendor/phpstan/phpstan-mockery/extension.neon
-
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
 
 parameters:
-    level: 0
+    level: 2
 
     paths:
         - config
@@ -15,9 +16,15 @@ parameters:
         - vendor/*
 
     ignoreErrors:
-        # Optional dependency
+
+        # Optional dependencies
+
         - message: '#(?:C|c)lass Enlightn\\SecurityChecker\\SecurityChecker not found#'
           paths:
-            - src/Checks
-            - tests/Checks
-            - tests/Stubs/Checks
+            - src/Checks/PackageSecurityHealthCheck.php
+            - tests/Checks/PackageSecurityHealthCheckTest.php
+            - tests/Stubs/Checks/PackageSecurityHealthCheck.php
+
+        - message: '#Call to method .+ on an unknown class Enlightn\\SecurityChecker\\SecurityChecker#'
+          paths:
+            - src/Checks/PackageSecurityHealthCheck.php

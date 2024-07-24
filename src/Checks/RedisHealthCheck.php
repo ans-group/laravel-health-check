@@ -4,6 +4,7 @@ namespace UKFast\HealthCheck\Checks;
 
 use Illuminate\Redis\Connections\PhpRedisClusterConnection;
 use Illuminate\Support\Facades\Redis;
+use RedisException;
 use UKFast\HealthCheck\HealthCheck;
 use Exception;
 use UKFast\HealthCheck\Status;
@@ -29,6 +30,9 @@ class RedisHealthCheck extends HealthCheck
         return config('database.redis.client') == 'phpredis';
     }
 
+    /**
+     * @throws RedisException
+     */
     protected function handlePhpRedisPing(): void
     {
         $redis = Redis::connection();
@@ -39,6 +43,9 @@ class RedisHealthCheck extends HealthCheck
             return;
         }
 
+        if (method_exists($redis, '_masters') === false) {
+            throw new RedisException('Masters not found.');
+        }
 
         foreach ($redis->_masters() as $master) {
             $redis->ping($master);

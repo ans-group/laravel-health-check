@@ -44,9 +44,9 @@ class CacheHealthCheckTest extends TestCase
             ]
         ]);
 
-        Cache::shouldReceive('store')->with('local')->once()->andReturnSelf()
-            ->shouldReceive('put')->once()
-            ->shouldReceive('pull')->once()->andReturn('incorrect-string');
+        Cache::shouldReceive('store')->with('local')->once()->andReturnSelf();
+        Cache::shouldReceive('put')->once();
+        Cache::shouldReceive('pull')->once()->andReturn('incorrect-string');
 
         $status = (new CacheHealthCheck())->status();
 
