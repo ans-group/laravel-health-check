@@ -16,6 +16,7 @@ use UKFast\HealthCheck\HealthCheckServiceProvider;
 class RedisHealthCheckTest extends TestCase
 {
     /**
+     * @inheritDoc
      * @param Application $app
      * @return array<int, class-string>
      */

@@ -12,6 +12,7 @@ use UKFast\HealthCheck\HealthCheckServiceProvider;
 class CacheHealthCheckTest extends TestCase
 {
     /**
+     * @inheritDoc
      * @param Application $app
      * @return array<int, class-string>
      */

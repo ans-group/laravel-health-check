@@ -11,6 +11,7 @@ use Tests\TestCase;
 class HealthCheckMakeCommandTest extends TestCase
 {
     /**
+     * @inheritDoc
      * @param Application $app
      * @return array<int, class-string>
      */

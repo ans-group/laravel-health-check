@@ -10,6 +10,7 @@ use UKFast\HealthCheck\HealthCheckServiceProvider;
 class PingControllerTest extends TestCase
 {
     /**
+     * @inheritDoc
      * @param Application $app
      * @return array<int, class-string>
      */

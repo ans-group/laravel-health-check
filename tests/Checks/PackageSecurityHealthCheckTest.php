@@ -15,6 +15,7 @@ use UKFast\HealthCheck\HealthCheckServiceProvider;
 class PackageSecurityHealthCheckTest extends TestCase
 {
     /**
+     * @inheritDoc
      * @param Application $app
      * @return array<int, class-string>
      */
@@ -30,9 +31,9 @@ class PackageSecurityHealthCheckTest extends TestCase
      * @param  \Closure|null  $mock
      * @return MockInterface
      */
-    protected function partialMock($abstract, Closure $mock = null): MockInterface
+    protected function partialMock($abstract, Closure $mock): MockInterface
     {
-        return $this->instance($abstract, Mockery::mock(...array_filter(func_get_args()))->makePartial());
+        return $this->instance($abstract, Mockery::mock($abstract, $mock)->makePartial());
     }
 
     public function testShowsProblemIfRequiredPackageNotLoaded()

@@ -22,4 +22,6 @@
     </rule>
 
     <rule ref="rulesets/naming.xml" />
+
+    <rule ref="rulesets/unusedcode.xml"/>
 </ruleset>

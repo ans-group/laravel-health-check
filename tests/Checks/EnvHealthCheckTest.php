@@ -10,6 +10,7 @@ use UKFast\HealthCheck\HealthCheckServiceProvider;
 class EnvHealthCheckTest extends TestCase
 {
     /**
+     * @inheritDoc
      * @param Application $app
      * @return array<int, class-string>
      */

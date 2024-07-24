@@ -13,6 +13,7 @@ use UKFast\HealthCheck\HealthCheckServiceProvider;
 class DatabaseHealthCheckTest extends TestCase
 {
     /**
+     * @inheritDoc
      * @param Application $app
      * @return array<int, class-string>
      */
