@@ -52,7 +52,7 @@ class HealthCheckServiceProvider extends ServiceProvider
             __DIR__ . '/../config/healthcheck.php' => $configPath,
         ], 'config');
 
-        if ($this->app instanceof \Laravel\Lumen\Application) {
+        if (class_exists(\Laravel\Lumen\Application::class) && $this->app instanceof \Laravel\Lumen\Application) {
             $this->app->configure('healthcheck');
         }
     }

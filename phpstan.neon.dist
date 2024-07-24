@@ -1,0 +1,23 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - vendor/phpstan/phpstan-mockery/extension.neon
+
+
+parameters:
+    level: 0
+
+    paths:
+        - config
+        - src
+        - tests
+
+    excludePaths:
+        - vendor/*
+
+    ignoreErrors:
+        # Optional dependency
+        - message: '#(?:C|c)lass Enlightn\\SecurityChecker\\SecurityChecker not found#'
+          paths:
+            - src/Checks
+            - tests/Checks
+            - tests/Stubs/Checks
