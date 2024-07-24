@@ -14,7 +14,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
 
     protected MockObject $migratorMock;
 
-    protected MockObject $migrationRepositoryMock;
+    protected MockObject $migrationRepository;
 
 
     public function prepare(): void
@@ -27,13 +27,13 @@ class MigrationUpToDateHealthCheckTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->migrationRepositoryMock = $this->getMockBuilder(MigrationRepositoryInterface::class)
+        $this->migrationRepository = $this->getMockBuilder(MigrationRepositoryInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->migratorMock->expects(($this->any()))
             ->method('getRepository')
-            ->willReturn($this->migrationRepositoryMock);
+            ->willReturn($this->migrationRepository);
 
         $this->migratorMock->expects($this->any())
             ->method('repositoryExists')
@@ -53,7 +53,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
                 'missing_migration.php' => 2
             ]);
 
-        $this->migrationRepositoryMock->expects($this->once())
+        $this->migrationRepository->expects($this->once())
             ->method('getRan')
             ->willReturn([]);
 
@@ -75,7 +75,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
             ->method('repositoryExists')
             ->willReturn(false);
 
-        $this->migrationRepositoryMock->expects($this->any())
+        $this->migrationRepository->expects($this->any())
             ->method('getRan')
             ->willReturn([]);
 
@@ -91,7 +91,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
                 'executed_migration.php' => 2
             ]);
 
-        $this->migrationRepositoryMock->expects($this->any())
+        $this->migrationRepository->expects($this->any())
             ->method('getRan')
             ->willReturn([
                 'executed_migration.php'

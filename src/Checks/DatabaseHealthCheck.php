@@ -11,11 +11,11 @@ class DatabaseHealthCheck extends HealthCheck
 {
     protected string $name = 'database';
 
-    protected DatabaseManager $db;
+    protected DatabaseManager $database;
 
-    public function __construct(DatabaseManager $db)
+    public function __construct(DatabaseManager $database)
     {
-        $this->db = $db;
+        $this->database = $database;
     }
 
     public function status(): Status
@@ -26,7 +26,7 @@ class DatabaseHealthCheck extends HealthCheck
                     $connection = '';
                 }
 
-                $pdo = $this->db->connection($connection)->getPdo();
+                $this->database->connection($connection)->getPdo();
             } catch (Exception $e) {
                 return $this->problem('Could not connect to db', [
                     'connection' => $connection,

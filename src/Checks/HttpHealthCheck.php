@@ -46,14 +46,14 @@ class HttpHealthCheck extends HealthCheck
 
             try {
                 $response = $client->get($address);
-            } catch (ConnectException $e) {
-                $badConnections->put($address, $e->getMessage());
+            } catch (ConnectException $exception) {
+                $badConnections->put($address, $exception->getMessage());
 
                 continue;
-            } catch (BadResponseException $e) {
-                $response = $e->getResponse();
-            } catch (Exception $e) {
-                $generalFailures->put($address, $this->exceptionContext($e));
+            } catch (BadResponseException $exception) {
+                $response = $exception->getResponse();
+            } catch (Exception $exception) {
+                $generalFailures->put($address, $this->exceptionContext($exception));
 
                 continue;
             }

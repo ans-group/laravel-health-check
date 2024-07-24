@@ -5,6 +5,8 @@ namespace Tests\Checks;
 use Closure;
 use Exception;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Mockery;
 use Mockery\MockInterface;
 use Tests\Stubs\Checks\PackageSecurityHealthCheck as StubPackageSecurityHealthCheck;
@@ -15,6 +17,7 @@ use UKFast\HealthCheck\HealthCheckServiceProvider;
 class PackageSecurityHealthCheckTest extends TestCase
 {
     /**
+     * @inheritDoc
      * @param Application $app
      * @return array<int, class-string>
      */
@@ -30,9 +33,18 @@ class PackageSecurityHealthCheckTest extends TestCase
      * @param  \Closure|null  $mock
      * @return MockInterface
      */
-    protected function partialMock($abstract, Closure $mock = null): MockInterface
+    protected function partialMock($abstract, ?Closure $mock = null): MockInterface
     {
-        return $this->instance($abstract, Mockery::mock(...array_filter(func_get_args()))->makePartial());
+        /**
+         * @var Collection<int, string|Closure,null> $arguments
+         */
+        $arguments = collect([
+            $abstract,
+            $mock,
+        ])
+            ->filter();
+
+        return $this->instance($abstract, Mockery::mock(...$arguments)->makePartial());
     }
 
     public function testShowsProblemIfRequiredPackageNotLoaded()

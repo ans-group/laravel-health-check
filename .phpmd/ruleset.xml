@@ -12,12 +12,20 @@
     <exclude-pattern>vendor/*</exclude-pattern>
 
     <rule ref="rulesets/cleancode.xml">
+        <!-- This is mainly for Laravel facade static accessors -->
         <exclude name="StaticAccess" />
     </rule>
 
     <rule ref="rulesets/codesize.xml" />
 
+    <rule ref="rulesets/controversial.xml" />
+
     <rule ref="rulesets/design.xml">
+        <!-- This package is designed to have many children of the healthcheck class -->
         <exclude name="NumberOfChildren" />
     </rule>
+
+    <rule ref="rulesets/naming.xml" />
+
+    <rule ref="rulesets/unusedcode.xml"/>
 </ruleset>

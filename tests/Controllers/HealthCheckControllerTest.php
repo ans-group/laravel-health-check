@@ -15,6 +15,7 @@ use UKFast\HealthCheck\HealthCheckServiceProvider;
 class HealthCheckControllerTest extends TestCase
 {
     /**
+     * @inheritDoc
      * @param Application $app
      * @return array<int, class-string>
      */
