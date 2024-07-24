@@ -3,6 +3,8 @@
 namespace Tests\Stubs\Database;
 
 use Illuminate\Database\Connection;
+use Mockery;
+use PDO;
 
 class HealthyConnection extends Connection
 {
@@ -10,8 +12,8 @@ class HealthyConnection extends Connection
     {
     }
 
-    public function getPdo(): bool
+    public function getPdo(): PDO
     {
-        return true;
+        return Mockery::mock(PDO::class);
     }
 }
