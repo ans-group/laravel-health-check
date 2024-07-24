@@ -43,8 +43,14 @@ class StatusCommand extends Command
             ->map(fn(string $check) => trim($check))
             ->filter();
 
-        $problems = [];
-        /** @var \UKFast\HealthCheck\HealthCheck $check */
+        /**
+         * @var Collection<string, array<int, string>> $problems
+         */
+        $problems = collect();
+
+        /**
+         * @var Check $check
+         */
         foreach (HealthCheck::all() as $check) {
             if ($this->shouldSkipHealthCheck($check, $onlyChecks, $exceptChecks)) {
                 continue;
@@ -53,19 +59,23 @@ class StatusCommand extends Command
             $status = $check->status();
 
             if ($status->isProblem()) {
-                $problems[] = [$check->name(), $status->name(), $status->message()];
+                $problems->push([
+                    $check->name(),
+                    $status->name(),
+                    $status->message(),
+                ]);
             }
         }
 
-        $isOkay = empty($problems);
-
-        if ($isOkay === false) {
+        if ($problems->isEmpty() === false) {
             $this->table(['name', 'status', 'message'], $problems);
+
+            return 1;
         }
 
         $this->info('All checks passed successfully');
 
-        return $isOkay ? 0 : 1;
+        return 0;
     }
 
     private function shouldSkipHealthCheck(Check $check, Collection $onlyChecks, Collection $exceptChecks): bool
