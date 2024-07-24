@@ -10,7 +10,7 @@ class AppHealth
 {
     public function __construct(
         /**
-         * @var Collection<int, class-string>
+         * @var Collection<int, HealthCheck>
          */
         protected Collection $checks,
     ) {
@@ -18,9 +18,6 @@ class AppHealth
 
     public function passes($checkName)
     {
-        /**
-         * @var HealthCheck $check
-         */
         $check = $this->checks->filter(function ($check) use ($checkName) {
             return $check->name() == $checkName;
         })->first();
@@ -44,7 +41,7 @@ class AppHealth
     /**
      * Returns a collection of all health checks
      *
-     * @return Collection<int, class-string>
+     * @return Collection<int, HealthCheck>
      */
     public function all(): Collection
     {
