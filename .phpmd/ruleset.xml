@@ -17,5 +17,7 @@
 
     <rule ref="rulesets/codesize.xml" />
 
+    <rule ref="rulesets/design.xml">
+        <exclude name="NumberOfChildren" />
+    </rule>
 </ruleset>
-
