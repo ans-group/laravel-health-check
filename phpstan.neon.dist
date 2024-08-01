@@ -5,7 +5,7 @@ includes:
     - vendor/phpstan/phpstan-phpunit/rules.neon
 
 parameters:
-    level: 4
+    level: 5
 
     paths:
         - config
@@ -24,6 +24,10 @@ parameters:
             - src/Checks/PackageSecurityHealthCheck.php
             - tests/Checks/PackageSecurityHealthCheckTest.php
             - tests/Stubs/Checks/PackageSecurityHealthCheck.php
+
+        - message: '#(?:C|c)lass SensioLabs\\Security\\SecurityChecker not found#'
+          paths:
+            - src/Checks/PackageSecurityHealthCheck.php
 
         - message: '#Call to method .+ on an unknown class Enlightn\\SecurityChecker\\SecurityChecker#'
           paths:

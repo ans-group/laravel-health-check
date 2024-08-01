@@ -53,7 +53,7 @@ class CrossServiceHealthCheckTest extends TestCase
         $container = [];
         $client = $this->mockClient(new Response(500), $container);
         $request = Request::create('/');
-        $request->headers->set('X-Service-Check', true);
+        $request->headers->set('X-Service-Check', 'true');
 
         $check = new CrossServiceHealthCheck($client, $request);
 
