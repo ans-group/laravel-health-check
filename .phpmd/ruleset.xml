@@ -16,7 +16,18 @@
         <exclude name="StaticAccess" />
     </rule>
 
-    <rule ref="rulesets/codesize.xml" />
+    <rule ref="rulesets/codesize.xml">
+        <!-- We don't want to limit public methods on tests -->
+        <exclude name="TooManyPublicMethods" />
+    </rule>
+
+    <rule ref="rulesets/codesize.xml/TooManyPublicMethods">
+        <properties>
+            <!-- Ignore test and the "with" set methods as well as the default ignores -->
+            <property name="ignorepattern" value="/^(test|set|get|with)/i" />
+        </properties>
+    </rule>
+
 
     <rule ref="rulesets/controversial.xml" />
 

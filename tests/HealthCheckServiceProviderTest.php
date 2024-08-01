@@ -4,6 +4,7 @@ namespace Tests;
 
 use Artisan;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 use URL;
@@ -60,20 +61,17 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertInstanceOf(\UKFast\HealthCheck\AppHealth::class, $this->app->make('app-health'));
     }
 
-    public function testUsesBasePathForHealthCheckRoutes(): void
+    #[DataProvider('routeProvider')]
+    public function testUsesBasePathForHealthCheckRoutes(string $route): void
     {
         config(['healthcheck.base-path' => '/test/']);
         $this->app->register(HealthCheckServiceProvider::class);
 
         $routes = $this->app->make('router')->getRoutes();
 
-        $this->assertNotNull($routes->match(Request::create('/test/ping')));
+        $this->assertNotNull($routes->match(Request::create('/test' . $route)));
         $this->expectException(NotFoundHttpException::class);
-        $this->assertNull($routes->match(Request::create('/ping')));
-
-        $this->assertNotNull($routes->match(Request::create('/test/health')));
-        $this->expectException(NotFoundHttpException::class);
-        $this->assertNull($routes->match(Request::create('/health')));
+        $routes->match(Request::create($route));
     }
 
     public function testBasePathDefaultsToNothing(): void
@@ -104,5 +102,17 @@ class HealthCheckServiceProviderTest extends TestCase
 
         $url = URL::signedRoute(config('healthcheck.route-name'));
         $this->assertNotNull($url);
+    }
+
+    public static function routeProvider(): array
+    {
+        return [
+            'ping' => [
+                'route' => '/ping',
+            ],
+            'health' => [
+                'route' => '/health',
+            ],
+        ];
     }
 }
