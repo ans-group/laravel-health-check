@@ -10,7 +10,7 @@ class AppHealth
 {
     public function __construct(
         /**
-         * @var Collection<int, HealthCheck>
+         * @var Collection<int, covariant HealthCheck>
          */
         protected Collection $checks,
     ) {
@@ -40,7 +40,7 @@ class AppHealth
     /**
      * Returns a collection of all health checks
      *
-     * @return Collection<int, HealthCheck>
+     * @return Collection<int, covariant HealthCheck>
      */
     public function all(): Collection
     {

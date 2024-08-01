@@ -12,10 +12,9 @@ class FtpHealthCheckTest extends TestCase
 {
     public function testShowsProblemWhenCantConnectToFtpServer(): void
     {
-        $ftp = Mockery::mock(FtpAdapter::class)
-            ->expects('listContents')
-            ->andThrow(new  UnableToConnectToFtpHost('uwu'))
-            ->getMock();
+        $ftp = Mockery::mock(FtpAdapter::class);
+        $ftp->expects('listContents')
+            ->andThrow(new  UnableToConnectToFtpHost('uwu'));
 
         $status = (new FtpHealthCheck($ftp))->status();
 
@@ -32,8 +31,8 @@ class FtpHealthCheckTest extends TestCase
             yield 'baz';
         };
 
-        $ftp = Mockery::mock(FtpAdapter::class)
-            ->expects('listContents')
+        $ftp = Mockery::mock(FtpAdapter::class);
+        $ftp->expects('listContents')
             ->andReturn($generator())
             ->getMock();
 
