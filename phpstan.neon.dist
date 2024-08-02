@@ -5,6 +5,8 @@ includes:
     - vendor/phpstan/phpstan-phpunit/rules.neon
 
 parameters:
+    reportUnmatchedIgnoredErrors: false
+
     level: 6
 
     paths:
