@@ -220,7 +220,6 @@ class HealthCheckControllerTest extends TestCase
 
     /**
      * @param array<int, class-string> $checks
-     * @return void
      */
     protected function setChecks(array $checks): void
     {

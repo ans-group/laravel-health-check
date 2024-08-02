@@ -59,7 +59,7 @@ class HealthCheckServiceProvider extends ServiceProvider
 
     private function withBasePath(string $path): string
     {
-        $path = trim((string) $path, '/');
+        $path = trim($path, '/');
         $basePath = trim((string) config('healthcheck.base-path'), '/');
 
         if ($basePath === '') {

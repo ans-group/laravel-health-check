@@ -18,7 +18,7 @@ class AppHealth
 
     public function passes(string $checkName): bool
     {
-        $check = $this->checks->filter(fn($check): bool => $check->name() == $checkName)
+        $check = $this->checks->filter(fn($check): bool => $check->name() === $checkName)
             ->first();
 
         if (!$check) {
