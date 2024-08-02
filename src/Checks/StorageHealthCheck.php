@@ -11,10 +11,19 @@ class StorageHealthCheck extends HealthCheck
 {
     protected string $name = 'storage';
 
+    /**
+     * @var array<int, string> $workingDisks
+     */
     protected array $workingDisks = [];
 
+    /**
+     * @var array<int, array<string, string>> $corruptedFiles
+     */
     protected array $corruptedFiles = [];
 
+    /**
+     * @var array<int, array<string, string>> $exceptions
+     */
     protected array $exceptions = [];
 
     public function status(): Status

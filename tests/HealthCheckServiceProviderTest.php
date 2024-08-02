@@ -104,6 +104,9 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertNotNull($url);
     }
 
+    /**
+     * @return array<string, array<string, string>>
+     */
     public static function routeProvider(): array
     {
         return [

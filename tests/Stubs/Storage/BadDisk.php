@@ -7,9 +7,10 @@ use Exception;
 class BadDisk
 {
     /**
+     * @param array<int, mixed> $arguments
      * @throws Exception
      */
-    public function __call($name, $arguments): never
+    public function __call(string $name, array $arguments): never
     {
         throw new Exception();
     }

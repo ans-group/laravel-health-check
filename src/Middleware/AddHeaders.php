@@ -2,12 +2,13 @@
 
 namespace UKFast\HealthCheck\Middleware;
 
+use closure;
 use Illuminate\Http\Request;
 use UKFast\HealthCheck\Facade\HealthCheck;
 
 class AddHeaders
 {
-    public function handle(Request $request, $next): mixed
+    public function handle(Request $request, closure $next): mixed
     {
         $response = $next($request);
 

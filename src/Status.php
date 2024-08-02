@@ -17,7 +17,7 @@ class Status
     protected string $message = '';
 
     /**
-     * @var array<string, string|array|int>
+     * @var array<string, string|array<string, string>|int> $context
      */
     protected array $context = [];
 
@@ -87,7 +87,7 @@ class Status
     /**
      * Sets the context for the status
      *
-     * @param $context array<string, string|array|int>
+     * @param array<int|string, string|array<string, string>|int> $context
      */
     public function withContext(array $context): self
     {
@@ -101,7 +101,7 @@ class Status
      * pairs to help with debugging. So long as the array can be
      * json encoded, it'll be outputted
      *
-     * @return array<string, string|array|int>
+     * @return array<string, string|array<string, string>|int>
      */
     public function context(): array
     {

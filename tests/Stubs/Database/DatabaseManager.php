@@ -2,6 +2,7 @@
 
 namespace Tests\Stubs\Database;
 
+use Illuminate\Database\Connection;
 use Illuminate\Database\DatabaseManager as IlluminateDatabaseManager;
 use InvalidArgumentException;
 
@@ -14,6 +15,7 @@ class DatabaseManager extends IlluminateDatabaseManager
     }
 
     /**
+     * @param string|null $name
      * @throws InvalidArgumentException
      */
     public function connection($name = null)
@@ -29,7 +31,7 @@ class DatabaseManager extends IlluminateDatabaseManager
         return $this->connections[$name];
     }
 
-    public function addConnection($name, $connection): void
+    public function addConnection(string $name, Connection $connection): void
     {
         $this->connections[$name] = $connection;
     }

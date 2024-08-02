@@ -218,7 +218,11 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    protected function setChecks($checks): void
+    /**
+     * @param array<int, class-string> $checks
+     * @return void
+     */
+    protected function setChecks(array $checks): void
     {
         config(['healthcheck.checks' => $checks]);
     }

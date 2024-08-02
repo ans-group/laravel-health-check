@@ -6,7 +6,10 @@ use Illuminate\Redis\Connections\PhpRedisClusterConnection as IlluminatePhpRedis
 
 class PhpRedisClusterConnection extends IlluminatePhpRedisClusterConnection
 {
-    public function ping(string|array $message = null): string|bool
+    /**
+     * @param string|array<int, string>|null $message
+     */
+    public function ping(string|array|null $message = null): string|bool
     {
         if (empty($message)) {
             return true;

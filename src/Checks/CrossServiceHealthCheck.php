@@ -26,6 +26,9 @@ class CrossServiceHealthCheck extends HealthCheck
             ]);
         }
 
+        /**
+         * @var array<int, array<string, string|array<string, string>>> $failedServices
+         */
         $failedServices = [];
         foreach (config('healthcheck.x-service-checks') as $service) {
             try {

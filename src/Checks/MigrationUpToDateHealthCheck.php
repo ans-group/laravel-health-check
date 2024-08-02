@@ -32,6 +32,9 @@ class MigrationUpToDateHealthCheck extends HealthCheck
         return $this->okay();
     }
 
+    /**
+     * @return array<int, string>
+     */
     protected function getPendingMigrations(): array
     {
         $files = $this->getMigrator()->getMigrationFiles($this->getMigrationPath());
@@ -40,6 +43,8 @@ class MigrationUpToDateHealthCheck extends HealthCheck
 
     /**
      * Gets ran migrations with repository check
+     * @return array<int, string>
+     *
      */
     protected function getRanMigrations(): array
     {
