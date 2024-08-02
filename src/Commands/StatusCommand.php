@@ -35,10 +35,16 @@ class StatusCommand extends Command
             return 1;
         }
 
+        /**
+         * @var Collection<int, string> $onlyChecks
+         */
         $onlyChecks = Str::of($only)->explode(',')
             ->map(fn(string $check): string => trim($check))
             ->filter();
 
+        /**
+         * @var Collection<int, string> $exceptChecks
+         */
         $exceptChecks = Str::of($except)->explode(',')
             ->map(fn(string $check): string => trim($check))
             ->filter();
@@ -78,6 +84,10 @@ class StatusCommand extends Command
         return 0;
     }
 
+    /**
+     * @param Collection<int, string> $onlyChecks
+     * @param Collection<int, string> $exceptChecks
+     */
     private function shouldSkipHealthCheck(Check $check, Collection $onlyChecks, Collection $exceptChecks): bool
     {
         if ($onlyChecks->isNotEmpty() && $onlyChecks->contains($check->name()) === false) {

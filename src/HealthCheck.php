@@ -15,6 +15,9 @@ abstract class HealthCheck
         return $this->name;
     }
 
+    /**
+     * @param array<int|string, string|array<string|int, string|array<string, string>>|int> $context
+     */
     public function problem(string $message = '', array $context = []): Status
     {
         return (new Status())
@@ -23,6 +26,9 @@ abstract class HealthCheck
             ->withName($this->name());
     }
 
+    /**
+     * @param array<int|string, string|array<string|int, string|array<string, string>>|int> $context
+     */
     public function degraded(string $message = '', array $context = []): Status
     {
         return (new Status())
@@ -31,6 +37,9 @@ abstract class HealthCheck
             ->withName($this->name());
     }
 
+    /**
+     * @param array<int|string, string|array<string|int, string|array<string, string>>|int> $context
+     */
     public function okay(array $context = []): Status
     {
         return (new Status())
@@ -40,7 +49,7 @@ abstract class HealthCheck
     }
 
     /**
-     * @return array<string, string|array|int>
+     * @return array<int|string, string|array<string|int, string|array<string, string>>|int>
      */
     protected function exceptionContext(Throwable $exception): array
     {

@@ -34,7 +34,7 @@ class HttpHealthCheck extends HealthCheck
         $badConnections = collect();
 
         /**
-         * @var Collection<string, array<string|int|array>> $generalFailures
+         * @var Collection<string, array<string|int|array<int, string>>> $generalFailures
          */
         $generalFailures = collect();
 
@@ -80,7 +80,7 @@ class HttpHealthCheck extends HealthCheck
     /**
      * @param Collection<string, array<string, string>> $badResponses
      * @param Collection<string, string> $badConnections
-     * @param Collection<string, array<string|int|array>> $generalFailures
+     * @param Collection<string, array<string|int|array<int, string>>> $generalFailures
      */
     private function isOkay(Collection $badResponses, Collection $badConnections, Collection $generalFailures): bool
     {

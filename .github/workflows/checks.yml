@@ -25,7 +25,7 @@ jobs:
           - php_version: 8.3
             laravel_version: 11
 
-    name: PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }}
+    name: Test on PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }}
 
     steps:
       - name: Checkout code
@@ -90,3 +90,20 @@ jobs:
 
         - name: Run Rector
           run: composer rector
+
+  larastan:
+      runs-on: ubuntu-latest
+      name: Larastan
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup
+          uses: ./.github/actions/setup
+          with:
+            php_version: 8.3
+            laravel_version: 11
+
+        - name: Run Larastan
+          run: composer larastan

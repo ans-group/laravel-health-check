@@ -3,6 +3,7 @@
 namespace UKFast\HealthCheck\Checks;
 
 use Exception;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
 use UKFast\HealthCheck\HealthCheck;
 use Carbon\Carbon;
@@ -12,10 +13,19 @@ class CacheHealthCheck extends HealthCheck
 {
     protected string $name = 'cache';
 
+    /**
+     * @var array<int, string> $workingStores
+     */
     protected array $workingStores = [];
 
+    /**
+     * @var array<int, array<string, string>>
+     */
     protected array $incorrectValues = [];
 
+    /**
+     * @var array<int, array<string, string>> $exceptions
+     */
     protected array $exceptions = [];
 
     public function status(): Status

@@ -9,6 +9,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Psr\Http\Message\RequestInterface;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\CrossServiceHealthCheck;
 
@@ -67,6 +68,9 @@ class CrossServiceHealthCheckTest extends TestCase
         $this->assertCount(0, $container);
     }
 
+    /**
+     * @param array<string, string|null|RequestInterface|array<string, string|int>> $container
+     */
     private function mockClient(Response $responses, array &$container): Client
     {
         $container = [];

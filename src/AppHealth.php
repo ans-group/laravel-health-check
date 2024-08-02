@@ -16,9 +16,9 @@ class AppHealth
     ) {
     }
 
-    public function passes($checkName)
+    public function passes(string $checkName): bool
     {
-        $check = $this->checks->filter(fn($check): bool => $check->name() == $checkName)
+        $check = $this->checks->filter(fn($check): bool => $check->name() === $checkName)
             ->first();
 
         if (!$check) {
@@ -32,7 +32,7 @@ class AppHealth
         }
     }
 
-    public function fails($checkName): bool
+    public function fails(string $checkName): bool
     {
         return !$this->passes($checkName);
     }

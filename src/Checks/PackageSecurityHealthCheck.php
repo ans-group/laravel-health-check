@@ -44,6 +44,10 @@ class PackageSecurityHealthCheck extends HealthCheck
             }
 
             $checker = new SecurityChecker();
+
+            /**
+             * @var Collection<string, string|array<string, string>> $result
+             */
             $result = $checker->check(
                 base_path('composer.lock'),
                 config('healthcheck.package-security.exclude-dev', false),
