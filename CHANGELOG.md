@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2024-08-07
+
+### Added
+
+- Enforcing [PSR-12](https://www.php-fig.org/psr/psr-12/) in CI via
+  [PHP CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer)
+  [#91](https://github.com/ans-group/laravel-health-check/pull/91) by [@phily245](https://github.com/phily245)
+- Enforcing [PHP Mess Detector](https://phpmd.org/) in CI to keep the code tidier
+  [#92](https://github.com/ans-group/laravel-health-check/pull/92) by [@phily245](https://github.com/phily245)
+- Enforcing [PHPStan](https://phpstan.org/) [level 6](https://phpstan.org/user-guide/rule-levels) via
+  [Larastan](https://github.com/larastan/larastan) in CI to keep the code more reliable
+  [#97](https://github.com/ans-group/laravel-health-check/pull/97)
+  [#98](https://github.com/ans-group/laravel-health-check/pull/98)
+  [#99](https://github.com/ans-group/laravel-health-check/pull/99)
+  [#100](https://github.com/ans-group/laravel-health-check/pull/100)
+  [#101](https://github.com/ans-group/laravel-health-check/pull/101)
+  [#102](https://github.com/ans-group/laravel-health-check/pull/102) by [@phily245](https://github.com/phily245)
+- Enforcing [RectorPHP](https://getrector.com/) checks in CI to keep the code more maintainable
+  [#197](https://github.com/ans-group/laravel-health-check/pull/97) by [@phily245](https://github.com/phily245)
+- Adding stricter typing
+  [#87](https://github.com/ans-group/laravel-health-check/pull/87) by [@phily245](https://github.com/phily245)
+- Documenting the new tooling in the contributing guide
+  [#103](https://github.com/ans-group/laravel-health-check/pull/103) by [@phily245](https://github.com/phily245)
+
+### Removed
+
+- Dropping support for < Laravel 10.0 to only support versions with bug/security fixes
+  [#82](https://github.com/ans-group/laravel-health-check/pull/82) by [@phily245](https://github.com/phily245) 
+- Dropping support for PHP < 8.1 to match Laravel 10's support
+  [#82](https://github.com/ans-group/laravel-health-check/pull/82) by [@phily245](https://github.com/phily245)
+
+### Fixed
+
+- Upgrading the FTP file check to use flysystem v3
+  [#89](https://github.com/ans-group/laravel-health-check/pull/89) by [@phily245](https://github.com/phily245)
+- Upgrading the package security health check so to not use a deprecated package
+  [#88](https://github.com/ans-group/laravel-health-check/pull/88) by [@srichter](https://github.com/srichter)
+  & [@phily245](https://github.com/phily245)
+
 ## [1.15.0] - 2024-07-17
 
 ### Added
