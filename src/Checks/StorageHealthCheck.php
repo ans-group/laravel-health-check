@@ -5,22 +5,32 @@ namespace UKFast\HealthCheck\Checks;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use UKFast\HealthCheck\HealthCheck;
+use UKFast\HealthCheck\Status;
 
 class StorageHealthCheck extends HealthCheck
 {
-    protected $name = 'storage';
+    protected string $name = 'storage';
 
-    protected $workingDisks = [];
-    
-    protected $corruptedFiles = [];
+    /**
+     * @var array<int, string> $workingDisks
+     */
+    protected array $workingDisks = [];
 
-    protected $exceptions = [];
+    /**
+     * @var array<int, array<string, string>> $corruptedFiles
+     */
+    protected array $corruptedFiles = [];
 
-    public function status()
+    /**
+     * @var array<int, array<string, string>> $exceptions
+     */
+    protected array $exceptions = [];
+
+    public function status(): Status
     {
         $uniqueString = uniqid('laravel-health-check_', true);
 
-        foreach (config('healthcheck.storage.disks') as $disk) {
+        foreach ((array) config('healthcheck.storage.disks') as $disk) {
             try {
                 $storage = Storage::disk($disk);
 

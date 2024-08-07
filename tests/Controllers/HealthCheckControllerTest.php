@@ -2,27 +2,32 @@
 
 namespace Tests\Controllers;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
 use Illuminate\Routing\RouteCollection;
+use Tests\Stubs\Checks\AlwaysDegradedCheck;
+use Tests\Stubs\Checks\AlwaysDownCheck;
+use Tests\Stubs\Checks\AlwaysUpCheck;
 use Tests\TestCase;
 use UKFast\HealthCheck\Controllers\HealthCheckController;
-use UKFast\HealthCheck\HealthCheck;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class HealthCheckControllerTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @inheritDoc
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    /**
-     * @test
-     */
-    public function returns_overall_status_of_okay_when_everything_is_up()
+    public function testReturnsOverallStatusOfOkayWhenEverythingIsUp(): void
     {
         $this->setChecks([AlwaysUpCheck::class]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'OK',
@@ -30,10 +35,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function overrides_default_ping_path()
+    public function testOverridesDefaultPingPath(): void
     {
         app('router')->setRoutes(app(RouteCollection::class));
 
@@ -47,8 +49,11 @@ class HealthCheckControllerTest extends TestCase
             'healthcheck.route-paths.ping' => '/pingz',
         ]);
 
-        // Manually re-boot the service provider to override the path
-        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+        /**
+         * @var HealthCheckServiceProvider $provider
+         */
+        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
+        $provider->boot();
 
         $this->setChecks([AlwaysUpCheck::class]);
 
@@ -59,10 +64,7 @@ class HealthCheckControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /**
-     * @test
-     */
-    public function overrides_default_health_path()
+    public function testOverridesDefaultHealthPath(): void
     {
         app('router')->setRoutes(app(RouteCollection::class));
 
@@ -76,8 +78,11 @@ class HealthCheckControllerTest extends TestCase
             'healthcheck.route-paths.health' => '/healthz',
         ]);
 
-        // Manually re-boot the service provider to override the path
-        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+        /**
+         * @var HealthCheckServiceProvider $provider
+         */
+        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
+        $provider->boot();
 
         $this->setChecks([AlwaysUpCheck::class]);
 
@@ -91,10 +96,7 @@ class HealthCheckControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    /**
-     * @test
-     */
-    public function defaults_the_ping_path_if_config_is_not_set()
+    public function testDefaultsThePingPathIfConfigIsNotSet(): void
     {
         app('router')->setRoutes(app(RouteCollection::class));
 
@@ -105,20 +107,19 @@ class HealthCheckControllerTest extends TestCase
             'healthcheck.route-paths' => null,
         ]);
 
-        // Manually re-boot the service provider to override the path
-        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+        /**
+         * @var HealthCheckServiceProvider $provider
+         */
+        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
+        $provider->boot();
 
         $this->setChecks([AlwaysUpCheck::class]);
 
         $response = $this->get('/ping');
         $this->assertSame('pong', $response->getContent());
-
     }
 
-    /**
-     * @test
-     */
-    public function defaults_the_health_path_if_config_is_not_set()
+    public function testDefaultsTheHealthPathIfConfigIsNotSet(): void
     {
         config([
             'healthcheck.route-paths' => null,
@@ -129,7 +130,11 @@ class HealthCheckControllerTest extends TestCase
         $response = $this->get('/health');
 
 
-        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+        /**
+         * @var HealthCheckServiceProvider $provider
+         */
+        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
+        $provider->boot();
 
         $this->setChecks([AlwaysUpCheck::class]);
 
@@ -141,10 +146,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function returns_degraded_status_with_response_code_200_when_service_is_degraded()
+    public function testReturnsDegradedStatusWithResponseCode200WhenServiceIsDegraded(): void
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDegradedCheck::class]);
         $response = (new HealthCheckController())->__invoke($this->app);
@@ -161,13 +163,10 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function returns_status_of_problem_when_a_problem_occurs()
+    public function testReturnsStatusOfProblemWhenAProblemOccurs(): void
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDownCheck::class]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'PROBLEM',
@@ -180,13 +179,10 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
     }
 
-    /**
-     * @test
-     */
-    public function returns_status_of_problem_when_both_degraded_and_problem_statuses_occur()
+    public function testReturnsStatusOfProblemWhenBothDegradedAndProblemStatusesOccur(): void
     {
         $this->setChecks([AlwaysUpCheck::class, AlwaysDegradedCheck::class, AlwaysDownCheck::class]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'PROBLEM',
@@ -204,7 +200,7 @@ class HealthCheckControllerTest extends TestCase
         ], json_decode($response->getContent(), true));
 
         $this->setChecks([AlwaysUpCheck::class, AlwaysDownCheck::class, AlwaysDegradedCheck::class,]);
-        $response = (new HealthCheckController)->__invoke($this->app);
+        $response = (new HealthCheckController())->__invoke($this->app);
 
         $this->assertSame([
             'status' => 'PROBLEM',
@@ -220,45 +216,13 @@ class HealthCheckControllerTest extends TestCase
                 'context' => ['debug' => 'info'],
             ],
         ], json_decode($response->getContent(), true));
-
     }
 
-    protected function setChecks($checks)
+    /**
+     * @param array<int, class-string> $checks
+     */
+    protected function setChecks(array $checks): void
     {
         config(['healthcheck.checks' => $checks]);
-    }
-}
-
-class AlwaysUpCheck extends HealthCheck
-{
-    protected $name = 'always-up';
-
-    public function status()
-    {
-        return $this->okay();
-    }
-}
-
-class AlwaysDegradedCheck extends HealthCheck
-{
-    protected $name = 'always-degraded';
-
-    public function status()
-    {
-        return $this->degraded('Something went wrong', [
-            'debug' => 'info',
-        ]);
-    }
-}
-
-class AlwaysDownCheck extends HealthCheck
-{
-    protected $name = 'always-down';
-
-    public function status()
-    {
-        return $this->problem('Something went wrong', [
-            'debug' => 'info',
-        ]);
     }
 }

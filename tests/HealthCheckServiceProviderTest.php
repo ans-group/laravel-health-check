@@ -4,26 +4,21 @@ namespace Tests;
 
 use Artisan;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 use URL;
 
 class HealthCheckServiceProviderTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function configures_healthcheck_package()
+    public function testConfiguresHealthcheckPackage(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
         $this->assertNotNull(config('healthcheck'));
     }
 
-    /**
-     * @test
-     */
-    public function registers_health_check_route()
+    public function testRegistersHealthCheckRoute(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
@@ -33,10 +28,7 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertSame('{"status":"OK"}', $response->getContent());
     }
 
-    /**
-     * @test
-     */
-    public function registers_ping_route()
+    public function testRegistersPingRoute(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
@@ -46,30 +38,21 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertSame('pong', $response->getContent());
     }
 
-    /**
-     * @test
-     */
-    public function registers_scheduler_health_check_command()
+    public function testRegistersSchedulerHealthCheckCommand(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
         $this->assertArrayHasKey('health-check:cache-scheduler-running', Artisan::all());
     }
 
-    /**
-     * @test
-     */
-    public function registers_health_check_make_command()
+    public function testRegistersHealthCheckMakeCommand(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
         $this->assertArrayHasKey('make:check', Artisan::all());
     }
 
-    /**
-     * @test
-     */
-    public function binds_app_health()
+    public function testBindsAppHealth(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
@@ -78,29 +61,20 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertInstanceOf(\UKFast\HealthCheck\AppHealth::class, $this->app->make('app-health'));
     }
 
-    /**
-     * @test
-     */
-    public function uses_base_path_for_health_check_routes()
+    #[DataProvider('routeProvider')]
+    public function testUsesBasePathForHealthCheckRoutes(string $route): void
     {
         config(['healthcheck.base-path' => '/test/']);
         $this->app->register(HealthCheckServiceProvider::class);
 
         $routes = $this->app->make('router')->getRoutes();
 
-        $this->assertNotNull($routes->match(Request::create('/test/ping')));
+        $this->assertNotNull($routes->match(Request::create('/test' . $route)));
         $this->expectException(NotFoundHttpException::class);
-        $this->assertNull($routes->match(Request::create('/ping')));
-
-        $this->assertNotNull($routes->match(Request::create('/test/health')));
-        $this->expectException(NotFoundHttpException::class);
-        $this->assertNull($routes->match(Request::create('/health')));
+        $routes->match(Request::create($route));
     }
 
-    /**
-     * @test
-     */
-    public function base_path_defaults_to_nothing()
+    public function testBasePathDefaultsToNothing(): void
     {
         config(['healthcheck.base-path' => '']);
         $this->app->register(HealthCheckServiceProvider::class);
@@ -111,28 +85,37 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertNotNull($routes->match(Request::create('/health')));
     }
 
-    /**
-     * @test
-     */
-    public function registered_route_has_a_name()
+    public function testRegisteredRouteHasAName(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
         $routes = $this->app->make('router')->getRoutes();
         $this->assertEquals(config('healthcheck.route-name'), $routes->match(Request::create('/health'))->getName());
     }
 
-    /**
-     * @test
-     */
-    public function health_name_can_be_used_for_route_generation()
+    public function testHealthNameCanBeUsedForRouteGeneration(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
-        if (substr(phpversion(), 0, 2) === '5.' || substr(phpversion(), 0, 3) === '7.0') {
+        if (str_starts_with(phpversion(), '5.') || str_starts_with(phpversion(), '7.0')) {
             $this->markTestSkipped('URL::signedRoute does not exists');
         }
 
         $url = URL::signedRoute(config('healthcheck.route-name'));
         $this->assertNotNull($url);
+    }
+
+    /**
+     * @return array<string, array<string, string>>
+     */
+    public static function routeProvider(): array
+    {
+        return [
+            'ping' => [
+                'route' => '/ping',
+            ],
+            'health' => [
+                'route' => '/health',
+            ],
+        ];
     }
 }

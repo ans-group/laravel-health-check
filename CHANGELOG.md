@@ -26,23 +26,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   [#102](https://github.com/ans-group/laravel-health-check/pull/102) by [@phily245](https://github.com/phily245)
 - Enforcing [RectorPHP](https://getrector.com/) checks in CI to keep the code more maintainable
   [#197](https://github.com/ans-group/laravel-health-check/pull/97) by [@phily245](https://github.com/phily245)
-- Adding stricter typing
+- **(breaking change)** Adding stricter typing
   [#87](https://github.com/ans-group/laravel-health-check/pull/87) by [@phily245](https://github.com/phily245)
 - Documenting the new tooling in the contributing guide
   [#103](https://github.com/ans-group/laravel-health-check/pull/103) by [@phily245](https://github.com/phily245)
 
 ### Removed
 
-- Dropping support for < Laravel 10.0 to only support versions with bug/security fixes
+- **(breaking change)** Dropping support for < Laravel 10.0 to only support versions with bug/security fixes
   [#82](https://github.com/ans-group/laravel-health-check/pull/82) by [@phily245](https://github.com/phily245) 
-- Dropping support for PHP < 8.1 to match Laravel 10's support
+- **(breaking change)** Dropping support for PHP < 8.1 to match Laravel 10's support
   [#82](https://github.com/ans-group/laravel-health-check/pull/82) by [@phily245](https://github.com/phily245)
 
 ### Fixed
 
-- Upgrading the FTP file check to use flysystem v3
+- **(breaking change)** Upgrading the FTP file check to use flysystem v3
   [#89](https://github.com/ans-group/laravel-health-check/pull/89) by [@phily245](https://github.com/phily245)
-- Upgrading the package security health check so to not use a deprecated package
+- **(breaking change)** Upgrading the package security health check so to not use a deprecated package
   [#88](https://github.com/ans-group/laravel-health-check/pull/88) by [@srichter](https://github.com/srichter)
   & [@phily245](https://github.com/phily245)
 

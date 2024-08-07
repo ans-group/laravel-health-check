@@ -10,39 +10,30 @@ use UKFast\HealthCheck\Checks\MigrationUpToDateHealthCheck;
 
 class MigrationUpToDateHealthCheckTest extends TestCase
 {
-    /**
-     * @var MigrationUpToDateHealthCheck|MockObject
-     */
-    protected $healthCheck;
+    protected MockObject&MigrationUpToDateHealthCheck $healthCheck;
 
-    /**
-     * @var Migrator|MockObject
-     */
-    protected $migratorMock;
+    protected MockObject $migratorMock;
 
-    /**
-     * @var MigrationRepositoryInterface|MockObject
-     */
-    protected $migrationRepositoryMock;
+    protected MockObject $migrationRepository;
 
 
-    public function prepare()
+    public function prepare(): void
     {
         $this->healthCheck = $this->getMockBuilder(MigrationUpToDateHealthCheck::class)
-            ->setMethods(['getMigrator', 'getMigrationPath'])->getMock();
+            ->onlyMethods(['getMigrator', 'getMigrationPath'])->getMock();
 
         $this->migratorMock = $this->getMockBuilder(Migrator::class)
-            ->setMethods(['getRepository','repositoryExists','getMigrationFiles'])
+            ->onlyMethods(['getRepository','repositoryExists','getMigrationFiles'])
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->migrationRepositoryMock = $this->getMockBuilder(MigrationRepositoryInterface::class)
+        $this->migrationRepository = $this->getMockBuilder(MigrationRepositoryInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->migratorMock->expects(($this->any()))
             ->method('getRepository')
-            ->willReturn($this->migrationRepositoryMock);
+            ->willReturn($this->migrationRepository);
 
         $this->migratorMock->expects($this->any())
             ->method('repositoryExists')
@@ -53,11 +44,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
             ->willReturn($this->migratorMock);
     }
 
-    /**
-     * @test
-     * @return void
-     */
-    public function can_return_false_when_schema_is_outdated()
+    public function testCanReturnFalseWhenSchemaIsOutdated(): void
     {
         $this->prepare();
         $this->migratorMock->expects($this->once())
@@ -66,21 +53,16 @@ class MigrationUpToDateHealthCheckTest extends TestCase
                 'missing_migration.php' => 2
             ]);
 
-        $this->migrationRepositoryMock->expects($this->once())
+        $this->migrationRepository->expects($this->once())
             ->method('getRan')
             ->willReturn([]);
 
         $status = $this->healthCheck->status();
         $this->assertFalse($status->isOkay());
-        $this->assertSame(['pending_migrations' => ['missing_migration.php']], $status->context());
-
+        $this->assertEquals(['pending_migrations' => ['missing_migration.php']], $status->context());
     }
 
-    /**
-     * @test
-     * @return void
-     */
-    public function can_return_false_when_ran_migration_could_not_be_retrieved()
+    public function testCanReturnFalseWhenRanMigrationCouldNotBeRetrieved(): void
     {
         $this->prepare();
         $this->migratorMock->expects($this->once())
@@ -93,18 +75,14 @@ class MigrationUpToDateHealthCheckTest extends TestCase
             ->method('repositoryExists')
             ->willReturn(false);
 
-        $this->migrationRepositoryMock->expects($this->any())
+        $this->migrationRepository->expects($this->any())
             ->method('getRan')
             ->willReturn([]);
 
         $this->assertFalse($this->healthCheck->status()->isOkay());
     }
 
-    /**
-     * @test
-     * @return void
-     */
-    public function can_return_true_when_migrations_are_upToDate()
+    public function testCanReturnTrueWhenMigrationsAreUpToDate(): void
     {
         $this->prepare();
         $this->migratorMock->expects($this->once())
@@ -113,7 +91,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
                 'executed_migration.php' => 2
             ]);
 
-        $this->migrationRepositoryMock->expects($this->any())
+        $this->migrationRepository->expects($this->any())
             ->method('getRan')
             ->willReturn([
                 'executed_migration.php'

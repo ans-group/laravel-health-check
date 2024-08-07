@@ -2,20 +2,24 @@
 
 namespace Tests\Checks;
 
+use Illuminate\Foundation\Application;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\EnvHealthCheck;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class EnvHealthCheckTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @inheritDoc
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_missing_a_dotenv_file()
+    public function testShowsProblemIfMissingADotenvFile(): void
     {
         putenv('REDIS_HOST=here');
         putenv('MYSQL_HOST=here');
@@ -24,15 +28,12 @@ class EnvHealthCheckTest extends TestCase
             'REDIS_HOST',
             'MYSQL_PASSWORD'
         ]]);
-        $status = (new EnvHealthCheck)->status();
+        $status = (new EnvHealthCheck())->status();
 
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_all_required_env_params_are_present()
+    public function testShowsOkayIfAllRequiredEnvParamsArePresent(): void
     {
         putenv('REDIS_HOST=here');
         putenv('MYSQL_HOST=here');
@@ -42,22 +43,19 @@ class EnvHealthCheckTest extends TestCase
             'REDIS_HOST',
             'MYSQL_PASSWORD'
         ]]);
-        $status = (new EnvHealthCheck)->status();
+           $status = (new EnvHealthCheck())->status();
 
-        $this->assertTrue($status->isOkay());
+           $this->assertTrue($status->isOkay());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_required_env_param_is_present_but_null()
+    public function testShowsOkayIfRequiredEnvParamIsPresentButNull(): void
     {
         putenv('REDIS_PASSWORD=null');
 
         config(['healthcheck.required-env' => [
             'REDIS_PASSWORD',
         ]]);
-        $status = (new EnvHealthCheck)->status();
+        $status = (new EnvHealthCheck())->status();
 
         $this->assertTrue($status->isOkay());
     }

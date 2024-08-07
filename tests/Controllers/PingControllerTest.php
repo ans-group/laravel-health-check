@@ -2,36 +2,39 @@
 
 namespace Tests\Controllers;
 
+use Illuminate\Foundation\Application;
 use Tests\TestCase;
 use UKFast\HealthCheck\Controllers\PingController;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class PingControllerTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @inheritDoc
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [\UKFast\HealthCheck\HealthCheckServiceProvider::class];
     }
 
-    /**
-     * @test
-     */
-    public function returns_pong()
+    public function testReturnsPong(): void
     {
-        $this->assertSame('pong', (new PingController)->__invoke());
+        $this->assertSame('pong', (new PingController())->__invoke());
     }
 
-    /**
-     * @test
-     */
-    public function overrides_default_path()
+    public function testOverridesDefaultPath(): void
     {
         config([
             'healthcheck.route-paths.ping' => '/pingz',
         ]);
 
-        // Manually re-boot the service provider to override the path
-        $this->app->getProvider(HealthCheckServiceProvider::class)->boot();
+        /**
+         * @var HealthCheckServiceProvider $provider
+         */
+        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
+        $provider->boot();
 
         $response = $this->get('/pingz');
 

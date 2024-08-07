@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Laravel Heath Check Rules"
+         xmlns="http://pmd.sf.net/ruleset/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0
+                     http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+    <description>
+        Laravel Heath Check Rules
+    </description>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+
+    <rule ref="rulesets/cleancode.xml">
+        <!-- This is mainly for Laravel facade static accessors -->
+        <exclude name="StaticAccess" />
+    </rule>
+
+    <rule ref="rulesets/codesize.xml">
+        <!-- We don't want to limit public methods on tests -->
+        <exclude name="TooManyPublicMethods" />
+    </rule>
+
+    <rule ref="rulesets/codesize.xml/TooManyPublicMethods">
+        <properties>
+            <!-- Ignore test and the "with" set methods as well as the default ignores -->
+            <property name="ignorepattern" value="/^(test|set|get|with)/i" />
+        </properties>
+    </rule>
+
+
+    <rule ref="rulesets/controversial.xml" />
+
+    <rule ref="rulesets/design.xml">
+        <!-- This package is designed to have many children of the healthcheck class -->
+        <exclude name="NumberOfChildren" />
+    </rule>
+
+    <rule ref="rulesets/naming.xml" />
+
+    <rule ref="rulesets/unusedcode.xml"/>
+</ruleset>

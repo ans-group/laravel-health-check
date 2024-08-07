@@ -8,21 +8,15 @@ use UKFast\HealthCheck\Status;
 
 class MigrationUpToDateHealthCheck extends HealthCheck
 {
-    protected $name = 'migration';
+    protected string $name = 'migration';
 
-    /**
-     * @var Migrator
-     */
-    protected $migrator;
+    protected Migrator|null $migrator = null;
 
-    /**
-     * @return Status
-     */
-    public function status()
+    public function status(): Status
     {
         try {
-            $pendingMigrations = (array)$this->getPendingMigrations();
-            $isDatabaseUptoDate = count($pendingMigrations) === 0;
+            $pendingMigrations = $this->getPendingMigrations();
+            $isDatabaseUptoDate = $pendingMigrations === [];
             if (!$isDatabaseUptoDate) {
                 return $this->problem(
                     'Not all migrations have been executed',
@@ -39,9 +33,9 @@ class MigrationUpToDateHealthCheck extends HealthCheck
     }
 
     /**
-     * @return array
+     * @return array<int, string>
      */
-    protected function getPendingMigrations()
+    protected function getPendingMigrations(): array
     {
         $files = $this->getMigrator()->getMigrationFiles($this->getMigrationPath());
         return array_diff(array_keys($files), $this->getRanMigrations());
@@ -49,10 +43,10 @@ class MigrationUpToDateHealthCheck extends HealthCheck
 
     /**
      * Gets ran migrations with repository check
+     * @return array<int, string>
      *
-     * @return array
      */
-    protected function getRanMigrations()
+    protected function getRanMigrations(): array
     {
         if (!$this->getMigrator()->repositoryExists()) {
             return [];
@@ -61,10 +55,7 @@ class MigrationUpToDateHealthCheck extends HealthCheck
         return $this->getMigrator()->getRepository()->getRan();
     }
 
-    /**
-     * @return Migrator
-     */
-    protected function getMigrator()
+    protected function getMigrator(): Migrator
     {
         if (is_null($this->migrator)) {
             $this->migrator = app('migrator');
@@ -73,10 +64,7 @@ class MigrationUpToDateHealthCheck extends HealthCheck
         return $this->migrator;
     }
 
-    /**
-     * @return string
-     */
-    protected function getMigrationPath()
+    protected function getMigrationPath(): string
     {
         return database_path() . DIRECTORY_SEPARATOR . 'migrations';
     }

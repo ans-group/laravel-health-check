@@ -55,28 +55,53 @@
     },
     "prefer-stable": true,
     "require": {
-        "php": ">=5.6",
+        "php": "^8.1",
         "ext-json": "*",
-        "illuminate/support": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
-        "illuminate/http": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
-        "illuminate/console": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
-        "nesbot/carbon": "^1.26.3|^2.0"
+        "illuminate/console": "^10.0|^11.0",
+        "illuminate/http": "^10.0|^11.0",
+        "illuminate/support": "^10.0|^11.0",
+        "league/flysystem-ftp": "^3.28"
     },
     "require-dev": {
-        "phpunit/phpunit": ">=5.0 <10",
-        "orchestra/testbench": "^3.0|^4.0|^5.0|^6.0|^8.0",
+        "guzzlehttp/guzzle": "^7.5",
+        "illuminate/database": "^10.0|^11.0",
+        "illuminate/log": "^10.0|^11.0",
+        "illuminate/redis": "^10.0|^11.0",
+        "larastan/larastan": "^2.9",
         "mockery/mockery": "^1.0",
-        "illuminate/database": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
-        "illuminate/log": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
-        "illuminate/redis": "^5.4|^6.0|^7.0|^8.0|^9.0|^10.0",
-        "guzzlehttp/guzzle": ">=5.6.3"
+        "orchestra/testbench": "^8.0|^9.0",
+        "phpmd/phpmd": "^2.15",
+        "phpstan/phpstan-mockery": "^1.1",
+        "phpstan/phpstan-phpunit": "^1.4",
+        "phpunit/phpunit": "^10.0|^11.0",
+        "rector/rector": "^1.2",
+        "squizlabs/php_codesniffer": "^3.10"
     },
     "suggest": {
         "illuminate/database": "Allows the database health check to function.",
         "illuminate/log": "Allows the log health check to function.",
         "illuminate/redis": "Allows the redis health check to function.",
         "league/flysystem": "Allows the ftp health check to function.",
+        "league/flysystem-ftp": "Allows the ftp health check to function.",
         "guzzlehttp/guzzle": "Allows the http health check to function.",
-        "sensiolabs/security-checker": "Allows the package security health check to function."
+        "enlightn/security-checker": "Allows the package security health check to function."
+    },
+    "scripts": {
+        "standards:check": [
+            "@phpcs",
+            "@phpmd",
+            "@rector"
+        ],
+        "standards:fix": [
+            "@phpcs:fix",
+            "@rector:fix"
+        ],
+        "test": "phpunit",
+        "phpcs": "./vendor/bin/phpcs --standard=PSR12 --ignore=vendor .",
+        "phpcs:fix": "./vendor/bin/phpcbf --standard=PSR12 --ignore=vendor .",
+        "phpmd": "./vendor/bin/phpmd . github .phpmd/ruleset.xml --color",
+        "rector": "./vendor/bin/rector process --dry-run",
+        "rector:fix": "./vendor/bin/rector process",
+        "larastan": "./vendor/bin/phpstan analyse --error-format=table --memory-limit=1G"
     }
 }

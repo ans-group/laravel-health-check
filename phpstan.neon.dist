@@ -1,0 +1,36 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - vendor/phpstan/phpstan-mockery/extension.neon
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+
+parameters:
+    reportUnmatchedIgnoredErrors: false
+
+    level: 6
+
+    paths:
+        - config
+        - src
+        - tests
+
+    excludePaths:
+        - vendor/*
+
+    ignoreErrors:
+
+        # Optional dependencies
+
+        - message: '#(?:C|c)lass Enlightn\\SecurityChecker\\SecurityChecker not found#'
+          paths:
+            - src/Checks/PackageSecurityHealthCheck.php
+            - tests/Checks/PackageSecurityHealthCheckTest.php
+            - tests/Stubs/Checks/PackageSecurityHealthCheck.php
+
+        - message: '#(?:C|c)lass SensioLabs\\Security\\SecurityChecker not found#'
+          paths:
+            - src/Checks/PackageSecurityHealthCheck.php
+
+        - message: '#Call to method .+ on an unknown class Enlightn\\SecurityChecker\\SecurityChecker#'
+          paths:
+            - src/Checks/PackageSecurityHealthCheck.php

@@ -3,40 +3,68 @@
 namespace UKFast\HealthCheck\Checks;
 
 use Exception;
-use SensioLabs\Security\SecurityChecker;
+use Illuminate\Support\Collection;
+use Enlightn\SecurityChecker\SecurityChecker;
 use UKFast\HealthCheck\HealthCheck;
+use UKFast\HealthCheck\Status;
 
 class PackageSecurityHealthCheck extends HealthCheck
 {
-    protected $name = 'package-security';
+    protected string $name = 'package-security';
 
-    protected $vulnerablePackages = [];
+    /**
+     * @var Collection<int, string> $vulnerablePackages
+     */
+    protected Collection $vulnerablePackages;
 
-    public static function checkDependency()
+    public function __construct()
     {
-        return class_exists(SecurityChecker::class);
+        $this->vulnerablePackages = collect();
     }
 
-    public function status()
+    /**
+     * @param class-string $class
+     */
+    public static function checkDependency(string $class): bool
+    {
+        return class_exists($class);
+    }
+
+    public function status(): Status
     {
         try {
-            if (! static::checkDependency()) {
-                throw new Exception('You need to install the sensiolabs/security-checker package to use this check.');
+            if (! static::checkDependency(SecurityChecker::class)) {
+                if (static::checkDependency(\SensioLabs\Security\SecurityChecker::class)) {
+                    throw new Exception(
+                        'The sensiolabs/security-checker package has been archived.'
+                            . ' Install enlightn/security-checker instead.'
+                    );
+                }
+                throw new Exception('You need to install the enlightn/security-checker package to use this check.');
             }
 
             $checker = new SecurityChecker();
-            $result = $checker->check(base_path('composer.lock'), 'json');
 
-            if ($result->count() > 0) {
-                $vulnerabilities = collect(json_decode((string) $result, true));
-                $this->vulnerablePackages = $vulnerabilities->reject(function ($vulnerability, $package) {
-                    return in_array($package, config('healthcheck.package-security.ignore'));
-                });
+            /**
+             * @var Collection<string, string|array<string, string>> $result
+             */
+            $result = $checker->check(
+                base_path('composer.lock'),
+                config('healthcheck.package-security.exclude-dev', false),
+            );
+
+            $vulnerabilities = collect($result);
+
+            if ($vulnerabilities->isNotEmpty()) {
+                $this->vulnerablePackages = $vulnerabilities->reject(
+                    fn($vulnerability, $package): bool =>
+                        in_array($package, config('healthcheck.package-security.ignore'))
+                );
 
                 if ($this->vulnerablePackages->count()) {
-                    $this->vulnerablePackages->transform(function ($vulnerability, $package) {
-                        return $vulnerability['version'];
-                    });
+                    $this->vulnerablePackages->transform(
+                        fn($vulnerability, $package): string => $vulnerability['version']
+                    );
 
                     return $this->problem(
                         'Some packages have security vulnerabilities',

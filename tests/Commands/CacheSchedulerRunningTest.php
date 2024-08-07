@@ -8,10 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 class CacheSchedulerRunningTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function running_command_updates_cache()
+    public function testRunningCommandUpdatesCache(): void
     {
         config([
             'healthcheck.scheduler.cache-key' => 'laravel-scheduler-health-check',
@@ -21,7 +18,7 @@ class CacheSchedulerRunningTest extends TestCase
         $this->app->register(HealthCheckServiceProvider::class);
 
         $this->artisan('health-check:cache-scheduler-running');
-        
+
         $this->assertTrue(true); // check command ran without error
     }
 }

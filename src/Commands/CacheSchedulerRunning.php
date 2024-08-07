@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use UKFast\HealthCheck\Checks\SchedulerHealthCheck;
 use Carbon\Carbon;
+
 class CacheSchedulerRunning extends Command
 {
     /**
@@ -18,10 +19,10 @@ class CacheSchedulerRunning extends Command
      */
     protected $description = 'Caches the scheduler has just ran';
 
-    public function handle()
+    public function handle(): void
     {
-        $cacheKey = config('healthcheck.scheduler.cache-key');
-        $cacheMinutes = config('healthcheck.scheduler.minutes-between-checks');
+        $cacheKey = (string) config('healthcheck.scheduler.cache-key');
+        $cacheMinutes = (int) config('healthcheck.scheduler.minutes-between-checks');
 
         Cache::put($cacheKey, 'healthy', Carbon::now()->addMinutes($cacheMinutes));
     }
