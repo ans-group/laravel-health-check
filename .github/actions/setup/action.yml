@@ -27,5 +27,5 @@ runs:
       shell: bash
 
     - name: Install optional dependencies
-      run:  composer require enlightn/security-checker
+      run:  composer require enlightn/security-checker league/flysystem-ftp
       shell: bash
