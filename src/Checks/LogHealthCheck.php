@@ -27,9 +27,9 @@ class LogHealthCheck extends HealthCheck
     {
         try {
             $this->logger->info('Checking if logs are writable');
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             return $this->problem('Could not write to log file', [
-                'exception' => $this->exceptionContext($e),
+                'exception' => $this->exceptionContext($exception),
             ]);
         }
 

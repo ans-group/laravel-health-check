@@ -2,6 +2,7 @@
 
 namespace UKFast\HealthCheck\Checks;
 
+use Exception;
 use Illuminate\Database\Migrations\Migrator;
 use UKFast\HealthCheck\HealthCheck;
 use UKFast\HealthCheck\Status;
@@ -23,9 +24,9 @@ class MigrationUpToDateHealthCheck extends HealthCheck
                     ['pending_migrations' => $pendingMigrations]
                 );
             }
-        } catch (\Exception $e) {
+        } catch (Exception $exception) {
             return $this->problem('Exceptions during migrations check', [
-                'exception' => $this->exceptionContext($e),
+                'exception' => $this->exceptionContext($exception),
             ]);
         }
 

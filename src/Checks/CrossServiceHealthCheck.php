@@ -35,10 +35,10 @@ class CrossServiceHealthCheck extends HealthCheck
                 $this->http->get($service, [
                     'headers' => ['X-Service-Check' => true],
                 ]);
-            } catch (GuzzleException $e) {
+            } catch (GuzzleException $exception) {
                 $failedServices[] = [
                     'service' => $service,
-                    'exception' => $this->exceptionContext($e),
+                    'exception' => $this->exceptionContext($exception),
                 ];
             }
         }

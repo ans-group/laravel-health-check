@@ -47,10 +47,10 @@ class CacheHealthCheck extends HealthCheck
                 }
 
                 $this->workingStores[] = $store;
-            } catch (Exception $e) {
+            } catch (Exception $exception) {
                 $this->exceptions[] = [
                     'store' => $store,
-                    'error' => $e->getMessage()
+                    'error' => $exception->getMessage()
                 ];
             }
         }

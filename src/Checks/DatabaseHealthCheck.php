@@ -25,10 +25,10 @@ class DatabaseHealthCheck extends HealthCheck
                 }
 
                 $this->database->connection($connection)->getPdo();
-            } catch (Exception $e) {
+            } catch (Exception $exception) {
                 return $this->problem('Could not connect to db', [
                     'connection' => $connection,
-                    'exception' => $this->exceptionContext($e),
+                    'exception' => $this->exceptionContext($exception),
                 ]);
             }
         }

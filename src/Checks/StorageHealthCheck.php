@@ -50,10 +50,10 @@ class StorageHealthCheck extends HealthCheck
                 }
 
                 $this->workingDisks[] = $disk;
-            } catch (Exception $e) {
+            } catch (Exception $exception) {
                 $this->exceptions[] = [
                     'disk' => $disk,
-                    'error' => $this->exceptionContext($e),
+                    'error' => $this->exceptionContext($exception),
                 ];
             }
         }

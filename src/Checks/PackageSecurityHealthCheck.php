@@ -74,9 +74,9 @@ class PackageSecurityHealthCheck extends HealthCheck
                     );
                 }
             }
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             return $this->problem('Failed to check packages for security vulnerabilities', [
-                'exception' => $this->exceptionContext($e),
+                'exception' => $this->exceptionContext($exception),
             ]);
         }
 

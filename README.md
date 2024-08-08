@@ -332,9 +332,9 @@ public function status()
 {
     try {
         Redis::ping();
-    } catch (Exception $e) {
+    } catch (Exception $exception) {
         return $this->problem('Failed to connect to redis', [
-            'exception' => $this->exceptionContext($e),
+            'exception' => $this->exceptionContext($exception),
         ]);
     }
 
