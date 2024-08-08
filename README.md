@@ -67,7 +67,7 @@ If one of the checks provided cannot be resolved from the service container, we'
 
 If you'd like to tweak the config file (helpful for configuring the `EnvHealthCheck`, for example), you can publish it with:
 
-```php
+```bash
 php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProvider" --tag="config"
 ```
 
@@ -332,9 +332,9 @@ public function status()
 {
     try {
         Redis::ping();
-    } catch (Exception $e) {
+    } catch (Exception $exception) {
         return $this->problem('Failed to connect to redis', [
-            'exception' => $this->exceptionContext($e),
+            'exception' => $this->exceptionContext($exception),
         ]);
     }
 

@@ -9,15 +9,13 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Psr\Http\Message\RequestInterface;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\CrossServiceHealthCheck;
 
 class CrossServiceHealthCheckTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function returns_okay_if_all_related_services_are_up()
+    public function testReturnsOkayIfAllRelatedServicesAreUp(): void
     {
         config(['healthcheck.x-service-checks' => ['http://api.example.com/health']]);
 
@@ -28,15 +26,12 @@ class CrossServiceHealthCheckTest extends TestCase
         $check = new CrossServiceHealthCheck($client, $request);
 
         $this->assertTrue($check->status()->isOkay());
-        $this->assertSame(1, count($container));
+        $this->assertCount(1, $container);
         $this->assertSame('http://api.example.com/health', (string) $container[0]['request']->getUri());
         $this->assertTrue(isset($container[0]['request']->getHeaders()['X-Service-Check']));
     }
 
-    /**
-     * @test
-     */
-    public function returns_problem_if_at_least_one_service_is_down()
+    public function testReturnsProblemIfAtLeastOneServiceIsDown(): void
     {
         config(['healthcheck.x-service-checks' => ['http://api.example.com/health']]);
 
@@ -47,31 +42,36 @@ class CrossServiceHealthCheckTest extends TestCase
         $check = new CrossServiceHealthCheck($client, $request);
 
         $this->assertTrue($check->status()->isProblem());
-        $this->assertSame(1, count($container));
+        $this->assertCount(1, $container);
         $this->assertSame('http://api.example.com/health', (string) $container[0]['request']->getUri());
         $this->assertTrue(isset($container[0]['request']->getHeaders()['X-Service-Check']));
     }
 
-    /**
-     * @test
-     */
-    public function skips_check_if_x_service_check_header_is_present()
+    public function testSkipsCheckIfXServiceCheckHeaderIsPresent(): void
     {
         config(['healthcheck.x-service-checks' => ['http://api.example.com/health']]);
 
         $container = [];
         $client = $this->mockClient(new Response(500), $container);
         $request = Request::create('/');
-        $request->headers->set('X-Service-Check', true);
+        $request->headers->set('X-Service-Check', 'true');
 
         $check = new CrossServiceHealthCheck($client, $request);
 
         $this->assertTrue($check->status()->isOkay());
-        $this->assertSame('Skipped, X-Service-Check header is present', $check->status()->context());
-        $this->assertSame(0, count($container));
+        $this->assertSame(
+            [
+                'message' => 'Skipped, X-Service-Check header is present'
+            ],
+            $check->status()->context(),
+        );
+        $this->assertCount(0, $container);
     }
 
-    private function mockClient($responses, &$container)
+    /**
+     * @param array<string, string|null|RequestInterface|array<string, string|int>> $container
+     */
+    private function mockClient(Response $responses, array &$container): Client
     {
         $container = [];
         $history = Middleware::history($container);

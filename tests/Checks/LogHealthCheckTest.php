@@ -2,55 +2,38 @@
 
 namespace Tests\Checks;
 
+use Illuminate\Foundation\Application;
+use Tests\Stubs\Log\BadLogger;
+use Tests\Stubs\Log\NullLogger;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\LogHealthCheck;
-use Exception;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class LogHealthCheckTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @inheritDoc
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_cannot_write_to_logs()
+    public function testShowsProblemIfCannotWriteToLogs(): void
     {
-        $this->app->bind('log', function () {
-            return new BadLogger;
-        });
+        $this->app->bind('log', fn(): BadLogger => new BadLogger());
 
         $status = (new LogHealthCheck($this->app))->status();
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_can_write_to_logs()
+    public function testShowsOkayIfCanWriteToLogs(): void
     {
-        $this->app->bind('log', function () {
-            return new NullLogger;
-        });
+        $this->app->bind('log', fn(): \Tests\Stubs\Log\NullLogger => new NullLogger());
 
         $status = (new LogHealthCheck($this->app))->status();
         $this->assertTrue($status->isOkay());
-    }
-}
-
-class BadLogger
-{
-    public function __call($name, $args)
-    {
-        throw new Exception('Failed to log');
-    }
-}
-
-class NullLogger
-{
-    public function __call($name, $args)
-    {
     }
 }

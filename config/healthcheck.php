@@ -82,7 +82,7 @@ return [
      * Will be used in the HealthCheckController's response.
      */
     'default-problem-http-code' => 500,
-    
+
     /*
      * Default timeout for cURL requests for HTTP health check.
      */
@@ -114,10 +114,11 @@ return [
     ],
 
     /*
-     * A list of packages to be ignored by the Package Security health check
+     * Settings for the Package Security health check
      */
     'package-security' => [
-        'ignore' => [],
+        'exclude-dev' => false, // Exclude dev dependencies from the security check
+        'ignore' => [], // Packages to ignore
     ],
 
     'scheduler' => [
@@ -127,7 +128,7 @@ return [
 
     /*
      * Default value for env checks.
-     * For each key, the check will call `env(KEY, config('healthcheck.env-default-key'))` 
+     * For each key, the check will call `env(KEY, config('healthcheck.env-default-key'))`
      * to avoid false positives when `env(KEY)` is defined but is null.
      */
     'env-check-key' => 'HEALTH_CHECK_ENV_DEFAULT_VALUE',

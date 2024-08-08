@@ -13,10 +13,7 @@ use UKFast\HealthCheck\Status;
 
 class StatusCommandTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function running_command_status()
+    public function testRunningCommandStatus(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
@@ -27,17 +24,11 @@ class StatusCommandTest extends TestCase
 
         $result = $this->artisan('health-check:status');
 
-        if ($result instanceof PendingCommand) {
-            $result->assertExitCode(0);
-        } else {
-            $this->assertTrue(true);
-        }
+        $this->assertInstanceof(PendingCommand::class, $result);
+        $result->assertExitCode(0);
     }
 
-    /**
-     * @test
-     */
-    public function running_command_status_with_only_option()
+    public function testRunningCommandStatusWithOnlyOption(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
@@ -47,17 +38,11 @@ class StatusCommandTest extends TestCase
 
         $result = $this->artisan('health-check:status', ['--only' => 'log']);
 
-        if ($result instanceof PendingCommand) {
-            $result->assertExitCode(0);
-        } else {
-            $this->assertTrue(true);
-        }
+        $this->assertInstanceof(PendingCommand::class, $result);
+        $result->assertExitCode(0);
     }
 
-    /**
-     * @test
-     */
-    public function running_command_status_with_except_option()
+    public function testRunningCommandStatusWithExceptOption(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class, DatabaseHealthCheck::class]]);
@@ -68,35 +53,22 @@ class StatusCommandTest extends TestCase
 
         $result = $this->artisan('health-check:status', ['--except' => 'database']);
 
-        if ($result instanceof PendingCommand) {
-            $result->assertExitCode(0);
-        } else {
-            $this->assertTrue(true);
-        }
+        $this->assertInstanceof(PendingCommand::class, $result);
+        $result->assertExitCode(0);
     }
 
-    /**
-     * @test
-     */
-    public function running_command_status_with_only_and_except_option()
+    public function testRunningCommandStatusWithOnlyAndExceptOption(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
         $result = $this->artisan('health-check:status', ['--only' => 'log', '--except' => 'log']);
 
-        if ($result instanceof PendingCommand) {
-            $result
-                ->assertExitCode(1)
-                ->expectsOutput('Pass --only OR --except, but not both!');
-        } else {
-            $this->assertTrue(true);
-        }
+        $this->assertInstanceof(PendingCommand::class, $result);
+        $result->assertExitCode(1)
+            ->expectsOutput('Pass --only OR --except, but not both!');
     }
 
-    /**
-     * @test
-     */
-    public function running_command_status_with_failure_condition()
+    public function testRunningCommandStatusWithFailureCondition(): void
     {
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
@@ -106,20 +78,16 @@ class StatusCommandTest extends TestCase
 
         $result = $this->artisan('health-check:status');
 
-        if ($result instanceof PendingCommand) {
-            $result->assertExitCode(1);
-            //for laravel 5.*
-            if (method_exists($result, 'expectsTable')) {
-                $result->expectsTable(['name', 'status', 'message'], [['log', 'statusName', 'statusMessage']]);
-            }
-        }
+        $this->assertInstanceof(PendingCommand::class, $result);
+        $result->assertExitCode(1);
+        $result->expectsTable(['name', 'status', 'message'], [['log', 'statusName', 'statusMessage']]);
     }
 
-    private function mockLogHealthCheck(Status $status)
+    private function mockLogHealthCheck(Status $status): void
     {
         $this->instance(
             LogHealthCheck::class,
-            Mockery::mock(LogHealthCheck::class, function (MockInterface $mock) use ($status) {
+            Mockery::mock(LogHealthCheck::class, function (MockInterface $mock) use ($status): void {
                 $mock->shouldReceive('name')->andReturn('log');
                 $mock->shouldReceive('status')->andReturn($status);
             })

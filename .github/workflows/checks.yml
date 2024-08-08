@@ -1,0 +1,109 @@
+name: Checks
+
+on:
+  push:
+    branches:
+      - master
+      - v2.0
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  php-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        environment:
+          - php_version: 8.1
+            laravel_version: 10
+          - php_version: 8.2
+            laravel_version: 10
+          - php_version: 8.2
+            laravel_version: 11
+          - php_version: 8.3
+            laravel_version: 11
+
+    name: Test on PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          php_version: ${{ matrix.environment.php_version }}
+          laravel_version: ${{ matrix.environment.laravel_version }}
+
+      - name: Execute tests
+        run: composer test
+
+  php-codesniffer:
+    runs-on: ubuntu-latest
+    name: PHP Codesniffer
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          php_version: 8.3
+          laravel_version: 11
+
+      - name: Run codesniffer
+        run: composer phpcs
+
+  php-mess-detector:
+    runs-on: ubuntu-latest
+    name: PHP Mess Detector
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          php_version: 8.3
+          laravel_version: 11
+
+      - name: Run mess detector
+        run: composer phpmd
+
+  rector:
+      runs-on: ubuntu-latest
+      name: Rector
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup
+          uses: ./.github/actions/setup
+          with:
+            php_version: 8.3
+            laravel_version: 11
+
+        - name: Run Rector
+          run: composer rector
+
+  larastan:
+      runs-on: ubuntu-latest
+      name: Larastan
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Setup
+          uses: ./.github/actions/setup
+          with:
+            php_version: 8.3
+            laravel_version: 11
+
+        - name: Run Larastan
+          run: composer larastan

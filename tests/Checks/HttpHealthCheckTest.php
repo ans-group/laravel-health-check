@@ -3,21 +3,29 @@
 namespace Tests\Checks;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\TooManyRedirectsException;
 use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use Illuminate\Foundation\Application;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\HttpHealthCheck;
+use UKFast\HealthCheck\HealthCheckServiceProvider;
 
 class HttpHealthCheckTest extends TestCase
 {
-    public function getPackageProviders($app)
+    /**
+     * @inheritDoc
+     * @param Application $app
+     * @return array<int, class-string>
+     */
+    public function getPackageProviders($app): array
     {
-        return ['UKFast\HealthCheck\HealthCheckServiceProvider'];
+        return [HealthCheckServiceProvider::class];
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_response_code_is_incorrect()
+    public function testShowsProblemIfResponseCodeIsIncorrect(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -27,9 +35,9 @@ class HttpHealthCheckTest extends TestCase
             'default-curl-timeout' => 1
         ]);
 
-        $this->app->bind(Client::class, function ($app, $args) {
+        $this->app->bind(Client::class, function (): Client {
             $responses = [
-                (new \GuzzleHttp\Psr7\Response(500)),
+                (new Response(500)),
             ];
             $mockHandler = new MockHandler($responses);
 
@@ -41,10 +49,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_if_connection_is_unreachable()
+    public function testShowsProblemIfConnectionIsUnreachable(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -54,9 +59,9 @@ class HttpHealthCheckTest extends TestCase
             'default-curl-timeout' => 1
         ]);
 
-        $this->app->bind(Client::class, function ($app, $args) {
+        $this->app->bind(Client::class, function (): Client {
             $responses = [
-                (new \GuzzleHttp\Psr7\Response(500)),
+                (new Response(500)),
             ];
             $mockHandler = MockHandler::createWithMiddleware($responses);
 
@@ -68,10 +73,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_on_connect_exception()
+    public function testShowsProblemOnConnectException(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -81,9 +83,9 @@ class HttpHealthCheckTest extends TestCase
             'default-curl-timeout' => 1
         ]);
 
-        $this->app->bind(Client::class, function ($app, $args) {
+        $this->app->bind(Client::class, function (): Client {
             $exceptions = [
-                (new \GuzzleHttp\Exception\ConnectException('Connection refused', new \GuzzleHttp\Psr7\Request('GET', 'test'))),
+                (new ConnectException('Connection refused', new Request('GET', 'test'))),
             ];
             $mockHandler = new MockHandler($exceptions);
 
@@ -95,10 +97,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_problem_on_general_exception()
+    public function testShowsProblemOnGeneralException(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -108,9 +107,9 @@ class HttpHealthCheckTest extends TestCase
             'default-curl-timeout' => 1
         ]);
 
-        $this->app->bind(Client::class, function ($app, $args) {
+        $this->app->bind(Client::class, function (): Client {
             $exceptions = [
-                (new \GuzzleHttp\Exception\TooManyRedirectsException('Will not follow more than 5 redirects', new \GuzzleHttp\Psr7\Request('GET', 'test'))),
+                (new TooManyRedirectsException('Will not follow more than 5 redirects', new Request('GET', 'test'))),
             ];
             $mockHandler = new MockHandler($exceptions);
 
@@ -122,10 +121,7 @@ class HttpHealthCheckTest extends TestCase
         $this->assertTrue($status->isProblem());
     }
 
-    /**
-     * @test
-     */
-    public function shows_okay_if_all_connections_are_reachable()
+    public function testShowsOkayIfAllConnectionsAreReachable(): void
     {
         config([
             'healthcheck.addresses' => [
@@ -135,9 +131,9 @@ class HttpHealthCheckTest extends TestCase
             'default-curl-timeout' => 1,
         ]);
 
-        $this->app->bind(Client::class, function ($app, $args) {
+        $this->app->bind(Client::class, function (): Client {
             $responses = [
-                (new \GuzzleHttp\Psr7\Response(200)),
+                (new Response(200)),
             ];
             $mockHandler = new MockHandler($responses);
 

@@ -29,10 +29,8 @@ class HealthCheckMakeCommand extends GeneratorCommand
 
     /**
      * Get the stub file for the generator.
-     *
-     * @return string
      */
-    protected function getStub()
+    protected function getStub(): string
     {
         return __DIR__ . '/Stubs/ExampleHealthCheck.php.stub';
     }
@@ -41,9 +39,8 @@ class HealthCheckMakeCommand extends GeneratorCommand
      * Get the default namespace for the class.
      *
      * @param  string  $rootNamespace
-     * @return string
      */
-    protected function getDefaultNamespace($rootNamespace)
+    protected function getDefaultNamespace($rootNamespace): string
     {
         return $rootNamespace . '\Checks';
     }

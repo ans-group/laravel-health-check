@@ -2,51 +2,63 @@
 
 namespace UKFast\HealthCheck;
 
-use Exception;
+use Throwable;
 
 abstract class HealthCheck
 {
-    protected $name;
+    protected string $name;
 
-    abstract public function status();
+    abstract public function status(): Status;
 
-    public function name()
+    public function name(): string
     {
         return $this->name;
     }
 
-    public function problem($message = '', $context = [])
+    /**
+     * @param array<int|string, string|array<string|int, string|array<string, string>>|int> $context
+     */
+    public function problem(string $message = '', array $context = []): Status
     {
-        return (new Status)
+        return (new Status())
             ->problem($message)
             ->withContext($context)
             ->withName($this->name());
     }
 
-    public function degraded($message = '', $context = [])
+    /**
+     * @param array<int|string, string|array<string|int, string|array<string, string>>|int> $context
+     */
+    public function degraded(string $message = '', array $context = []): Status
     {
-        return (new Status)
+        return (new Status())
             ->degraded($message)
             ->withContext($context)
             ->withName($this->name());
     }
 
-    public function okay($context = [])
+    /**
+     * @param array<int|string, string|array<string|int, string|array<string, string>>|int> $context
+     */
+    public function okay(array $context = []): Status
     {
-        return (new Status)
+        return (new Status())
             ->okay()
             ->withContext($context)
             ->withName($this->name());
     }
 
-    protected function exceptionContext(Exception $e)
+    /**
+     * @return array<int|string, string|array<string|int, string|array<string, string>>|int>
+     */
+    protected function exceptionContext(Throwable $exception): array
     {
         return [
-            'error' => $e->getMessage(),
-            'class' => get_class($e),
-            'line' => $e->getLine(),
-            'file' => $e->getFile(),
-            'trace' => explode("\n", $e->getTraceAsString()),
+            'error' => $exception->getMessage(),
+            'class' => $exception::class,
+            'line' => $exception->getLine(),
+            'file' => $exception->getFile(),
+            'trace' => explode("\n", $exception->getTraceAsString()),
         ];
     }
 }

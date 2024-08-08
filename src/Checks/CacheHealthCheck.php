@@ -2,28 +2,40 @@
 
 namespace UKFast\HealthCheck\Checks;
 
+use Exception;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
 use UKFast\HealthCheck\HealthCheck;
 use Carbon\Carbon;
+use UKFast\HealthCheck\Status;
 
 class CacheHealthCheck extends HealthCheck
 {
-    protected $name = 'cache';
+    protected string $name = 'cache';
 
-    protected $workingStores = [];
-    
-    protected $incorrectValues = [];
+    /**
+     * @var array<int, string> $workingStores
+     */
+    protected array $workingStores = [];
 
-    protected $exceptions = [];
+    /**
+     * @var array<int, array<string, string>>
+     */
+    protected array $incorrectValues = [];
 
-    public function status()
+    /**
+     * @var array<int, array<string, string>> $exceptions
+     */
+    protected array $exceptions = [];
+
+    public function status(): Status
     {
         foreach (config('healthcheck.cache.stores') as $store) {
             try {
                 $cache = Cache::store($store);
 
                 $cache->put('laravel-health-check', 'healthy', Carbon::now()->addMinutes(1));
-                
+
                 $value = $cache->pull('laravel-health-check', 'broken');
 
                 if ($value != 'healthy') {
@@ -35,10 +47,10 @@ class CacheHealthCheck extends HealthCheck
                 }
 
                 $this->workingStores[] = $store;
-            } catch (\Exception $e) {
+            } catch (Exception $exception) {
                 $this->exceptions[] = [
                     'store' => $store,
-                    'error' => $e->getMessage()
+                    'error' => $exception->getMessage()
                 ];
             }
         }
