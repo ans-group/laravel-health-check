@@ -13,6 +13,6 @@ class HealthCheckTest extends TestCase
         $this->app->register(HealthCheckServiceProvider::class);
 
         config(['healthcheck.checks' => [\UKFast\HealthCheck\Checks\EnvHealthCheck::class]]);
-        $this->assertCount(1, HealthCheck::all());
+        $this->assertCount(1, HealthCheck::all()->toArray());
     }
 }
