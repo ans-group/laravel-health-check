@@ -81,6 +81,7 @@ class BadLogger implements LoggerInterface
     }
 
     /**
+     * @param mixed $level
      * @inheritDoc
      * @throws Exception
      */
