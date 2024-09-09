@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2024-09-09
+
+## Fixed
+
+- Fix a static analysis CI issue brought in by an upstream change [#107](https://github.com/ans-group/laravel-health-check/pull/107) by [@phily245](https://github.com/phily245)
+
 ## [2.0.0] - 2024-08-07
 
 ### Added
