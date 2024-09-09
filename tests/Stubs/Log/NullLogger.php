@@ -64,6 +64,7 @@ class NullLogger implements LoggerInterface
     }
 
     /**
+     * @param mixed $level
      * @inheritDoc
      */
     public function log($level, Stringable | string $message, array $context = []): void
