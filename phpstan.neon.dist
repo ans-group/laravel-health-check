@@ -34,3 +34,83 @@ parameters:
         - message: '#Call to method .+ on an unknown class Enlightn\\SecurityChecker\\SecurityChecker#'
           paths:
             - src/Checks/PackageSecurityHealthCheck.php
+
+        # Updated baseline for Larastan ^3.0
+
+        -
+          message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+          identifier: larastan.noEnvCallsOutsideOfConfig
+          count: 2
+          path: config/healthcheck.php
+
+        -
+          message: '#^Loose comparison using \!\= between ''broken'' and ''healthy'' will always evaluate to true\.$#'
+          identifier: notEqual.alwaysTrue
+          count: 1
+          path: src/Checks/CacheHealthCheck.php
+
+        -
+          message: '#^Unreachable statement \- code above always terminates\.$#'
+          identifier: deadCode.unreachable
+          count: 1
+          path: src/Checks/CacheHealthCheck.php
+
+        -
+          message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+          identifier: larastan.noEnvCallsOutsideOfConfig
+          count: 1
+          path: src/Checks/EnvHealthCheck.php
+
+        -
+          message: '#^Parameter \#2 \$value of method Illuminate\\Support\\Collection\<string,array\<string, string\>\>\:\:put\(\) expects array\<string, string\>, array\<string, mixed\> given\.$#'
+          identifier: argument.type
+          count: 1
+          path: src/Checks/HttpHealthCheck.php
+
+        -
+          message: '#^Property UKFast\\HealthCheck\\Checks\\PackageSecurityHealthCheck\:\:\$vulnerablePackages \(Illuminate\\Support\\Collection\<int, string\>\) does not accept Illuminate\\Support\\Collection\<string, array\<string, string\>\|string\>\.$#'
+          identifier: assign.propertyType
+          count: 1
+          path: src/Checks/PackageSecurityHealthCheck.php
+
+        -
+          message: '#^Offset 0 does not exist on non\-empty\-array\<string, array\<string, int\|string\>\|Psr\\Http\\Message\\RequestInterface\|string\|null\>\.$#'
+          identifier: offsetAccess.notFound
+          count: 4
+          path: tests/Checks/CrossServiceHealthCheckTest.php
+
+        -
+          message: '#^Parameter &\$container by\-ref type of method Tests\\Checks\\CrossServiceHealthCheckTest\:\:mockClient\(\) expects array\<string, array\<string, int\|string\>\|Psr\\Http\\Message\\RequestInterface\|string\|null\>, array\|ArrayAccess\<int, array\> given\.$#'
+          identifier: parameterByRef.type
+          count: 1
+          path: tests/Checks/CrossServiceHealthCheckTest.php
+
+        -
+          message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true will always evaluate to true\.$#'
+          identifier: method.alreadyNarrowedType
+          count: 1
+          path: tests/Commands/CacheSchedulerRunningTest.php
+
+        -
+          message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with Illuminate\\Routing\\Route will always evaluate to true\.$#'
+          identifier: method.alreadyNarrowedType
+          count: 3
+          path: tests/HealthCheckServiceProviderTest.php
+
+        -
+          message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with string will always evaluate to true\.$#'
+          identifier: method.alreadyNarrowedType
+          count: 1
+          path: tests/HealthCheckServiceProviderTest.php
+
+        -
+          message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.CamelCaseMethodName\)\)\: Unexpected token "\.CamelCaseMethodName\)", expected ''\)'' at offset 219 on line 5$#'
+          identifier: phpDoc.parseError
+          count: 1
+          path: tests/Stubs/Redis/Connections/PhpRedisClusterConnection.php
+
+        -
+          message: '#^PHPDoc tag @SuppressWarnings has invalid value \(\(PHPMD\.UnusedLocalVariable\)\)\: Unexpected token "\.UnusedLocalVariable\)", expected ''\)'' at offset 167 on line 4$#'
+          identifier: phpDoc.parseError
+          count: 1
+          path: tests/Stubs/Redis/Connections/PhpRedisClusterConnection.php
