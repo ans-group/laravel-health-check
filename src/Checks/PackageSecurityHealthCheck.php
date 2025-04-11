@@ -13,7 +13,7 @@ class PackageSecurityHealthCheck extends HealthCheck
     protected string $name = 'package-security';
 
     /**
-     * @var Collection<int, string> $vulnerablePackages
+     * @var Collection<string, array<string, string>|string> $vulnerablePackages
      */
     protected Collection $vulnerablePackages;
 
