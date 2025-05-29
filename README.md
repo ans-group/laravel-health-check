@@ -1,3 +1,5 @@
+![ANS Logo](https://www.ans.co.uk/wp-content/themes/ans/images/logo.svg)
+
 # Laravel Health Check
 
 A package for checking the health of your Laravel or Lumen applications.
@@ -84,7 +86,7 @@ The `config/healthcheck.php` file controls the behavior of the health check pack
 - **checks**: (Required) An array of health check classes to run. You can enable, disable, or customize checks by adding, removing, or configuring entries in this array. Each entry can be:
   - A class name (for default configuration)
   - A class name as a key, with an array of options as the value (for per-check configuration)
-  
+
   Example:
   ```php
   'checks' => [
@@ -107,7 +109,7 @@ The `config/healthcheck.php` file controls the behavior of the health check pack
       ],
   ],
   ```
-  
+
   **Common built-in checks:**
   - `DatabaseHealthCheck`: Checks database connectivity.
   - `CacheHealthCheck`: Checks cache store availability.
