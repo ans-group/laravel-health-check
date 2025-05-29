@@ -30,6 +30,46 @@ This package provides a simple, extensible way to monitor the health of your Lar
 - **CLI Integration**: Health checks can be run via Artisan commands for use in CI/CD pipelines or scheduled tasks.
 - **Extensibility**: Developers can add custom checks by creating new classes and registering them in the config.
 
+## Getting Started
+
+### Installation
+
+1. **Install via Composer**:
+   ```bash
+   composer require ans-group/laravel-health-check
+   ```
+2. **Publish the config (optional)**:
+   ```bash
+   php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProvider"
+   ```
+
+### Configuration
+
+- Configure which health checks to run by editing `config/healthcheck.php`.
+- Enable or disable built-in checks, and add your own custom checks to the `checks` array.
+- Protect the `/health` and `/ping` endpoints by adding middleware in your `routes/web.php` or `routes/api.php`.
+
+### Usage
+
+- **Web Endpoints**:
+  - Visit `/health` for a full JSON report of all checks.
+  - Visit `/ping` for a lightweight liveness check.
+- **CLI**:
+  - Run all health checks via Artisan:
+    ```bash
+    php artisan health:check
+    ```
+  - Create a new custom health check stub:
+    ```bash
+    php artisan make:health-check MyCustomCheck
+    ```
+
+### Extending
+
+- Create a new class that implements the `HealthCheck` interface (see `src/Checks/` for examples).
+- Register your custom check in the `checks` array in `config/healthcheck.php`.
+- Optionally, add configuration or dependencies as needed.
+
 ## Example Checks
 - Database connectivity
 - Cache store availability
@@ -40,20 +80,6 @@ This package provides a simple, extensible way to monitor the health of your Lar
 - HTTP/FTP endpoint monitoring
 - Package security (vulnerable dependencies)
 - Scheduler status
-
-## Getting Started
-
-1. **Install via Composer**:
-   ```bash
-   composer require ans-group/laravel-health-check
-   ```
-2. **Publish the config (optional)**:
-   ```bash
-   php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProvider"
-   ```
-3. **Configure checks** in `config/healthcheck.php`.
-4. **Protect endpoints** as needed using middleware.
-5. **Access health endpoints** at `/health` and `/ping`.
 
 ## Contributing
 
