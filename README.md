@@ -77,6 +77,51 @@ This package provides a simple, extensible way to monitor the health of your Lar
   });
   ```
 
+### Configuration File Reference
+
+The `config/healthcheck.php` file controls which health checks are enabled and allows you to customize their behavior. Below is a summary of the main options:
+
+- **checks**: An array of health check classes to run. You can add, remove, or override checks here. Example:
+  ```php
+  'checks' => [
+      UKFast\HealthCheck\Checks\DatabaseHealthCheck::class,
+      UKFast\HealthCheck\Checks\CacheHealthCheck::class,
+      // Add your custom checks
+      App\HealthChecks\MyCustomCheck::class,
+  ],
+  ```
+
+- **Per-check configuration**: Some checks accept configuration options. For example, to require specific environment variables:
+  ```php
+  'checks' => [
+      UKFast\HealthCheck\Checks\EnvHealthCheck::class => [
+          'required' => ['APP_KEY', 'DB_CONNECTION'],
+      ],
+  ],
+  ```
+
+- **Custom options**: Some checks (like storage, Redis, HTTP, FTP, etc.) may accept options such as connection names, disk names, URLs, or credentials. Refer to the comments in the config file or the check class for details. Example for storage:
+  ```php
+  'checks' => [
+      UKFast\HealthCheck\Checks\StorageHealthCheck::class => [
+          'disks' => ['local', 's3'],
+      ],
+  ],
+  ```
+
+- **Disabling a check**: Remove it from the `checks` array or comment it out.
+
+- **Adding a custom check**: Add your class to the array, optionally with configuration:
+  ```php
+  'checks' => [
+      App\HealthChecks\MyCustomCheck::class => [
+          // Custom options for your check
+      ],
+  ],
+  ```
+
+For a full list of available built-in checks and their options, see the `src/Checks/` directory and the comments in `config/healthcheck.php`.
+
 ### Creating Custom Health Checks
 
 1. **Generate a stub:**
