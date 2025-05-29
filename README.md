@@ -79,39 +79,57 @@ This package provides a simple, extensible way to monitor the health of your Lar
 
 ### Configuration File Reference
 
-The `config/healthcheck.php` file controls which health checks are enabled and allows you to customize their behavior. Below is a summary of the main options:
+The `config/healthcheck.php` file controls the behavior of the health check package. Here is an explanation of each part:
 
-- **checks**: An array of health check classes to run. You can add, remove, or override checks here. Example:
+- **checks**: (Required) An array of health check classes to run. You can enable, disable, or customize checks by adding, removing, or configuring entries in this array. Each entry can be:
+  - A class name (for default configuration)
+  - A class name as a key, with an array of options as the value (for per-check configuration)
+  
+  Example:
   ```php
   'checks' => [
-      UKFast\HealthCheck\Checks\DatabaseHealthCheck::class,
-      UKFast\HealthCheck\Checks\CacheHealthCheck::class,
-      // Add your custom checks
-      App\HealthChecks\MyCustomCheck::class,
-  ],
-  ```
-
-- **Per-check configuration**: Some checks accept configuration options. For example, to require specific environment variables:
-  ```php
-  'checks' => [
-      UKFast\HealthCheck\Checks\EnvHealthCheck::class => [
+      UKFast\HealthCheck\Checks\DatabaseHealthCheck::class, // Checks database connection
+      UKFast\HealthCheck\Checks\CacheHealthCheck::class,    // Checks cache store
+      UKFast\HealthCheck\Checks\EnvHealthCheck::class => [  // Checks required environment variables
           'required' => ['APP_KEY', 'DB_CONNECTION'],
       ],
-  ],
-  ```
-
-- **Custom options**: Some checks (like storage, Redis, HTTP, FTP, etc.) may accept options such as connection names, disk names, URLs, or credentials. Refer to the comments in the config file or the check class for details. Example for storage:
-  ```php
-  'checks' => [
-      UKFast\HealthCheck\Checks\StorageHealthCheck::class => [
+      UKFast\HealthCheck\Checks\StorageHealthCheck::class => [ // Checks storage disks
           'disks' => ['local', 's3'],
+      ],
+      UKFast\HealthCheck\Checks\HttpHealthCheck::class => [ // Checks HTTP endpoints
+          'urls' => ['https://example.com/api/health'],
+      ],
+      UKFast\HealthCheck\Checks\RedisHealthCheck::class => [ // Checks Redis connections
+          'connections' => ['default', 'cache'],
+      ],
+      App\HealthChecks\MyCustomCheck::class => [ // Your custom check
+          // Custom options for your check
       ],
   ],
   ```
+  
+  **Common built-in checks:**
+  - `DatabaseHealthCheck`: Checks database connectivity.
+  - `CacheHealthCheck`: Checks cache store availability.
+  - `EnvHealthCheck`: Checks for required environment variables (set `required`).
+  - `LogHealthCheck`: Checks log file writability.
+  - `StorageHealthCheck`: Checks storage disks (set `disks`).
+  - `RedisHealthCheck`: Checks Redis connections (set `connections`).
+  - `HttpHealthCheck`: Checks HTTP endpoints (set `urls`).
+  - `FtpHealthCheck`: Checks FTP endpoints (set `hosts`).
+  - `SchedulerHealthCheck`: Checks if the Laravel scheduler is running.
+  - `PackageSecurityHealthCheck`: Checks for vulnerable dependencies.
 
-- **Disabling a check**: Remove it from the `checks` array or comment it out.
+- **Per-check configuration**: Some checks accept options to customize their behavior. For example:
+  - `required` (EnvHealthCheck): List of environment variables that must be set.
+  - `disks` (StorageHealthCheck): List of storage disks to check.
+  - `urls` (HttpHealthCheck): List of URLs to check for HTTP health.
+  - `connections` (RedisHealthCheck): List of Redis connections to check.
+  - `hosts` (FtpHealthCheck): List of FTP hosts to check.
 
-- **Adding a custom check**: Add your class to the array, optionally with configuration:
+- **Disabling a check**: Remove the class from the `checks` array or comment it out.
+
+- **Adding a custom check**: Add your custom class to the array, optionally with configuration:
   ```php
   'checks' => [
       App\HealthChecks\MyCustomCheck::class => [
@@ -120,7 +138,9 @@ The `config/healthcheck.php` file controls which health checks are enabled and a
   ],
   ```
 
-For a full list of available built-in checks and their options, see the `src/Checks/` directory and the comments in `config/healthcheck.php`.
+- **Other options**: Some checks may support additional options (timeouts, credentials, etc.). Refer to the comments in the config file or the check class for details.
+
+For a full list of available built-in checks and their options, see the `src/Checks/` directory and the comments in your `config/healthcheck.php` file.
 
 ### Creating Custom Health Checks
 
