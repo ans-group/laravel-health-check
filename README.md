@@ -45,9 +45,76 @@ This package provides a simple, extensible way to monitor the health of your Lar
 
 ### Configuration
 
-- Configure which health checks to run by editing `config/healthcheck.php`.
-- Enable or disable built-in checks, and add your own custom checks to the `checks` array.
-- Protect the `/health` and `/ping` endpoints by adding middleware in your `routes/web.php` or `routes/api.php`.
+- Edit `config/healthcheck.php` to enable, disable, or customize the built-in health checks.
+- Add your own check class to the `checks` array to register it for execution. For example:
+  ```php
+  // config/healthcheck.php
+  return [
+      'checks' => [
+          UKFast\HealthCheck\Checks\DatabaseHealthCheck::class,
+          App\HealthChecks\MyCustomCheck::class, // Add your custom check here
+      ],
+      // ...other config options...
+  ];
+  ```
+- You can set options for each check (such as connection names, required environment variables, etc.) in this config file. For example:
+  ```php
+  // config/healthcheck.php
+  return [
+      'checks' => [
+          UKFast\HealthCheck\Checks\EnvHealthCheck::class => [
+              'required' => ['APP_KEY', 'DB_CONNECTION'],
+          ],
+      ],
+  ];
+  ```
+- Protect the `/health` and `/ping` endpoints by adding middleware in your `routes/web.php` or `routes/api.php` as needed. For example:
+  ```php
+  // routes/web.php
+  Route::middleware(['basicAuth'])->group(function () {
+      Route::get('/health', [HealthCheckController::class, 'index']);
+      Route::get('/ping', [PingController::class, 'index']);
+  });
+  ```
+
+### Creating Custom Health Checks
+
+1. **Generate a stub:**
+   ```bash
+   php artisan make:health-check MyCustomCheck
+   ```
+   This will create a new check class in `app/HealthChecks` (or your default namespace).
+
+2. **Implement your logic:**
+   ```php
+   // app/HealthChecks/MyCustomCheck.php
+   use UKFast\HealthCheck\HealthCheck;
+   use UKFast\HealthCheck\Status;
+
+   class MyCustomCheck extends HealthCheck
+   {
+       public function name(): string
+       {
+           return 'my_custom_check';
+       }
+
+       public function run(): Status
+       {
+           // Your custom logic here
+           if (/* healthy */) {
+               return Status::ok('Everything is fine!');
+           }
+           return Status::problem('Something is wrong!');
+       }
+   }
+   ```
+
+3. **Register your check:**
+   - Add your new class to the `checks` array in `config/healthcheck.php` as shown above.
+   - Optionally, add any configuration or dependencies your check needs.
+
+4. **Test your check:**
+   - Run `php artisan health:check` or visit `/health` to see your custom check in action.
 
 ### Usage
 
