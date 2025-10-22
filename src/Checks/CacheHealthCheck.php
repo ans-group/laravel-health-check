@@ -33,10 +33,11 @@ class CacheHealthCheck extends HealthCheck
         foreach (config('healthcheck.cache.stores') as $store) {
             try {
                 $cache = Cache::store($store);
+                $key = 'laravel-health-check.' . random_bytes(32);
 
-                $cache->put('laravel-health-check', 'healthy', Carbon::now()->addMinutes(1));
+                $cache->put($key, 'healthy', Carbon::now()->addMinutes(1));
 
-                $value = $cache->pull('laravel-health-check', 'broken');
+                $value = $cache->pull($key, 'broken');
 
                 if ($value != 'healthy') {
                     $this->incorrectValues[] = [
