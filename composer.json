@@ -101,7 +101,7 @@
         "test": "phpunit",
         "phpcs": "./vendor/bin/phpcs --standard=PSR12 --ignore=vendor .",
         "phpcs:fix": "./vendor/bin/phpcbf --standard=PSR12 --ignore=vendor .",
-        "phpmd": "./vendor/bin/phpmd . github .phpmd/ruleset.xml --color",
+        "phpmd": "./vendor/bin/phpmd src,tests github .phpmd/ruleset.xml --color",
         "rector": "./vendor/bin/rector process --dry-run",
         "rector:fix": "./vendor/bin/rector process",
         "larastan": "./vendor/bin/phpstan analyse --error-format=table --memory-limit=1G"

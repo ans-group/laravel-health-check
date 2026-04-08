@@ -8,10 +8,8 @@ use Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector;
 
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/',
-    ])
-    ->withSkip([
-        __DIR__ . '/vendor',
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
     ])
     ->withSkip([
         AddOverrideAttributeToOverriddenMethodsRector::class,
