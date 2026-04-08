@@ -6,7 +6,7 @@ RUN apk add --update git \
     openssh \
     zip
 
-RUN pecl install xdebug && docker-php-ext-enable xdebug && echo "xdebug.mode=off" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN pecl install xdebug && docker-php-ext-enable xdebug
 
 RUN docker-php-ext-install ftp pdo_mysql
 
