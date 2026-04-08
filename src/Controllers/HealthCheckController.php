@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UKFast\HealthCheck\Controllers;
 
 use Illuminate\Contracts\Container\BindingResolutionException;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UKFast\HealthCheck\Middleware;
 
 use closure;
@@ -16,7 +18,7 @@ class AddHeaders
             $header = "X-{$check->name()}-status";
             $status = $check->status()->isOkay() ? 1 : 0;
 
-            $response->headers->set($header, $status);
+            $response->headers->set($header, (string) $status);
         });
 
         return $response;
