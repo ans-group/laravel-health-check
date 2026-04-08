@@ -32,7 +32,7 @@ jobs:
           - php_version: 8.5
             laravel_version: 13
 
-    name: Test on PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }}
+    name: Tests (PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }})
 
     steps:
       - name: Checkout code
