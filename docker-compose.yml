@@ -1,0 +1,40 @@
+x-php: &php
+  environment:
+    XDEBUG_MODE: 'off'
+  volumes:
+    - './:/app'
+  networks:
+    - laravel-health-check
+
+services:
+  php82:
+    <<: *php
+    container_name: laravel-health-check-php82
+    build:
+      context: .
+      dockerfile: .docker/php82/Dockerfile
+
+  php83:
+    <<: *php
+    container_name: laravel-health-check-php83
+    build:
+      context: .
+      dockerfile: .docker/php83/Dockerfile
+
+  php84:
+    <<: *php
+    container_name: laravel-health-check-php84
+    build:
+      context: .
+      dockerfile: .docker/php84/Dockerfile
+
+  php85:
+    <<: *php
+    container_name: laravel-health-check-php85
+    build:
+      context: .
+      dockerfile: .docker/php85/Dockerfile
+
+networks:
+  laravel-health-check:
+    name: ${LARAVEL_HEALTH_CHECK_NETWORK:-laravel-health-check}

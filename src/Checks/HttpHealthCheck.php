@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UKFast\HealthCheck\Checks;
 
 use Exception;
@@ -71,9 +73,9 @@ class HttpHealthCheck extends HealthCheck
         }
 
         return $this->problem('Some HTTP connections are not working', [
-            'incorrect_status_code' => $badResponses,
-            'could_not_connect' => $badConnections,
-            'general_failures' => $generalFailures,
+            'incorrect_status_code' => $badResponses->toArray(),
+            'could_not_connect' => $badConnections->toArray(),
+            'general_failures' => $generalFailures->toArray(),
         ]);
     }
 
