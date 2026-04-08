@@ -24,8 +24,6 @@ jobs:
             laravel_version: 12
           - php_version: 8.5
             laravel_version: 12
-          - php_version: 8.2
-            laravel_version: 13
           - php_version: 8.3
             laravel_version: 13
           - php_version: 8.4
