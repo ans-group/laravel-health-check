@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - master
-      - v2.0
+      - v1.x
+      - v2.x
   pull_request:
   schedule:
     - cron: '0 0 * * *'
@@ -16,16 +17,22 @@ jobs:
     strategy:
       matrix:
         environment:
-          - php_version: 8.1
-            laravel_version: 10
           - php_version: 8.2
-            laravel_version: 10
-          - php_version: 8.2
-            laravel_version: 11
+            laravel_version: 12
           - php_version: 8.3
-            laravel_version: 11
+            laravel_version: 12
+          - php_version: 8.4
+            laravel_version: 12
+          - php_version: 8.5
+            laravel_version: 12
+          - php_version: 8.3
+            laravel_version: 13
+          - php_version: 8.4
+            laravel_version: 13
+          - php_version: 8.5
+            laravel_version: 13
 
-    name: Test on PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }}
+    name: Tests (PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }})
 
     steps:
       - name: Checkout code
@@ -42,7 +49,26 @@ jobs:
 
   php-codesniffer:
     runs-on: ubuntu-latest
-    name: PHP Codesniffer
+
+    strategy:
+      matrix:
+        environment:
+          - php_version: 8.2
+            laravel_version: 12
+          - php_version: 8.3
+            laravel_version: 12
+          - php_version: 8.4
+            laravel_version: 12
+          - php_version: 8.5
+            laravel_version: 12
+          - php_version: 8.3
+            laravel_version: 13
+          - php_version: 8.4
+            laravel_version: 13
+          - php_version: 8.5
+            laravel_version: 13
+
+    name: PHP Codesniffer (PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }})
 
     steps:
       - name: Checkout code
@@ -51,15 +77,34 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
         with:
-          php_version: 8.3
-          laravel_version: 11
+          php_version: ${{ matrix.environment.php_version }}
+          laravel_version: ${{ matrix.environment.laravel_version }}
 
       - name: Run codesniffer
         run: composer phpcs
 
   php-mess-detector:
     runs-on: ubuntu-latest
-    name: PHP Mess Detector
+
+    strategy:
+      matrix:
+        environment:
+          - php_version: 8.2
+            laravel_version: 12
+          - php_version: 8.3
+            laravel_version: 12
+          - php_version: 8.4
+            laravel_version: 12
+          - php_version: 8.5
+            laravel_version: 12
+          - php_version: 8.3
+            laravel_version: 13
+          - php_version: 8.4
+            laravel_version: 13
+          - php_version: 8.5
+            laravel_version: 13
+
+    name: PHP Mess Detector (PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }})
 
     steps:
       - name: Checkout code
@@ -68,42 +113,80 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
         with:
-          php_version: 8.3
-          laravel_version: 11
+          php_version: ${{ matrix.environment.php_version }}
+          laravel_version: ${{ matrix.environment.laravel_version }}
 
       - name: Run mess detector
         run: composer phpmd
 
   rector:
-      runs-on: ubuntu-latest
-      name: Rector
+    runs-on: ubuntu-latest
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+    strategy:
+      matrix:
+        environment:
+          - php_version: 8.2
+            laravel_version: 12
+          - php_version: 8.3
+            laravel_version: 12
+          - php_version: 8.4
+            laravel_version: 12
+          - php_version: 8.5
+            laravel_version: 12
+          - php_version: 8.3
+            laravel_version: 13
+          - php_version: 8.4
+            laravel_version: 13
+          - php_version: 8.5
+            laravel_version: 13
 
-        - name: Setup
-          uses: ./.github/actions/setup
-          with:
-            php_version: 8.3
-            laravel_version: 11
+    name: Rector (PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }})
 
-        - name: Run Rector
-          run: composer rector
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          php_version: ${{ matrix.environment.php_version }}
+          laravel_version: ${{ matrix.environment.laravel_version }}
+
+      - name: Run Rector
+        run: composer rector
 
   larastan:
-      runs-on: ubuntu-latest
-      name: Larastan
+    runs-on: ubuntu-latest
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+    strategy:
+      matrix:
+        environment:
+          - php_version: 8.2
+            laravel_version: 12
+          - php_version: 8.3
+            laravel_version: 12
+          - php_version: 8.4
+            laravel_version: 12
+          - php_version: 8.5
+            laravel_version: 12
+          - php_version: 8.3
+            laravel_version: 13
+          - php_version: 8.4
+            laravel_version: 13
+          - php_version: 8.5
+            laravel_version: 13
 
-        - name: Setup
-          uses: ./.github/actions/setup
-          with:
-            php_version: 8.3
-            laravel_version: 11
+    name: Larastan (PHP ${{ matrix.environment.php_version }} & Laravel ${{ matrix.environment.laravel_version }})
 
-        - name: Run Larastan
-          run: composer larastan
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          php_version: ${{ matrix.environment.php_version }}
+          laravel_version: ${{ matrix.environment.laravel_version }}
+
+      - name: Run Larastan
+        run: composer larastan

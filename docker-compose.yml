@@ -1,0 +1,56 @@
+x-php: &php
+  environment:
+    XDEBUG_MODE: 'off'
+  networks:
+    - laravel-health-check
+
+services:
+  php82:
+    <<: *php
+    container_name: laravel-health-check-php82
+    build:
+      context: .
+      dockerfile: .docker/php82/Dockerfile
+    volumes:
+      - './:/app'
+      - php82-vendor:/app/vendor
+
+  php83:
+    <<: *php
+    container_name: laravel-health-check-php83
+    build:
+      context: .
+      dockerfile: .docker/php83/Dockerfile
+    volumes:
+      - './:/app'
+      - php83-vendor:/app/vendor
+
+  php84:
+    <<: *php
+    container_name: laravel-health-check-php84
+    build:
+      context: .
+      dockerfile: .docker/php84/Dockerfile
+    volumes:
+      - './:/app'
+      - php84-vendor:/app/vendor
+
+  php85:
+    <<: *php
+    container_name: laravel-health-check-php85
+    build:
+      context: .
+      dockerfile: .docker/php85/Dockerfile
+    volumes:
+      - './:/app'
+      - php85-vendor:/app/vendor
+
+networks:
+  laravel-health-check:
+    name: ${LARAVEL_HEALTH_CHECK_NETWORK:-laravel-health-check}
+
+volumes:
+  php82-vendor:
+  php83-vendor:
+  php84-vendor:
+  php85-vendor:

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace UKFast\HealthCheck\Controllers;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -33,12 +35,12 @@ class HealthCheckController
                 Arr::set($body, $status->name() . '.context', $status->context());
             }
 
-            if ($status->getStatus() == Status::PROBLEM && $hasProblem == false) {
+            if ($status->getStatus() == Status::PROBLEM && $hasProblem === false) {
                 $hasProblem = true;
                 Arr::set($body, 'status', Status::PROBLEM);
             }
 
-            if ($status->getStatus() == Status::DEGRADED && $hasProblem == false) {
+            if ($status->getStatus() == Status::DEGRADED && $hasProblem === false) {
                 Arr::set($body, 'status', Status::DEGRADED);
             }
         }
