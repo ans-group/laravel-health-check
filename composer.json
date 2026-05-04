@@ -77,7 +77,7 @@
         "phpstan/phpstan-phpunit": "^1.4|^2.0",
         "phpunit/phpunit": "^10.0|^11.0|^12.0",
         "rector/rector": "^1.2|^2.0",
-        "squizlabs/php_codesniffer": "^3.10"
+        "squizlabs/php_codesniffer": "^3.10 || ^4.0"
     },
     "suggest": {
         "illuminate/database": "Allows the database health check to function.",
