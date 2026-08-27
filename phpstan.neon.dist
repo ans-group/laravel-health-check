@@ -40,7 +40,7 @@ parameters:
         -
           message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
           identifier: larastan.noEnvCallsOutsideOfConfig
-          count: 2
+          count: 5
           path: config/healthcheck.php
 
         -

@@ -7,7 +7,6 @@ namespace UKFast\HealthCheck\Checks;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use UKFast\HealthCheck\HealthCheck;
-use UKFast\HealthCheck\Status;
 
 class StorageHealthCheck extends HealthCheck
 {
@@ -28,7 +27,7 @@ class StorageHealthCheck extends HealthCheck
      */
     protected array $exceptions = [];
 
-    public function status(): Status
+    public function check(): void
     {
         $uniqueString = uniqid('laravel-health-check_', true);
 
@@ -60,17 +59,15 @@ class StorageHealthCheck extends HealthCheck
             }
         }
 
-        if (empty($this->corruptedFiles) && empty($this->exceptions)) {
-            return $this->okay();
+        if ($this->corruptedFiles !== [] || $this->exceptions !== []) {
+            $this->fail(
+                'Some storage disks are not working',
+                [
+                    'working' => $this->workingDisks,
+                    'corrupted_files' => $this->corruptedFiles,
+                    'exceptions' => $this->exceptions,
+                ]
+            );
         }
-
-        return $this->problem(
-            'Some storage disks are not working',
-            [
-                'working' => $this->workingDisks,
-                'corrupted_files' => $this->corruptedFiles,
-                'exceptions' => $this->exceptions,
-            ]
-        );
     }
 }

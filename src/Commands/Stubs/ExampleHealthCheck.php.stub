@@ -6,10 +6,10 @@ use UKFast\HealthCheck\HealthCheck;
 
 class DummyClass extends HealthCheck
 {
-    protected $name = 'example';
+    protected string $name = 'example';
 
-    public function status()
+    public function check(): void
     {
-        return $this->okay();
+        // Throw with $this->fail('message', $context) when unhealthy.
     }
 }

@@ -9,7 +9,6 @@ use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Support\Facades\Cache;
 use UKFast\HealthCheck\HealthCheck;
 use Carbon\Carbon;
-use UKFast\HealthCheck\Status;
 
 class CacheHealthCheck extends HealthCheck
 {
@@ -30,7 +29,7 @@ class CacheHealthCheck extends HealthCheck
      */
     protected array $exceptions = [];
 
-    public function status(): Status
+    public function check(): void
     {
         foreach (config('healthcheck.cache.stores') as $store) {
             try {
@@ -58,17 +57,15 @@ class CacheHealthCheck extends HealthCheck
             }
         }
 
-        if (empty($this->incorrectValues) && empty($this->exceptions)) {
-            return $this->okay();
+        if ($this->incorrectValues !== [] || $this->exceptions !== []) {
+            $this->fail(
+                'Some cache connections are not working',
+                [
+                    'working' => $this->workingStores,
+                    'incorrect_values' => $this->incorrectValues,
+                    'exceptions' => $this->exceptions
+                ]
+            );
         }
-
-        return $this->problem(
-            'Some cache connections are not working',
-            [
-                'working' => $this->workingStores,
-                'incorrect_values' => $this->incorrectValues,
-                'exceptions' => $this->exceptions
-            ]
-        );
     }
 }

@@ -32,7 +32,7 @@ class SchedulerHealthCheckTest extends TestCase
 
         Cache::shouldReceive('has')->andReturn(false);
 
-        $status = (new SchedulerHealthCheck())->status();
+        $status = (new SchedulerHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
         $this->assertEquals('Scheduler has not ran in the last 5 minutes', $status->message());
@@ -47,7 +47,7 @@ class SchedulerHealthCheckTest extends TestCase
 
         Cache::shouldReceive('has')->andReturn(true);
 
-        $status = (new SchedulerHealthCheck())->status();
+        $status = (new SchedulerHealthCheck())->inspect();
 
         $this->assertTrue($status->isOkay());
     }

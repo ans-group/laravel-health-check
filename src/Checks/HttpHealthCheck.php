@@ -11,13 +11,12 @@ use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Container\Container;
 use Illuminate\Support\Collection;
 use UKFast\HealthCheck\HealthCheck;
-use UKFast\HealthCheck\Status;
 
 class HttpHealthCheck extends HealthCheck
 {
     protected string $name = 'http';
 
-    public function status(): Status
+    public function check(): void
     {
         $container = Container::getInstance();
 
@@ -68,15 +67,13 @@ class HttpHealthCheck extends HealthCheck
             }
         }
 
-        if ($this->isOkay($badResponses, $badConnections, $generalFailures)) {
-            return $this->okay();
+        if (! $this->isOkay($badResponses, $badConnections, $generalFailures)) {
+            $this->fail('Some HTTP connections are not working', [
+                'incorrect_status_code' => $badResponses->toArray(),
+                'could_not_connect' => $badConnections->toArray(),
+                'general_failures' => $generalFailures->toArray(),
+            ]);
         }
-
-        return $this->problem('Some HTTP connections are not working', [
-            'incorrect_status_code' => $badResponses->toArray(),
-            'could_not_connect' => $badConnections->toArray(),
-            'general_failures' => $generalFailures->toArray(),
-        ]);
     }
 
     /**

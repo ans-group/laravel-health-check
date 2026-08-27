@@ -14,7 +14,7 @@ class UnreliableCheck extends HealthCheck
     /**
      * @throws RuntimeException
      */
-    public function status(): never
+    public function check(): never
     {
         throw new RuntimeException('Something went badly wrong');
     }

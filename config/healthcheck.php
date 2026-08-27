@@ -1,17 +1,26 @@
 <?php
 
 return [
-    /*
-     * Base path for the health check endpoints, by default will use /
+    /**
+     * Base path prepended to the health endpoint URI (rarely needed).
      */
     'base-path' => '',
 
     /**
-     * Paths to host the health check and ping endpoints
+     * URI for the health endpoint. Same role as Laravel's
+     * `withRouting(health: ...)` — set this instead of the framework
+     * `health:` argument (omit `health:` so this package owns the route).
      */
-    'route-paths' => [
-        'health' => '/health',
-        'ping' => '/ping',
+    'path' => env('HEALTHCHECK_PATH', '/up'),
+
+    /**
+     * Opt-in static liveness file (web server only — the app never
+     * registers a ping route). When enabled, the package writes `pong`
+     * to public/{path} if that file is not already present.
+     */
+    'ping' => [
+        'enabled' => env('HEALTHCHECK_PING', false),
+        'path' => env('HEALTHCHECK_PING_PATH', 'ping'),
     ],
 
     /*
@@ -25,7 +34,7 @@ return [
     ],
 
     /*
-     * A list of middleware to run on the health-check route
+     * A list of middleware to run on the health endpoint.
      * It's recommended that you have a middleware that only
      * allows admin consumers to see the endpoint.
      *
@@ -43,7 +52,7 @@ return [
     ],
 
     /*
-     * Routename for the healthcheck
+     * Route name for the health endpoint
      */
     'route-name' => 'healthcheck',
 
@@ -79,7 +88,7 @@ return [
 
     /*
      * Default code for HTTP health check when there any problem occured.
-     * Will be used in the HealthCheckController's response.
+     * Will be used in the health endpoint response.
      */
     'default-problem-http-code' => 500,
 
@@ -90,8 +99,8 @@ return [
 
     /*
      * An array of other services that use the health check package
-     * to hit. The URI should reference the endpoint specifically,
-     * for example: https://api.example.com/health
+     * to hit. The URI should reference that service's health endpoint
+     * specifically.
      */
     'x-service-checks' => [],
 
@@ -132,11 +141,4 @@ return [
      * to avoid false positives when `env(KEY)` is defined but is null.
      */
     'env-check-key' => 'HEALTH_CHECK_ENV_DEFAULT_VALUE',
-
-    /*
-     * Additional config can be put here. For example, a health check
-     * for your .env file needs to know which keys need to be present.
-     * You can pass this information by specifying a new key here then
-     * accessing it via config('healthcheck.env') in your healthcheck class
-     */
 ];

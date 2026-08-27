@@ -10,8 +10,8 @@ use Mockery\MockInterface;
 use Tests\TestCase;
 use UKFast\HealthCheck\Checks\DatabaseHealthCheck;
 use UKFast\HealthCheck\Checks\LogHealthCheck;
+use UKFast\HealthCheck\Exceptions\HealthCheckFailedException;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
-use UKFast\HealthCheck\Status;
 
 class StatusCommandTest extends TestCase
 {
@@ -20,9 +20,7 @@ class StatusCommandTest extends TestCase
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
 
-        $status = new Status();
-        $status->okay();
-        $this->mockLogHealthCheck($status);
+        $this->mockLogHealthCheck();
 
         $result = $this->artisan('health-check:status');
 
@@ -34,9 +32,7 @@ class StatusCommandTest extends TestCase
     {
         $this->app->register(HealthCheckServiceProvider::class);
 
-        $status = new Status();
-        $status->okay();
-        $this->mockLogHealthCheck($status);
+        $this->mockLogHealthCheck();
 
         $result = $this->artisan('health-check:status', ['--only' => 'log']);
 
@@ -49,9 +45,7 @@ class StatusCommandTest extends TestCase
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class, DatabaseHealthCheck::class]]);
 
-        $status = new Status();
-        $status->okay();
-        $this->mockLogHealthCheck($status);
+        $this->mockLogHealthCheck();
 
         $result = $this->artisan('health-check:status', ['--except' => 'database']);
 
@@ -74,24 +68,28 @@ class StatusCommandTest extends TestCase
     {
         $this->app->register(HealthCheckServiceProvider::class);
         config(['healthcheck.checks' => [LogHealthCheck::class]]);
-        $status = new Status();
-        $status->withName('statusName')->problem('statusMessage');
-        $this->mockLogHealthCheck($status);
+        $this->mockLogHealthCheck(new HealthCheckFailedException('log', 'statusMessage'));
 
         $result = $this->artisan('health-check:status');
 
         $this->assertInstanceof(PendingCommand::class, $result);
         $result->assertExitCode(1);
-        $result->expectsTable(['name', 'status', 'message'], [['log', 'statusName', 'statusMessage']]);
+        $result->expectsTable(['name', 'status', 'message'], [['log', 'down', 'statusMessage']]);
     }
 
-    private function mockLogHealthCheck(Status $status): void
+    private function mockLogHealthCheck(HealthCheckFailedException|null $failure = null): void
     {
         $this->instance(
             LogHealthCheck::class,
-            Mockery::mock(LogHealthCheck::class, function (MockInterface $mock) use ($status): void {
+            Mockery::mock(LogHealthCheck::class, function (MockInterface $mock) use ($failure): void {
                 $mock->shouldReceive('name')->andReturn('log');
-                $mock->shouldReceive('status')->andReturn($status);
+                if ($failure instanceof HealthCheckFailedException) {
+                    $mock->shouldReceive('check')->andThrow($failure);
+
+                    return;
+                }
+
+                $mock->shouldReceive('check')->andReturnNull();
             })
         );
     }

@@ -7,6 +7,8 @@ namespace UKFast\HealthCheck\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Throwable;
+use UKFast\HealthCheck\Exceptions\HealthCheckDegradedException;
 use UKFast\HealthCheck\Facade\HealthCheck;
 use UKFast\HealthCheck\HealthCheck as Check;
 
@@ -64,13 +66,15 @@ class StatusCommand extends Command
                 continue;
             }
 
-            $status = $check->status();
-
-            if ($status->isProblem()) {
+            try {
+                $check->check();
+            } catch (HealthCheckDegradedException) {
+                continue;
+            } catch (Throwable $exception) {
                 $problems->push([
                     $check->name(),
-                    $status->name(),
-                    $status->message(),
+                    'down',
+                    $exception->getMessage(),
                 ]);
             }
         }

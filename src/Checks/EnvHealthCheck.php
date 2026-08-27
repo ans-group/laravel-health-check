@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace UKFast\HealthCheck\Checks;
 
 use UKFast\HealthCheck\HealthCheck;
-use UKFast\HealthCheck\Status;
 
 class EnvHealthCheck extends HealthCheck
 {
     protected string $name = 'env';
 
-    public function status(): Status
+    public function check(): void
     {
         $default = config('healthcheck.env-check-key', 'HEALTH_CHECK_ENV_DEFAULT_VALUE');
 
@@ -22,12 +21,10 @@ class EnvHealthCheck extends HealthCheck
             }
         }
 
-        if (empty($missing)) {
-            return $this->okay();
+        if ($missing !== []) {
+            $this->fail('Missing env params', [
+                'missing' => $missing,
+            ]);
         }
-
-        return $this->problem('Missing env params', [
-            'missing' => $missing,
-        ]);
     }
 }

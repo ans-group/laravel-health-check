@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - Unreleased
+
+### Added
+
+- Package-owned health endpoint using `DiagnosingHealth` and throw-to-fail, with JSON (`up`/`down`) and a publishable HTML view
+- Configurable health URI (`HEALTHCHECK_PATH` / `healthcheck.path`), matching Laravel's `health:` option
+- Opt-in static ping file under `public/` (`HEALTHCHECK_PING`)
+- A warning is logged at boot if a route already exists at the configured health path, to catch the framework's own `health:` route being registered alongside this package's
+
+### Changed
+
+- Custom checks implement `check(): void` and call `fail()` / `degrade()` instead of returning a `Status`
+- Artisan `health-check:status` and the `HealthCheck` facade follow the throw-based check API
+- `exceptionContext()` no longer includes `file`, `line`, or `trace` — the health endpoint is public by default, so a failing check's response body no longer leaks server file paths or stack traces to an unauthenticated caller. The full exception is still sent to the application's logger via `report()`
+- `AddHeaders` middleware reuses the `HealthReport` already produced by the health endpoint's own request instead of re-running every check a second time; it only falls back to running checks itself when applied to a route with no report to reuse
+- JSON responses drop the aggregate top-level `message` and now match Laravel's native health route contract exactly (`{"status": "up"|"down"}`), extended with a `checks` breakdown
+- The HTML view is rebuilt on Laravel's own `health-up.blade.php` markup (same Tailwind CDN, same "Application up" / "Application experiencing problems" wording, same "HTTP request received" copy) instead of a bespoke design, extended below with a per-check table
+
+### Removed
+
+- The `/health` HTTP route and 2.x JSON envelope (`OK` / `PROBLEM` / `DEGRADED` at the top level)
+- The Laravel ping route (`PingController`); ping is a static file only when enabled
+
+### Fixed
+
+- `healthcheck.ping.path` is validated against directory traversal (`..` segments) and confirmed to resolve under `public/` before a file is written, since it's an env-configurable value
+
 ## [2.0.1] - 2024-09-09
 
 ### Fixed

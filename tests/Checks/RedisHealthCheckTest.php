@@ -42,7 +42,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck())->status();
+        $status = (new RedisHealthCheck())->inspect();
         $this->assertTrue($status->isOkay());
     }
 
@@ -61,7 +61,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck())->status();
+        $status = (new RedisHealthCheck())->inspect();
         $this->assertFalse($status->isOkay());
     }
 
@@ -80,7 +80,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck())->status();
+        $status = (new RedisHealthCheck())->inspect();
         $this->assertTrue($status->isOkay());
     }
 
@@ -99,7 +99,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck())->status();
+        $status = (new RedisHealthCheck())->inspect();
         $this->assertFalse($status->isOkay());
     }
 
@@ -127,7 +127,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck())->status();
+        $status = (new RedisHealthCheck())->inspect();
         $this->assertTrue($status->isOkay());
     }
 
@@ -155,7 +155,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck())->status();
+        $status = (new RedisHealthCheck())->inspect();
         $this->assertFalse($status->isOkay());
     }
 
@@ -198,7 +198,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck())->status();
+        $status = (new RedisHealthCheck())->inspect();
         $this->assertTrue($status->isOkay());
     }
 
@@ -239,7 +239,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck())->status();
+        $status = (new RedisHealthCheck())->inspect();
         $this->assertFalse($status->isOkay());
     }
 
@@ -282,7 +282,7 @@ class RedisHealthCheckTest extends TestCase
 
         Redis::swap($redis);
 
-        $status = (new RedisHealthCheck())->status();
+        $status = (new RedisHealthCheck())->inspect();
         $this->assertFalse($status->isOkay());
     }
 }

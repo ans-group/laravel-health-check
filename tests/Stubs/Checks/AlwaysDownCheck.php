@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Tests\Stubs\Checks;
 
 use UKFast\HealthCheck\HealthCheck;
-use UKFast\HealthCheck\Status;
 
 class AlwaysDownCheck extends HealthCheck
 {
     protected string $name = 'always-down';
 
-    public function status(): Status
+    public function check(): void
     {
-        return $this->problem('Something went wrong', [
+        $this->fail('Something went wrong', [
             'debug' => 'info',
         ]);
     }

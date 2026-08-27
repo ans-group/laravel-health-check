@@ -59,7 +59,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
             ->method('getRan')
             ->willReturn([]);
 
-        $status = $this->healthCheck->status();
+        $status = $this->healthCheck->inspect();
         $this->assertFalse($status->isOkay());
         $this->assertEquals(['pending_migrations' => ['missing_migration.php']], $status->context());
     }
@@ -81,7 +81,7 @@ class MigrationUpToDateHealthCheckTest extends TestCase
             ->method('getRan')
             ->willReturn([]);
 
-        $this->assertFalse($this->healthCheck->status()->isOkay());
+        $this->assertFalse($this->healthCheck->inspect()->isOkay());
     }
 
     public function testCanReturnTrueWhenMigrationsAreUpToDate(): void
@@ -99,6 +99,6 @@ class MigrationUpToDateHealthCheckTest extends TestCase
                 'executed_migration.php'
             ]);
 
-        $this->assertTrue($this->healthCheck->status()->isOkay());
+        $this->assertTrue($this->healthCheck->inspect()->isOkay());
     }
 }

@@ -50,7 +50,7 @@ class PackageSecurityHealthCheckTest extends TestCase
 
     public function testShowsProblemIfRequiredPackageNotLoaded(): void
     {
-        $status = (new StubPackageSecurityHealthCheck())->status();
+        $status = (new StubPackageSecurityHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
         $this->assertSame(
@@ -65,7 +65,7 @@ class PackageSecurityHealthCheckTest extends TestCase
             SecurityChecker::class => false,
             'SensioLabs\Security\SecurityChecker' => true,
         ];
-        $status = (new StubPackageSecurityHealthCheck())->status();
+        $status = (new StubPackageSecurityHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
         $this->assertSame(
@@ -79,7 +79,7 @@ class PackageSecurityHealthCheckTest extends TestCase
         $this->partialMock('overload:Enlightn\SecurityChecker\SecurityChecker', fn (MockInterface $mock) =>
             $mock->shouldReceive('check')->andThrow(new Exception('File not found at [/tmp/composer.lock]')));
 
-        $status = (new PackageSecurityHealthCheck())->status();
+        $status = (new PackageSecurityHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
     }
@@ -93,7 +93,7 @@ class PackageSecurityHealthCheckTest extends TestCase
                     true
                 )));
 
-        $status = (new PackageSecurityHealthCheck())->status();
+        $status = (new PackageSecurityHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
     }
@@ -113,7 +113,7 @@ class PackageSecurityHealthCheckTest extends TestCase
                     true
                 )));
 
-        $status = (new PackageSecurityHealthCheck())->status();
+        $status = (new PackageSecurityHealthCheck())->inspect();
 
         $this->assertTrue($status->isOkay());
     }
@@ -124,7 +124,7 @@ class PackageSecurityHealthCheckTest extends TestCase
             $mock->shouldReceive('check')
                 ->andReturn([]));
 
-        $status = (new PackageSecurityHealthCheck())->status();
+        $status = (new PackageSecurityHealthCheck())->inspect();
 
         $this->assertTrue($status->isOkay());
     }

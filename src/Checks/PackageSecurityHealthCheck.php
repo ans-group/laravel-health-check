@@ -7,8 +7,8 @@ namespace UKFast\HealthCheck\Checks;
 use Exception;
 use Illuminate\Support\Collection;
 use Enlightn\SecurityChecker\SecurityChecker;
+use UKFast\HealthCheck\Exceptions\HealthCheckFailedException;
 use UKFast\HealthCheck\HealthCheck;
-use UKFast\HealthCheck\Status;
 
 class PackageSecurityHealthCheck extends HealthCheck
 {
@@ -32,7 +32,7 @@ class PackageSecurityHealthCheck extends HealthCheck
         return class_exists($class);
     }
 
-    public function status(): Status
+    public function check(): void
     {
         try {
             if (! static::checkDependency(SecurityChecker::class)) {
@@ -68,7 +68,7 @@ class PackageSecurityHealthCheck extends HealthCheck
                         fn($vulnerability, $package): string => $vulnerability['version']
                     );
 
-                    return $this->problem(
+                    $this->fail(
                         'Some packages have security vulnerabilities',
                         [
                             'packages' => $this->vulnerablePackages->toArray(),
@@ -76,12 +76,12 @@ class PackageSecurityHealthCheck extends HealthCheck
                     );
                 }
             }
+        } catch (HealthCheckFailedException $exception) {
+            throw $exception;
         } catch (Exception $exception) {
-            return $this->problem('Failed to check packages for security vulnerabilities', [
+            $this->fail('Failed to check packages for security vulnerabilities', [
                 'exception' => $this->exceptionContext($exception),
             ]);
         }
-
-        return $this->okay();
     }
 }

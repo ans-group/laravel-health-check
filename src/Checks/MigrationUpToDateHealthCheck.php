@@ -6,8 +6,8 @@ namespace UKFast\HealthCheck\Checks;
 
 use Exception;
 use Illuminate\Database\Migrations\Migrator;
+use UKFast\HealthCheck\Exceptions\HealthCheckFailedException;
 use UKFast\HealthCheck\HealthCheck;
-use UKFast\HealthCheck\Status;
 
 class MigrationUpToDateHealthCheck extends HealthCheck
 {
@@ -15,24 +15,24 @@ class MigrationUpToDateHealthCheck extends HealthCheck
 
     protected Migrator|null $migrator = null;
 
-    public function status(): Status
+    public function check(): void
     {
         try {
             $pendingMigrations = $this->getPendingMigrations();
             $isDatabaseUptoDate = $pendingMigrations === [];
             if (!$isDatabaseUptoDate) {
-                return $this->problem(
+                $this->fail(
                     'Not all migrations have been executed',
                     ['pending_migrations' => $pendingMigrations]
                 );
             }
+        } catch (HealthCheckFailedException $exception) {
+            throw $exception;
         } catch (Exception $exception) {
-            return $this->problem('Exceptions during migrations check', [
+            $this->fail('Exceptions during migrations check', [
                 'exception' => $this->exceptionContext($exception),
             ]);
         }
-
-        return $this->okay();
     }
 
     /**
@@ -60,9 +60,7 @@ class MigrationUpToDateHealthCheck extends HealthCheck
 
     protected function getMigrator(): Migrator
     {
-        if (is_null($this->migrator)) {
-            $this->migrator = app('migrator');
-        }
+        $this->migrator ??= app('migrator');
 
         return $this->migrator;
     }

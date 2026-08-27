@@ -9,7 +9,6 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Container\Container;
 use Psr\Log\LoggerInterface;
 use UKFast\HealthCheck\HealthCheck;
-use UKFast\HealthCheck\Status;
 
 class LogHealthCheck extends HealthCheck
 {
@@ -25,16 +24,14 @@ class LogHealthCheck extends HealthCheck
         $this->logger = $container->make('log');
     }
 
-    public function status(): Status
+    public function check(): void
     {
         try {
             $this->logger->info('Checking if logs are writable');
         } catch (Exception $exception) {
-            return $this->problem('Could not write to log file', [
+            $this->fail('Could not write to log file', [
                 'exception' => $this->exceptionContext($exception),
             ]);
         }
-
-        return $this->okay();
     }
 }

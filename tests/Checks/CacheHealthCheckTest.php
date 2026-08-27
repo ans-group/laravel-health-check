@@ -33,7 +33,7 @@ class CacheHealthCheckTest extends TestCase
 
         Cache::shouldReceive('store')->andReturn(new BadStore());
 
-        $status = (new CacheHealthCheck())->status();
+        $status = (new CacheHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
     }
@@ -50,7 +50,7 @@ class CacheHealthCheckTest extends TestCase
         Cache::shouldReceive('put')->once();
         Cache::shouldReceive('pull')->once()->andReturn('incorrect-string');
 
-        $status = (new CacheHealthCheck())->status();
+        $status = (new CacheHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
     }
@@ -63,7 +63,7 @@ class CacheHealthCheckTest extends TestCase
             ]
         ]);
 
-        $status = (new CacheHealthCheck())->status();
+        $status = (new CacheHealthCheck())->inspect();
 
         $this->assertTrue($status->isOkay());
     }

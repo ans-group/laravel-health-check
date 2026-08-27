@@ -27,7 +27,7 @@ class LogHealthCheckTest extends TestCase
     {
         $this->app->bind('log', fn(): BadLogger => new BadLogger());
 
-        $status = (new LogHealthCheck($this->app))->status();
+        $status = (new LogHealthCheck($this->app))->inspect();
         $this->assertTrue($status->isProblem());
     }
 
@@ -35,7 +35,7 @@ class LogHealthCheckTest extends TestCase
     {
         $this->app->bind('log', fn(): \Tests\Stubs\Log\NullLogger => new NullLogger());
 
-        $status = (new LogHealthCheck($this->app))->status();
+        $status = (new LogHealthCheck($this->app))->inspect();
         $this->assertTrue($status->isOkay());
     }
 }

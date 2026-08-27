@@ -1,9 +1,7 @@
 <?php
 
-use Rector\CodeQuality\Rector\Concat\JoinStringConcatRector;
 use Rector\CodeQuality\Rector\Empty_\SimplifyEmptyCheckOnEmptyArrayRector;
 use Rector\Config\RectorConfig;
-use Rector\Strict\Rector\Empty_\DisallowedEmptyRuleFixerRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -11,9 +9,7 @@ return RectorConfig::configure()
         __DIR__ . '/tests',
     ])
     ->withSkip([
-        JoinStringConcatRector::class,
         SimplifyEmptyCheckOnEmptyArrayRector::class,
-        DisallowedEmptyRuleFixerRector::class
     ])
     ->withPhpSets()
     ->withPreparedSets(

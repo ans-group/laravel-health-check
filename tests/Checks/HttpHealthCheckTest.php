@@ -46,7 +46,7 @@ class HttpHealthCheckTest extends TestCase
             return new Client(['handler' => $mockHandler]);
         });
 
-        $status = (new HttpHealthCheck())->status();
+        $status = (new HttpHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
     }
@@ -70,7 +70,7 @@ class HttpHealthCheckTest extends TestCase
             return new Client(['handler' => $mockHandler]);
         });
 
-        $status = (new HttpHealthCheck())->status();
+        $status = (new HttpHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
     }
@@ -94,7 +94,7 @@ class HttpHealthCheckTest extends TestCase
             return new Client(['handler' => $mockHandler]);
         });
 
-        $status = (new HttpHealthCheck())->status();
+        $status = (new HttpHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
     }
@@ -118,7 +118,7 @@ class HttpHealthCheckTest extends TestCase
             return new Client(['handler' => $mockHandler]);
         });
 
-        $status = (new HttpHealthCheck())->status();
+        $status = (new HttpHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
     }
@@ -142,7 +142,7 @@ class HttpHealthCheckTest extends TestCase
             return new Client(['handler' => $mockHandler]);
         });
 
-        $status = (new HttpHealthCheck())->status();
+        $status = (new HttpHealthCheck())->inspect();
 
         $this->assertTrue($status->isOkay());
     }

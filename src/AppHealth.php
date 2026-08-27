@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace UKFast\HealthCheck;
 
-use Exception;
+use Throwable;
 use Illuminate\Support\Collection;
 use UKFast\HealthCheck\Exceptions\CheckNotFoundException;
 
@@ -28,8 +28,10 @@ class AppHealth
         }
 
         try {
-            return $check->status()->isOkay();
-        } catch (Exception) {
+            $check->check();
+
+            return true;
+        } catch (Throwable) {
             return false;
         }
     }
@@ -40,8 +42,6 @@ class AppHealth
     }
 
     /**
-     * Returns a collection of all health checks
-     *
      * @return Collection<int, covariant HealthCheck>
      */
     public function all(): Collection

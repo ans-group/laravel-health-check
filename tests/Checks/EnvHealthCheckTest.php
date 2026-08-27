@@ -30,7 +30,7 @@ class EnvHealthCheckTest extends TestCase
             'REDIS_HOST',
             'MYSQL_PASSWORD'
         ]]);
-        $status = (new EnvHealthCheck())->status();
+        $status = (new EnvHealthCheck())->inspect();
 
         $this->assertTrue($status->isProblem());
     }
@@ -47,7 +47,7 @@ class EnvHealthCheckTest extends TestCase
                 'MYSQL_PASSWORD',
             ],
         ]);
-        $status = (new EnvHealthCheck())->status();
+        $status = (new EnvHealthCheck())->inspect();
 
         $this->assertTrue($status->isOkay());
     }
@@ -59,7 +59,7 @@ class EnvHealthCheckTest extends TestCase
         config(['healthcheck.required-env' => [
             'REDIS_PASSWORD',
         ]]);
-        $status = (new EnvHealthCheck())->status();
+        $status = (new EnvHealthCheck())->inspect();
 
         $this->assertTrue($status->isOkay());
     }

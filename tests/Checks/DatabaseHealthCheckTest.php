@@ -33,7 +33,7 @@ class DatabaseHealthCheckTest extends TestCase
         $database = new DatabaseManager();
         $database->addConnection('default', new BadConnection());
 
-        $status = (new DatabaseHealthCheck($database))->status();
+        $status = (new DatabaseHealthCheck($database))->inspect();
 
         $this->assertTrue($status->isProblem());
     }
@@ -47,7 +47,7 @@ class DatabaseHealthCheckTest extends TestCase
         $database = new DatabaseManager();
         $database->addConnection('default', new HealthyConnection());
 
-        $status = (new DatabaseHealthCheck($database))->status();
+        $status = (new DatabaseHealthCheck($database))->inspect();
 
         $this->assertTrue($status->isOkay());
     }
@@ -62,7 +62,7 @@ class DatabaseHealthCheckTest extends TestCase
         $database->addConnection('healthy', new HealthyConnection());
         $database->addConnection('bad', new BadConnection());
 
-        $status = (new DatabaseHealthCheck($database))->status();
+        $status = (new DatabaseHealthCheck($database))->inspect();
 
         $this->assertTrue($status->isProblem());
         $this->assertSame('bad', $status->context()['connection']);

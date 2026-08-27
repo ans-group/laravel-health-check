@@ -18,7 +18,7 @@ class FtpHealthCheckTest extends TestCase
         $ftp->expects('listContents')
             ->andThrow(new  UnableToConnectToFtpHost('uwu'));
 
-        $status = (new FtpHealthCheck($ftp))->status();
+        $status = (new FtpHealthCheck($ftp))->inspect();
 
         $this->assertTrue($status->isProblem());
 
@@ -38,7 +38,7 @@ class FtpHealthCheckTest extends TestCase
             ->andReturn($generator())
             ->getMock();
 
-        $status = (new FtpHealthCheck($ftp))->status();
+        $status = (new FtpHealthCheck($ftp))->inspect();
         $this->assertTrue($status->isOkay());
 
         Mockery::close();

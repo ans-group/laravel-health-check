@@ -8,7 +8,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use UKFast\HealthCheck\HealthCheck;
-use UKFast\HealthCheck\Status;
 
 class CrossServiceHealthCheck extends HealthCheck
 {
@@ -20,12 +19,14 @@ class CrossServiceHealthCheck extends HealthCheck
     ) {
     }
 
-    public function status(): Status
+    public function check(): void
     {
         if ($this->request->headers->has('X-Service-Check')) {
-            return $this->okay([
+            $this->pass([
                 'message' => 'Skipped, X-Service-Check header is present',
             ]);
+
+            return;
         }
 
         /**
@@ -46,9 +47,7 @@ class CrossServiceHealthCheck extends HealthCheck
         }
 
         if ($failedServices !== []) {
-            return $this->problem("Some services failed", $failedServices);
+            $this->fail("Some services failed", $failedServices);
         }
-
-        return $this->okay();
     }
 }

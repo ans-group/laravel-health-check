@@ -4,108 +4,82 @@
 
 # Health Check Package
 
-The purpose of this package is to surface a health-check endpoint on `/health` which, when hit, returns the status of all the services and dependencies your project relies on, along with the overall health of your system. This is useful in both development and production for debugging issues with a faulty application.
+Laravel includes a [built-in health check route](https://laravel.com/docs/deployment#the-health-route) that reports the status of your application to an uptime monitor, load balancer, or orchestration system such as Kubernetes: by default served at `/up`, returning `200` if the application booted without exceptions and `500` otherwise, and dispatching `Illuminate\Foundation\Events\DiagnosingHealth` so you can throw from a listener to fail the check.
 
-This package also adds a `/ping` endpoint. Just hit `/ping` and receive `pong` in response. 
+This package **is** that health route — it registers the endpoint itself, dispatches the same `DiagnosingHealth` event, and fails the same way (throwing). Nothing about the wiring is different; what you get on top is:
 
+- **A library of ready-made checks** (database, cache, Redis, storage, FTP, outbound HTTP, pending migrations, scheduler liveness, Composer package security, cross-service) instead of writing your own `DiagnosingHealth` listeners from scratch.
+- **A `degrade()` path alongside `fail()`** — report a check as unhealthy without dropping the endpoint to a `500`, for problems you want visible but not paging on-call.
+- **The same JSON and HTML Laravel already returns, extended, not replaced** — JSON is still `{"status": "up"|"down"}` with a `checks` breakdown added; the HTML page is Laravel's own health page markup with a per-check table added below it. Point an existing uptime monitor at this endpoint and nothing about the contract it already expects changes.
+- **A facade, Artisan command (`health-check:status --only=... --except=...`), and route middleware** (basic-auth gating, `X-{check}-status` response headers) for querying check status outside the HTTP route too.
+- **An opt-in static ping file** — `public/{path}` served by the web server without booting PHP at all, for a cheaper "is the box up?" signal than hitting the full endpoint.
+
+Because it *is* the framework's health route rather than a second one beside it, **omit** the `health:` argument in `bootstrap/app.php`'s `withRouting()` — this package registers the route (same default `/up`, configurable via `HEALTHCHECK_PATH`) so there's only one to keep straight.
+
+![Laravel's native health page next to this package's — same card, same wording, extended with a per-check breakdown](docs/images/native-vs-package-comparison.png)
+
+Upgrading from 2.x? See [UPGRADE.md](UPGRADE.md).
 
 ## Installation
 
-To install the package:
-
-Run  `composer require ans-group/laravel-health-check` to add the package to your dependencies.
-
-This will automatically install the package to your vendor folder.
-
-#### Laravel
-
-In Laravel applications, the service provider should be automatically registered, but you may register it manually in your `config/app.php` file:
-
-```php
-'providers' => [
-    // ...
-    UKFast\HealthCheck\HealthCheckServiceProvider::class,
-];  
+```bash
+composer require ans-group/laravel-health-check
 ```
-
-#### Lumen
-
-To have the package function in Lumen, you need to register the service provider. add the following to your `bootstrap/app.php` file:
-
-```php
-$app->register(\UKFast\HealthCheck\HealthCheckServiceProvider::class);
-```
-
-You can test that the package is working correctly by hitting the `/health` endpoint.
-
-
-## Configuration
 
 ### Laravel
 
-
-##### Facade
-
-We surface a `HealthCheck` facade with the package. You can use the `passes`, `fails`, or `all` methods, if you want to access the results of a check or the number of checks running from within your code.
+The service provider is auto-discovered. In `bootstrap/app.php`, do **not** pass `health:` to `withRouting()`:
 
 ```php
-if (HealthCheck::passes('env')) {
-    // check passed
-}
-
-if (HealthCheck::fails('http')) {
-    // check failed
-}
-
-$numberOfChecks = HealthCheck::all()->count();
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+    )
+    ->create();
 ```
 
-If one of the checks provided cannot be resolved from the service container, we'll throw a `CheckNotFoundException` with the name of the missing check.
-
-
-##### Config
-
-If you'd like to tweak the config file (helpful for configuring the `EnvHealthCheck`, for example), you can publish it with:
-
-```bash
-php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProvider" --tag="config"
-```
-
-##### Console command
-
-Check all: `php artisan health-check:status`
-
-Only specific checks: `php artisan health-check:status --only=log,cache`
-
-Except specific checks: `php artisan health-check:status --except=cache`
-
-##### Middleware
-
-You can register custom middleware to run on requests to the `/health` endpoint. You can add this to the middleware array in the `config/healthcheck.php` config file created by the command above, as shown in the example below:
-
-```php
-/**
- * A list of middleware to run on the health-check route
- * It's recommended that you have a middleware that only
- * allows admin consumers to see the endpoint.
- *
- * See UKFast\HealthCheck\Middleware\BasicAuth for a one-size-fits all
- * solution
- */
-'middleware' => [
-    App\Http\Middleware\CustomMiddleware::class
-],
-```
-
-Now your `CustomMiddleware` middleware will be ran on every request to the `/health` endpoint.
-
+Hit the health endpoint (JSON: send `Accept: application/json`). Overall `status` is `up` or `down`; each check is listed under `checks`.
 
 ### Lumen
 
+Register the provider in `bootstrap/app.php`:
 
-##### Facade
+```php
+$app->register(\UKFast\HealthCheck\HealthCheckServiceProvider::class);
+$app->configure('healthcheck');
+```
 
-We surface a `HealthCheck` facade with the package. You can use the `passes`, `fails`, or `all` methods, if you want to access the results of a check or the number of checks running from within your code.
+## Configuration
+
+Publish the config (and optionally the HTML view):
+
+```bash
+php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProvider" --tag="config"
+php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProvider" --tag="healthcheck-views"
+```
+
+### Health endpoint path
+
+Same role as Laravel's `health:` option:
+
+```php
+'path' => env('HEALTHCHECK_PATH', '/up'),
+```
+
+Change `HEALTHCHECK_PATH` or `'path'` in config. Middleware on that route is `healthcheck.middleware`.
+
+### Ping (opt-in, static file)
+
+The package does **not** register a ping route. Set `HEALTHCHECK_PING=true` (or `'ping.enabled' => true`) and it will write `pong` to `public/{ping.path}` if the file is missing. The web server can serve that file without booting Laravel.
+
+You can also publish the stub yourself:
+
+```bash
+php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProvider" --tag="healthcheck-ping"
+```
+
+### Facade
 
 ```php
 if (HealthCheck::passes('env')) {
@@ -119,254 +93,87 @@ if (HealthCheck::fails('http')) {
 $numberOfChecks = HealthCheck::all()->count();
 ```
 
-If one of the checks provided cannot be resolved from the service container, we'll throw a `CheckNotFoundException` with the name of the missing check.
+A missing check name throws `CheckNotFoundException`.
 
+### Console
 
-##### Config
-
-If you'd like to tweak the config file (helpful for configuring the `EnvHealthCheck`, for example):
-
-Manually copy the package config file (see example below) to `config\healthcheck.php` (you may need to create the config directory if it does not already exist).
-
-```php
-<?php
-
-return [
-    /**
-     * Base path for the health check endpoints, by default will use /
-     */
-    'base-path' => '',
-
-    /**
-     * List of health checks to run when determining the health
-     * of the service
-     */
-    'checks' => [
-        UKFast\HealthCheck\Checks\LogHealthCheck::class,
-        UKFast\HealthCheck\Checks\DatabaseHealthCheck::class,
-        UKFast\HealthCheck\Checks\EnvHealthCheck::class
-    ],
-
-    /**
-     * A list of middleware to run on the health-check route
-     * It's recommended that you have a middleware that only
-     * allows admin consumers to see the endpoint.
-     * 
-     * See UKFast\HealthCheck\BasicAuth for a one-size-fits all
-     * solution
-     */
-    'middleware' => [],
-
-    /**
-     * Used by the basic auth middleware
-     */
-    'auth' => [
-        'user' => env('HEALTH_CHECK_USER'),
-        'password' => env('HEALTH_CHECK_PASSWORD'),
-    ],
-
-    /**
-     * Can define a list of connection names to test. Names can be
-     * found in your config/database.php file. By default, we just
-     * check the 'default' connection
-     */
-    'database' => [
-        'connections' => ['default'],
-    ],
-
-    /**
-     * Can give an array of required environment values, for example
-     * 'REDIS_HOST'. If any don't exist, then it'll be surfaced in the
-     * context of the healthcheck
-     */
-    'required-env' => [],
-
-    /**
-     * List of addresses and expected response codes to
-     * monitor when running the HTTP health check
-     *
-     * e.g. address => response code
-     */
-    'addresses' => [],
-
-    /**
-     * Default response code for HTTP health check. Will be used
-     * when one isn't provided in the addresses config.
-     */
-    'default-response-code' => 200,
-
-    /**
-     * Default timeout for cURL requests for HTTP health check.
-     */
-    'default-curl-timeout' => 2.0,
-
-    /**
-     * An array of other services that use the health check package
-     * to hit. The URI should reference the endpoint specifically,
-     * for example: https://api.example.com/health
-     */
-    'x-service-checks' => [],
-
-    /**
-     * A list of stores to be checked by the Cache health check
-     */
-    'cache' => [
-        'stores' => [
-            'array'
-        ]
-    ],
-
-    /**
-     * A list of disks to be checked by the Storage health check
-     */
-    'storage' => [
-        'disks' => [
-            'local',
-        ]
-    ],
-
-    /**
-     * Additional config can be put here. For example, a health check
-     * for your .env file needs to know which keys need to be present.
-     * You can pass this information by specifying a new key here then
-     * accessing it via config('healthcheck.env') in your healthcheck class
-     */
-];
+```bash
+php artisan health-check:status
+php artisan health-check:status --only=log,cache
+php artisan health-check:status --except=cache
 ```
 
-Update your `bootstrap/app.php` file to override the default package config:
+### Middleware
 
-```php
-$app->configure('healthcheck');
-```
+Configure `healthcheck.middleware` for the health endpoint. Built-in:
 
+- `BasicAuth` — require HTTP basic auth for the full body
+- `AddHeaders` — `X-{check}-status` headers
 
-##### Middleware
+## Checks
 
-You can register custom middleware to run on requests to the `/health` endpoint. You can add this to the middleware array in the `config/healthcheck.php` config file you created using the config above, as shown in the example below:
+Register classes under `healthcheck.checks`. Bundled checks include log, database, env, cache, Redis, HTTP, storage, FTP, migrations, scheduler, package security, and cross-service.
 
-```php
-/**
- * A list of middleware to run on the health-check route
- * It's recommended that you have a middleware that only
- * allows admin consumers to see the endpoint.
- *
- * See UKFast\HealthCheck\BasicAuth for a one-size-fits all
- * solution
- */
-'middleware' => [
-    App\Http\Middleware\CustomMiddleware::class
-],
-```
+### Scheduler
 
-Now your `CustomMiddleware` middleware will be ran on every request to the `/health` endpoint.
-
-Out of the box, the health check package provides:
-
- * BasicAuth - Requires that basic auth credentials be sent in order to see full status
- * AddHeaders - Adds X-check-status headers to the response, so you can avoid having to parse JSON
-
-### Checks
-
-##### Scheduler Health Check
-
-The scheduler health check works by using a time limited cache key on your project every minute. You will need to register the
-CacheSchedulerRunning command to run every minute in your projects `Kernel.php`.
-
-You can customise the cache key and length of time in minutes before the scheduler not running will trigger an error.
+The scheduler check uses a time-limited cache key. Schedule the command every minute:
 
 ```php
 $schedule->command(CacheSchedulerRunning::class)->everyMinute();
 ```
 
+Cache key and TTL are under `healthcheck.scheduler`.
+
+### App listeners
+
+You can still listen for `Illuminate\Foundation\Events\DiagnosingHealth` and throw to fail the health endpoint, as Laravel documents.
+
 ## Creating your own health checks
 
-It's very simple to create your own health checks.
+```bash
+php artisan make:check RedisHealthCheck
+```
 
-In this example, we'll create a health check for Redis.
-
-You first need to create your health-check class, you can put this inside `App\HealthChecks`.
-In this case, the class would be `App\HealthChecks\RedisHealthCheck`
-
-Every health check needs to extend the base `HealthCheck` class and implement a `status()` method. You should also set the `$name` property for display purposes.
+Extend `UKFast\HealthCheck\HealthCheck`, set `$name`, and implement `check()`. Throw with `$this->fail()` when unhealthy, or `$this->degrade()` when the app should stay HTTP 200 but report a degraded check.
 
 ```php
 <?php
 
-namespace App\HealthChecks;
+namespace App\Checks;
 
+use Exception;
+use Illuminate\Support\Facades\Redis;
 use UKFast\HealthCheck\HealthCheck;
 
 class RedisHealthCheck extends HealthCheck
 {
-    protected $name = 'my-fancy-redis-check';
+    protected string $name = 'my-fancy-redis-check';
 
-    public function status()
+    public function check(): void
     {
-        return $this->okay();
+        try {
+            Redis::ping();
+        } catch (Exception $exception) {
+            $this->fail('Failed to connect to redis', [
+                'exception' => $this->exceptionContext($exception),
+            ]);
+        }
     }
 }
 ```
 
-Now we've got our basic class setup, we can add it to the list of checks to run in our `config/healthcheck.php` file.
-
-Open up `config/healthcheck.php` and go to the `'checks'` array. Add your class to the list of those checks:
-
-```php
-'checks' => [
-    // ...
-    App\HealthChecks\RedisHealthCheck::class,
-]
-```
-
-If you hit the `/health` endpoint now, you'll see that there's a `my-fancy-redis-check` property and it should return `OK` for the status.
-
-We can now go about actually implementing the check properly.
-
-Go back to the `status()` method in the `RedisHealthCheck` class.
-
-Add in the following code:
-
-```php
-public function status()
-{
-    try {
-        Redis::ping();
-    } catch (Exception $exception) {
-        return $this->problem('Failed to connect to redis', [
-            'exception' => $this->exceptionContext($exception),
-        ]);
-    }
-
-    return $this->okay();
-}
-```
-
-You'll need to import the following at the top as well
-
-```php
-use Illuminate\Support\Facades\Redis;
-use UKFast\HealthCheck\HealthCheck;
-use Exception;
-```
-
-Finally, hit the `/health` endpoint, depending on if your app can actually hit Redis, you'll see the status of Redis. If it's still returning `OK` try changing `REDIS_HOST` to something that doesn't exist to trip the error.
-
+Add the class to `healthcheck.checks`.
 
 ## Contributing
 
-We welcome contributions to this package that will be beneficial to the community.
+We welcome contributions that will be beneficial to the community.
 
-You can reach out to our open-source team via **open-source@ukfast.co.uk** who will get back to you as soon as possible.
-
-Please refer to our [CONTRIBUTING](CONTRIBUTING.md) file for more information.
-
+Reach out via **open-source@ukfast.co.uk**. See [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Security
 
-If you think you have identified a security vulnerability, please contact our team via **security@ukfast.co.uk** who will get back to you as soon as possible, rather than using the issue tracker.
-
+Report vulnerabilities to **security@ukfast.co.uk**, not the issue tracker.
 
 ## Licence
 
-This project is licenced under the MIT Licence (MIT). Please see the [Licence](LICENCE) file for more information.
+MIT. See the [Licence](LICENSE) file.

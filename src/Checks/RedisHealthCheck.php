@@ -9,22 +9,20 @@ use Illuminate\Support\Facades\Redis;
 use RedisException;
 use UKFast\HealthCheck\HealthCheck;
 use Exception;
-use UKFast\HealthCheck\Status;
 
 class RedisHealthCheck extends HealthCheck
 {
     protected string $name = 'redis';
 
-    public function status(): Status
+    public function check(): void
     {
         try {
             $this->handlePing();
         } catch (Exception $exception) {
-            return $this->problem('Failed to connect to redis', [
+            $this->fail('Failed to connect to redis', [
                 'exception' => $this->exceptionContext($exception),
             ]);
         }
-        return $this->okay();
     }
 
     protected function isUsingPhpRedis(): bool
