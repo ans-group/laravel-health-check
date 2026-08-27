@@ -51,7 +51,13 @@ public function check(): void
 
 ## Ping is not a Laravel route
 
-The `GET` ping route is removed. For a web-server-only liveness file, set `HEALTHCHECK_PING=true` (or `healthcheck.ping.enabled`). The package writes `pong` to `public/{healthcheck.ping.path}` if that file does not already exist.
+The `GET` ping route is removed. For a web-server-only liveness file, publish the stub once and commit it:
+
+```bash
+php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProvider" --tag="healthcheck-ping"
+```
+
+That copies `pong` to `public/ping`. Nothing is written automatically at runtime.
 
 ## Failure context no longer includes file paths or stack traces
 
@@ -65,7 +71,6 @@ If you built tooling against the old `context.exception.trace`/`file`/`line` sha
 
 ## Other
 
-- `healthcheck.route-paths` is replaced by `healthcheck.path` and `healthcheck.ping`.
+- `healthcheck.route-paths` is replaced by `healthcheck.path`.
 - Named route `healthcheck.route-name` still exists; it points at the health endpoint, not the old `/health` URI.
 - If a route already exists at the configured health path when the package boots (for example, the framework's own `health:` argument is still set), a warning is logged. This doesn't stop either route from registering — remove `health:` from `withRouting()` as described above to avoid two handlers on the same URI.
-- `healthcheck.ping.path` is now validated: a `..` segment, or a path that would resolve outside `public/`, throws an `InvalidArgumentException` at boot instead of writing the file somewhere unexpected.

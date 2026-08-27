@@ -6,7 +6,6 @@ namespace Tests;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\File;
-use InvalidArgumentException;
 use Tests\TestCase;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 
@@ -22,84 +21,10 @@ class PingFileTest extends TestCase
         return [HealthCheckServiceProvider::class];
     }
 
-    public function testDoesNotPublishAPingFileByDefault(): void
+    public function testDoesNotRegisterAPingRouteOrFileByDefault(): void
     {
         $this->assertFalse(File::exists(public_path('ping')));
         $this->get('/ping')->assertNotFound();
-    }
-
-    public function testPublishesAPingFileWhenEnabled(): void
-    {
-        $target = public_path('ping');
-        $this->forgetPingFile($target);
-
-        config(['healthcheck.ping.enabled' => true]);
-
-        /** @var HealthCheckServiceProvider $provider */
-        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
-        $provider->boot();
-
-        $this->assertTrue(File::exists($target));
-        $this->assertSame("pong\n", File::get($target));
-
-        $this->forgetPingFile($target);
-    }
-
-    public function testDoesNotOverwriteAnExistingPingFile(): void
-    {
-        $target = public_path('ping');
-        File::put($target, "custom\n");
-
-        config(['healthcheck.ping.enabled' => true]);
-
-        /** @var HealthCheckServiceProvider $provider */
-        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
-        $provider->boot();
-
-        $this->assertSame("custom\n", File::get($target));
-
-        $this->forgetPingFile($target);
-    }
-
-    public function testRejectsAPingPathThatTraversesOutsideThePublicDirectory(): void
-    {
-        config([
-            'healthcheck.ping.enabled' => true,
-            'healthcheck.ping.path' => '../../etc/cron.d/malicious',
-        ]);
-
-        /** @var HealthCheckServiceProvider $provider */
-        $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
-
-        $this->expectException(InvalidArgumentException::class);
-
-        $provider->boot();
-    }
-
-    public function testPublishesWhenThePublicPathIsASymlinkToAnotherDirectory(): void
-    {
-        $root = sys_get_temp_dir() . '/health-check-ping-symlink-test';
-        $releasesDir = $root . '/release-1/public';
-        $currentLink = $root . '/current';
-
-        File::deleteDirectory($root);
-        File::ensureDirectoryExists($releasesDir);
-        symlink($releasesDir, $currentLink);
-
-        try {
-            $this->app->usePublicPath($currentLink);
-
-            config(['healthcheck.ping.enabled' => true]);
-
-            /** @var HealthCheckServiceProvider $provider */
-            $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
-            $provider->boot();
-
-            $this->assertTrue(File::exists($releasesDir . '/ping'));
-            $this->assertSame("pong\n", File::get($releasesDir . '/ping'));
-        } finally {
-            File::deleteDirectory($root);
-        }
     }
 
     public function testPingStubContainsPong(): void
@@ -107,10 +32,18 @@ class PingFileTest extends TestCase
         $this->assertSame("pong\n", File::get(dirname(__DIR__) . '/stubs/ping'));
     }
 
-    private function forgetPingFile(string $target): void
+    public function testStubIsRegisteredUnderTheHealthcheckPingPublishTag(): void
     {
-        if (File::exists($target)) {
-            File::delete($target);
-        }
+        $paths = HealthCheckServiceProvider::pathsToPublish(
+            HealthCheckServiceProvider::class,
+            'healthcheck-ping',
+        );
+
+        $this->assertCount(1, $paths);
+        $this->assertSame(
+            realpath(dirname(__DIR__) . '/stubs/ping'),
+            realpath(array_key_first($paths)),
+        );
+        $this->assertSame(public_path('ping'), array_values($paths)[0]);
     }
 }

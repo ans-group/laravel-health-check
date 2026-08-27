@@ -30,10 +30,12 @@ behaves in a plain Laravel app.
   package must never register anything at a hardcoded `/health` path, and
   should never assume `HEALTHCHECK_PATH`/`config('healthcheck.path')` is any
   particular value — users can and do change it.
-- **The ping file is not a route.** It's a static file copied under
-  `public/` (see [PingFilePublisher.php](src/PingFilePublisher.php)) that the
-  web server serves without booting PHP. It must never become a registered
-  Laravel route, and must never overwrite a file that's already there.
+- **The ping file is not a route, and is never written at runtime.** It's a
+  static file published via `php artisan vendor:publish --tag=healthcheck-ping`
+  (see the `healthcheck-ping` entry in `HealthCheckServiceProvider::configure()`)
+  that the consuming app commits to `public/ping` like any other published
+  asset. It must never become a registered Laravel route, and the package
+  must never write to `public/` on its own during a normal request/boot cycle.
 - **Debug mode rethrows, matching core.** `UpController` rethrows in debug
   mode instead of rendering — that's intentional parity with how Laravel's
   own exception handler behaves.
@@ -50,12 +52,6 @@ unauthenticated caller can read.
   (guarded against the logger itself being what's broken) so the detail is
   still available server-side. If you're tempted to add more detail here for
   debugging convenience, it will leak to anonymous callers — don't.
-- **`PingFilePublisher`** ([src/PingFilePublisher.php](src/PingFilePublisher.php))
-  rejects any ping path containing `..` or empty segments, and re-verifies
-  the resolved directory is still under `public_path()` before writing.
-  `healthcheck.ping.path` is env-configurable, so a typo or misconfiguration
-  should fail loudly (`InvalidArgumentException`) rather than write outside
-  `public/`.
 - **`Middleware/BasicAuth`** intentionally runs the check suite before
   verifying credentials, and returns the *real* status code with an empty
   body on failed/missing auth (see `tests/Middleware/BasicAuthTest.php`).

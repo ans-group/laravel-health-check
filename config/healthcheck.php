@@ -13,16 +13,6 @@ return [
      */
     'path' => env('HEALTHCHECK_PATH', '/up'),
 
-    /**
-     * Opt-in static liveness file (web server only — the app never
-     * registers a ping route). When enabled, the package writes `pong`
-     * to public/{path} if that file is not already present.
-     */
-    'ping' => [
-        'enabled' => env('HEALTHCHECK_PING', false),
-        'path' => env('HEALTHCHECK_PING_PATH', 'ping'),
-    ],
-
     /*
      * List of health checks to run when determining the health
      * of the service

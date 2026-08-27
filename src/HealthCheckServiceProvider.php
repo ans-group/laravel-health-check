@@ -62,8 +62,6 @@ class HealthCheckServiceProvider extends ServiceProvider
                 StatusCommand::class,
             ]);
         }
-
-        $this->publishPingFile();
     }
 
     protected function configure(): void
@@ -84,15 +82,6 @@ class HealthCheckServiceProvider extends ServiceProvider
                 __DIR__ . '/../stubs/ping' => public_path('ping'),
             ], 'healthcheck-ping');
         }
-    }
-
-    private function publishPingFile(): void
-    {
-        if (! config('healthcheck.ping.enabled')) {
-            return;
-        }
-
-        (new PingFilePublisher())->publish((string) config('healthcheck.ping.path', 'ping'));
     }
 
     private function routeAlreadyExists(string $healthPath): bool

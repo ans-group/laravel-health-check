@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Package-owned health endpoint using `DiagnosingHealth` and throw-to-fail, with JSON (`up`/`down`) and a publishable HTML view
 - Configurable health URI (`HEALTHCHECK_PATH` / `healthcheck.path`), matching Laravel's `health:` option
-- Opt-in static ping file under `public/` (`HEALTHCHECK_PING`)
+- Publishable static ping file (`php artisan vendor:publish --tag=healthcheck-ping` copies `pong` to `public/ping`), meant to be committed like any other published asset
 - A warning is logged at boot if a route already exists at the configured health path, to catch the framework's own `health:` route being registered alongside this package's
 
 ### Changed
@@ -28,13 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - The `/health` HTTP route and 2.x JSON envelope (`OK` / `PROBLEM` / `DEGRADED` at the top level)
-- The Laravel ping route (`PingController`); ping is a static file only when enabled
+- The Laravel ping route (`PingController`); ping is a publishable static file only, never registered as a route
 - Lumen support
 
 ### Fixed
 
-- `healthcheck.ping.path` is validated against directory traversal (`..` segments) and confirmed to resolve under `public/` before a file is written, since it's an env-configurable value
-- `PingFilePublisher`'s traversal check now resolves `public_path()` itself before comparing, so a symlinked public directory (common in zero-downtime deploys) no longer trips a false-positive `InvalidArgumentException`
 - `AddHeaders` now treats a degraded check as not-OK consistently, whether its status comes from a reused `HealthReport` or from running the check directly
 
 ## [2.0.1] - 2024-09-09

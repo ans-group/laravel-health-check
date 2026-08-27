@@ -12,7 +12,7 @@ This package **is** that health route — it registers the endpoint itself, disp
 - **A `degrade()` path alongside `fail()`** — report a check as unhealthy without dropping the endpoint to a `500`, for problems you want visible but not paging on-call.
 - **The same JSON and HTML Laravel already returns, extended, not replaced** — JSON is still `{"status": "up"|"down"}` with a `checks` breakdown added; the HTML page is Laravel's own health page markup with a per-check table added below it. Point an existing uptime monitor at this endpoint and nothing about the contract it already expects changes.
 - **A facade, Artisan command (`health-check:status --only=... --except=...`), and route middleware** (basic-auth gating, `X-{check}-status` response headers) for querying check status outside the HTTP route too.
-- **An opt-in static ping file** — `public/{path}` served by the web server without booting PHP at all, for a cheaper "is the box up?" signal than hitting the full endpoint.
+- **A publishable static ping file** — copy `pong` to `public/ping` and commit it, so the web server can answer a cheaper "is the box up?" signal without booting PHP at all.
 
 Because it *is* the framework's health route rather than a second one beside it, **omit** the `health:` argument in `bootstrap/app.php`'s `withRouting()` — this package registers the route (same default `/up`, configurable via `HEALTHCHECK_PATH`) so there's only one to keep straight.
 
@@ -58,15 +58,15 @@ Same role as Laravel's `health:` option:
 
 Change `HEALTHCHECK_PATH` or `'path'` in config. Middleware on that route is `healthcheck.middleware`.
 
-### Ping (opt-in, static file)
+### Ping (published static file)
 
-The package does **not** register a ping route. Set `HEALTHCHECK_PING=true` (or `'ping.enabled' => true`) and it will write `pong` to `public/{ping.path}` if the file is missing. The web server can serve that file without booting Laravel.
-
-You can also publish the stub yourself:
+The package does **not** register a ping route or write anything at runtime. Publish the stub once:
 
 ```bash
 php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProvider" --tag="healthcheck-ping"
 ```
+
+That copies `pong` to `public/ping`. Commit the file like any other published asset — the web server can then serve it directly without booting Laravel, and there's no runtime dependency on `public/` being writable.
 
 ### Facade
 
