@@ -1,6 +1,6 @@
-# Upgrade to 3.0
+# Upgrade to 4.0
 
-3.0 is a breaking release. Stay on 2.x until you can take these changes.
+4.0 is a breaking release. Stay on 2.x until you can take these changes.
 
 ## Framework health route
 
@@ -14,7 +14,7 @@ There is no compatibility flag or redirect. Point load balancers, k8s probes, an
 
 JSON is no longer `{ "status": "OK"|"PROBLEM"|"DEGRADED", "<check>": { "status": "OK", ... } }`.
 
-3.0 JSON matches Laravel's own health route contract exactly (`{"status": "up"|"down"}`) and extends it with a `checks` breakdown — no other top-level keys:
+4.0 JSON matches Laravel's own health route contract exactly (`{"status": "up"|"down"}`) and extends it with a `checks` breakdown — no other top-level keys:
 
 ```json
 {
@@ -32,7 +32,7 @@ JSON is no longer `{ "status": "OK"|"PROBLEM"|"DEGRADED", "<check>": { "status":
 
 Overall `status` is `up` or `down` (Laravel-style). Per-check values are `up`, `down`, or `degraded`. A degraded check does not fail the HTTP status; a `down` check uses `healthcheck.default-problem-http-code` (default 500). Browsers get an HTML view (`healthcheck::up`) built on Laravel's own health page markup — same "Application up" / "Application experiencing problems" heading, same Tailwind CDN styling — extended below with a per-check table; `Accept: application/json` gets JSON.
 
-If you were reading the top-level `message` key from 2.x-era 3.0 pre-release builds, it's gone — the per-check `checks.*.message` values it summarized are still there.
+If you were reading the top-level `message` key from 2.x-era 4.0 pre-release builds, it's gone — the per-check `checks.*.message` values it summarized are still there.
 
 ## Custom checks must throw
 
@@ -57,11 +57,11 @@ The `GET` ping route is removed. For a web-server-only liveness file, set `HEALT
 
 `exceptionContext()` (used by the bundled checks, and available to your own) now returns only `error` and `class`. It used to also include `file`, `line`, and a full `trace` — since the health endpoint is public by default, that meant an unauthenticated caller could read server file paths and stack traces in a failing check's response. The full exception is still passed to `report()` (your normal logger/error tracker), so nothing is lost server-side — it's just no longer in the HTTP response body.
 
-If you built tooling against the old `context.exception.trace`/`file`/`line` shape, it's gone in 3.0.
+If you built tooling against the old `context.exception.trace`/`file`/`line` shape, it's gone in 4.0.
 
 ## Lumen is no longer supported
 
-3.0 drops Lumen. If you're on Lumen, stay on 2.x.
+4.0 drops Lumen. If you're on Lumen, stay on 2.x.
 
 ## Other
 

@@ -82,11 +82,13 @@ diff rather than blindly re-running it.
 
 ## Compatibility notes
 
-- 2.x is a separate maintained line for consumers who can't move to 3.x's
-  breaking, core-aligned design. There is no 3.x config flag to restore 2.x
+- 2.x is a separate maintained line for consumers who can't move to 4.x's
+  breaking, core-aligned design. There is no 4.x config flag to restore 2.x
   behavior (old `/health` path, old JSON shape) — that would just delay the
-  same removal to a future major. Point people at 2.x instead.
-- 3.x does not support Lumen. It's fine to use
+  same removal to a future major. Point people at 2.x instead. (Note: 3.x
+  exists as a tag but was a routine PHP/Laravel version-support bump, not
+  this rewrite — this work is 4.x.)
+- 4.x does not support Lumen. It's fine to use
   `Illuminate\Foundation\Application`-only APIs (e.g. `hasDebugModeEnabled()`)
   directly rather than routing around them for Lumen compatibility — but
   prefer the plainest option that works (e.g. `config('app.debug')` over
