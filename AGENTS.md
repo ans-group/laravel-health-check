@@ -30,12 +30,6 @@ behaves in a plain Laravel app.
   package must never register anything at a hardcoded `/health` path, and
   should never assume `HEALTHCHECK_PATH`/`config('healthcheck.path')` is any
   particular value — users can and do change it.
-- **The ping file is not a route, and is never written at runtime.** It's a
-  static file published via `php artisan vendor:publish --tag=healthcheck-ping`
-  (see the `healthcheck-ping` entry in `HealthCheckServiceProvider::configure()`)
-  that the consuming app commits to `public/ping` like any other published
-  asset. It must never become a registered Laravel route, and the package
-  must never write to `public/` on its own during a normal request/boot cycle.
 - **Debug mode rethrows, matching core.** `UpController` rethrows in debug
   mode instead of rendering — that's intentional parity with how Laravel's
   own exception handler behaves.
