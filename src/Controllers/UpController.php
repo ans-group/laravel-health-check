@@ -21,7 +21,7 @@ class UpController
         try {
             $this->diagnose();
         } catch (Throwable $exception) {
-            if (app()->hasDebugModeEnabled()) {
+            if (config('app.debug')) {
                 throw $exception;
             }
 

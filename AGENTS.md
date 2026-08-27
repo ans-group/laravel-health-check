@@ -86,8 +86,9 @@ diff rather than blindly re-running it.
   breaking, core-aligned design. There is no 3.x config flag to restore 2.x
   behavior (old `/health` path, old JSON shape) — that would just delay the
   same removal to a future major. Point people at 2.x instead.
-- Lumen support matters and should keep working without
-  `Illuminate\Foundation\Application`-only APIs (e.g. `ApplicationBuilder`).
-  Guard Lumen-specific code behind `class_exists(\Laravel\Lumen\Application::class)`
-  checks, matching the existing pattern in
-  [HealthCheckServiceProvider.php](src/HealthCheckServiceProvider.php).
+- 3.x does not support Lumen. It's fine to use
+  `Illuminate\Foundation\Application`-only APIs (e.g. `hasDebugModeEnabled()`)
+  directly rather than routing around them for Lumen compatibility — but
+  prefer the plainest option that works (e.g. `config('app.debug')` over
+  `app()->hasDebugModeEnabled()`) when both are equally correct, since it's
+  one less framework-internal API to depend on.

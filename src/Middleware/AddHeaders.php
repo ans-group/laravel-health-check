@@ -29,7 +29,7 @@ class AddHeaders
         HealthCheck::all()->each(function (Check $check) use ($response, $report): void {
             $header = "X-{$check->name()}-status";
             $status = $report?->statusFor($check->name());
-            $ok = $status !== null ? $status !== 'down' : $this->runCheck($check);
+            $ok = $status !== null ? $status === 'up' : $this->runCheck($check);
 
             $response->headers->set($header, $ok ? '1' : '0');
         });

@@ -26,8 +26,6 @@ Upgrading from 2.x? See [UPGRADE.md](UPGRADE.md).
 composer require ans-group/laravel-health-check
 ```
 
-### Laravel
-
 The service provider is auto-discovered. In `bootstrap/app.php`, do **not** pass `health:` to `withRouting()`:
 
 ```php
@@ -40,15 +38,6 @@ return Application::configure(basePath: dirname(__DIR__))
 ```
 
 Hit the health endpoint (JSON: send `Accept: application/json`). Overall `status` is `up` or `down`; each check is listed under `checks`.
-
-### Lumen
-
-Register the provider in `bootstrap/app.php`:
-
-```php
-$app->register(\UKFast\HealthCheck\HealthCheckServiceProvider::class);
-$app->configure('healthcheck');
-```
 
 ## Configuration
 

@@ -1,13 +1,11 @@
 {
     "name": "ans-group/laravel-health-check",
-    "description": "A package for checking the health of your Laravel/Lumen applications.",
+    "description": "A package for checking the health of your Laravel applications.",
     "keywords": [
         "ukfast",
         "laravel-health-check",
-        "lumen-health-check",
         "ukfast-health-check",
-        "laravel",
-        "lumen"
+        "laravel"
     ],
     "type": "library",
     "license": "MIT",

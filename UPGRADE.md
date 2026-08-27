@@ -59,6 +59,10 @@ The `GET` ping route is removed. For a web-server-only liveness file, set `HEALT
 
 If you built tooling against the old `context.exception.trace`/`file`/`line` shape, it's gone in 3.0.
 
+## Lumen is no longer supported
+
+3.0 drops Lumen. If you're on Lumen, stay on 2.x.
+
 ## Other
 
 - `healthcheck.route-paths` is replaced by `healthcheck.path` and `healthcheck.ping`.

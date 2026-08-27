@@ -76,6 +76,32 @@ class PingFileTest extends TestCase
         $provider->boot();
     }
 
+    public function testPublishesWhenThePublicPathIsASymlinkToAnotherDirectory(): void
+    {
+        $root = sys_get_temp_dir() . '/health-check-ping-symlink-test';
+        $releasesDir = $root . '/release-1/public';
+        $currentLink = $root . '/current';
+
+        File::deleteDirectory($root);
+        File::ensureDirectoryExists($releasesDir);
+        symlink($releasesDir, $currentLink);
+
+        try {
+            $this->app->usePublicPath($currentLink);
+
+            config(['healthcheck.ping.enabled' => true]);
+
+            /** @var HealthCheckServiceProvider $provider */
+            $provider = $this->app->getProvider(HealthCheckServiceProvider::class);
+            $provider->boot();
+
+            $this->assertTrue(File::exists($releasesDir . '/ping'));
+            $this->assertSame("pong\n", File::get($releasesDir . '/ping'));
+        } finally {
+            File::deleteDirectory($root);
+        }
+    }
+
     public function testPingStubContainsPong(): void
     {
         $this->assertSame("pong\n", File::get(dirname(__DIR__) . '/stubs/ping'));

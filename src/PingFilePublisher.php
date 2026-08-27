@@ -30,7 +30,13 @@ class PingFilePublisher
             );
         }
 
-        $publicPath = rtrim(public_path(), '/');
+        $publicPath = realpath(public_path());
+
+        if ($publicPath === false) {
+            throw new InvalidArgumentException('The public directory could not be resolved.');
+        }
+
+        $publicPath = rtrim($publicPath, '/');
         $target = $publicPath . '/' . $relative;
 
         if (File::exists($target)) {
@@ -41,7 +47,7 @@ class PingFilePublisher
 
         $resolvedDirectory = (string) realpath(dirname($target));
 
-        if (! str_starts_with($resolvedDirectory, $publicPath)) {
+        if ($resolvedDirectory !== $publicPath && ! str_starts_with($resolvedDirectory, $publicPath . '/')) {
             throw new InvalidArgumentException(
                 "healthcheck.ping.path [{$relative}] must resolve to a location under the public directory."
             );
