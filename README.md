@@ -11,7 +11,7 @@ This package **is** that health route — it registers the endpoint itself, disp
 - **A library of ready-made checks** (database, cache, Redis, storage, FTP, outbound HTTP, pending migrations, scheduler liveness, Composer package security, cross-service) instead of writing your own `DiagnosingHealth` listeners from scratch.
 - **A `degrade()` path alongside `fail()`** — report a check as unhealthy without dropping the endpoint to a `500`, for problems you want visible but not paging on-call.
 - **The same JSON and HTML Laravel already returns, extended, not replaced** — JSON is still `{"status": "up"|"down"}` with a `checks` breakdown added; the HTML page is Laravel's own health page markup with a per-check table added below it. Point an existing uptime monitor at this endpoint and nothing about the contract it already expects changes.
-- **A facade, Artisan command (`health-check:status --only=... --except=...`), and route middleware** (basic-auth gating, `X-{check}-status` response headers) for querying check status outside the HTTP route too.
+- **A facade, Artisan command (`health-check:status --only=... --except=...`), and route middleware** (basic auth or header-token gating, `X-{check}-status` response headers) for querying check status outside the HTTP route too.
 - **A publishable static ping file** — copy `pong` to `public/ping` and commit it, so the web server can answer a cheaper "is the box up?" signal without booting PHP at all.
 
 Because it *is* the framework's health route rather than a second one beside it, **omit** the `health:` argument in `bootstrap/app.php`'s `withRouting()` — this package registers the route (same default `/up`, configurable via `HEALTHCHECK_PATH`) so there's only one to keep straight.
@@ -58,6 +58,32 @@ Same role as Laravel's `health:` option:
 
 Change `HEALTHCHECK_PATH` or `'path'` in config. Middleware on that route is `healthcheck.middleware`.
 
+### Authentication
+
+The health endpoint is public by default — the same as Laravel's native one. Add `Authenticate` to `healthcheck.middleware` to gate it:
+
+```php
+'middleware' => [
+    \UKFast\HealthCheck\Middleware\Authenticate::class,
+],
+```
+
+It accepts HTTP basic auth, a header token, or both — either passing is enough, so an old monitoring system that can only do basic auth and a new one sending a header can hit the same endpoint at once (useful mid-migration). Configure whichever you need:
+
+```php
+'auth' => [
+    // HTTP basic auth, for older monitoring systems that can't send custom headers
+    'user' => env('HEALTH_CHECK_USER'),
+    'password' => env('HEALTH_CHECK_PASSWORD'),
+
+    // A shared secret sent as a request header, for anything that can send custom headers
+    'header' => env('HEALTH_CHECK_AUTH_HEADER', 'X-Health-Check-Token'),
+    'token' => env('HEALTH_CHECK_AUTH_TOKEN'),
+],
+```
+
+Leaving `user`/`password` unset disables basic auth; leaving `token` unset disables the header token — each method is independently opt-in. A caller that fails both still gets the real HTTP status code back, just no body, so an unauthenticated monitor can tell "up or down" without seeing check detail.
+
 ### Ping (published static file)
 
 The package does **not** register a ping route or write anything at runtime. Publish the stub once:
@@ -96,7 +122,7 @@ php artisan health-check:status --except=cache
 
 Configure `healthcheck.middleware` for the health endpoint. Built-in:
 
-- `Authenticate` — require HTTP basic auth, a header token, or either, for the full body. Basic auth covers older monitoring systems that can't send custom headers; the header token covers anything that can — configure whichever you need under `healthcheck.auth` (both `user`/`password` and `token` can be set at once, so old and new systems can hit the same endpoint during a migration). A caller that fails auth still sees the real status code, just no body — so a monitor without credentials can tell "up or down" but nothing else.
+- `Authenticate` — gate the endpoint behind basic auth, a header token, or both. See [Authentication](#authentication) above.
 - `AddHeaders` — `X-{check}-status` headers
 
 ## Checks
