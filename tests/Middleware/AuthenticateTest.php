@@ -8,6 +8,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Tests\TestCase;
+use UKFast\HealthCheck\DnsHostnameResolver;
 use UKFast\HealthCheck\Middleware\Authenticate;
 
 class AuthenticateTest extends TestCase
@@ -206,5 +207,82 @@ class AuthenticateTest extends TestCase
         $response = (new Authenticate())->handle($request, fn(): ResponseFactory|Response => response('body', 500));
 
         $this->assertSame('body', $response->getContent());
+    }
+
+    public function testShowsFullResponseIfClientIpMatchesAResolvedHostname(): void
+    {
+        config(['healthcheck.auth.allowed-hostnames' => ['my-home.duckdns.org']]);
+
+        $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '203.0.113.7']);
+
+        $authenticate = new Authenticate($this->resolverFor(['203.0.113.7']));
+        $response = $authenticate->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('body', $response->getContent());
+    }
+
+    public function testOnlyShowsStatusCodeIfClientIpDoesNotMatchAResolvedHostname(): void
+    {
+        config(['healthcheck.auth.allowed-hostnames' => ['my-home.duckdns.org']]);
+
+        $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '198.51.100.1']);
+
+        $authenticate = new Authenticate($this->resolverFor(['203.0.113.7']));
+        $response = $authenticate->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function testAnUnconfiguredHostnameAllowlistNeverAuthenticates(): void
+    {
+        $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '203.0.113.7']);
+
+        $authenticate = new Authenticate($this->resolverFor(['203.0.113.7']));
+        $response = $authenticate->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function testHostnameAllowlistPassingIsSufficientAlongsideOtherConfiguredMethods(): void
+    {
+        config([
+            'healthcheck.auth.user' => 'correct-user',
+            'healthcheck.auth.password' => 'correct-password',
+            'healthcheck.auth.allowed-hostnames' => ['my-home.duckdns.org'],
+        ]);
+
+        $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '203.0.113.7']);
+
+        $authenticate = new Authenticate($this->resolverFor(['203.0.113.7']));
+        $response = $authenticate->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('body', $response->getContent());
+    }
+
+    /**
+     * @param array<int, string> $addresses
+     */
+    private function resolverFor(array $addresses): DnsHostnameResolver
+    {
+        return new class ($addresses) extends DnsHostnameResolver {
+            public ?string $seenHostname = null;
+
+            /**
+             * @param array<int, string> $addresses
+             */
+            public function __construct(private readonly array $addresses)
+            {
+            }
+
+            /**
+             * @return array<int, string>
+             */
+            public function resolve(string $hostname): array
+            {
+                $this->seenHostname = $hostname;
+
+                return $this->addresses;
+            }
+        };
     }
 }

@@ -50,15 +50,25 @@ unauthenticated caller can read.
   through `exceptionContext()` rather than building its own context array —
   that's the one place the "don't leak trace details" rule is enforced.
 - **`Middleware/Authenticate`** ([src/Middleware/Authenticate.php](src/Middleware/Authenticate.php))
-  gates the endpoint behind basic auth, a header token, and an IP allowlist
-  — any one configured method passing is sufficient. Each method only ever
-  authenticates if it's actually configured: empty config must never match
-  empty/absent credentials, and an empty allowlist must never match any IP.
-  It intentionally runs the check suite before verifying credentials, and
+  gates the endpoint behind basic auth, a header token, a static IP
+  allowlist, and a DDNS hostname allowlist — any one configured method
+  passing is sufficient. Each method only ever authenticates if it's
+  actually configured: empty config must never match empty/absent
+  credentials, and an empty allowlist must never match any IP. It
+  intentionally runs the check suite before verifying credentials, and
   returns the *real* status code with an empty body on failed/missing auth
   (see `tests/Middleware/AuthenticateTest.php`) — a caller without
   credentials should learn "up or down" but nothing else. Don't "fix" this
   into a generic 401 without discussing it; it's a deliberate, tested design.
+- **`DnsHostnameResolver`** ([src/DnsHostnameResolver.php](src/DnsHostnameResolver.php))
+  backs the hostname allowlist. It caches a hostname's resolved IPs for
+  the DNS record's own TTL (not a fixed interval), and caches a failed
+  lookup for 30s so a DNS outage doesn't force every request to pay a
+  lookup. `dns_get_record()` has no timeout parameter — a hung resolver
+  blocks whichever single request triggers a cache-miss lookup. This is a
+  documented, accepted limitation (see README), not a bug to fix with a
+  timeout workaround; there's no clean portable way to bound it, and it
+  only ever affects the one request that's unlucky enough to hit it.
 
 ## Before finishing a change
 
