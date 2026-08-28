@@ -23,17 +23,27 @@ return [
      * It's recommended that you have a middleware that only
      * allows admin consumers to see the endpoint.
      *
-     * See UKFast\HealthCheck\Middleware\BasicAuth for a one-size-fits all
-     * solution
+     * See UKFast\HealthCheck\Middleware\Authenticate for a one-size-fits-all
+     * solution that gates the endpoint behind basic auth, a header token,
+     * or both.
      */
     'middleware' => [],
 
     /*
-     * Used by the basic auth middleware
+     * Used by the Authenticate middleware. Each method only authenticates
+     * if it's configured - leave user/password unset to disable basic
+     * auth, or token unset to disable the header token, independently.
      */
     'auth' => [
+        // HTTP basic auth, for older monitoring systems that can't send
+        // custom headers.
         'user' => env('HEALTH_CHECK_USER'),
         'password' => env('HEALTH_CHECK_PASSWORD'),
+
+        // A shared secret sent as a request header, for anything that can
+        // send custom headers.
+        'header' => env('HEALTH_CHECK_AUTH_HEADER', 'X-Health-Check-Token'),
+        'token' => env('HEALTH_CHECK_AUTH_TOKEN'),
     ],
 
     /*

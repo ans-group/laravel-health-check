@@ -46,12 +46,15 @@ unauthenticated caller can read.
   (guarded against the logger itself being what's broken) so the detail is
   still available server-side. If you're tempted to add more detail here for
   debugging convenience, it will leak to anonymous callers — don't.
-- **`Middleware/BasicAuth`** intentionally runs the check suite before
+- **`Middleware/Authenticate`** intentionally runs the check suite before
   verifying credentials, and returns the *real* status code with an empty
-  body on failed/missing auth (see `tests/Middleware/BasicAuthTest.php`).
+  body on failed/missing auth (see `tests/Middleware/AuthenticateTest.php`).
   That's a deliberate, tested design — a caller without credentials should
   learn "up or down" but nothing else. Don't "fix" this into a generic 401
-  without discussing it; it's a documented behavior change, not a bug.
+  without discussing it; it's a documented behavior change, not a bug. It
+  authenticates via basic auth OR a header token — either passing is
+  sufficient, and each method only ever authenticates if it's actually
+  configured (empty config must never match empty/absent credentials).
 - Any new bundled check that catches an exception internally should route it
   through `exceptionContext()` rather than building its own context array —
   that's the one place the "don't leak trace details" rule is enforced.

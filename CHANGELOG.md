@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Configurable health URI (`HEALTHCHECK_PATH` / `healthcheck.path`), matching Laravel's `health:` option
 - Publishable static ping file (`php artisan vendor:publish --tag=healthcheck-ping` copies `pong` to `public/ping`), meant to be committed like any other published asset
 - A warning is logged at boot if a route already exists at the configured health path, to catch the framework's own `health:` route being registered alongside this package's
+- `Authenticate` middleware gates the health endpoint behind HTTP basic auth, a shared header token, or both — either passing is sufficient, so an old and new monitoring system can hit the same endpoint during a migration. Configure via `healthcheck.auth` (`user`/`password` for basic auth, `header`/`token` for the header token)
 
 ### Changed
 
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `AddHeaders` middleware reuses the `HealthReport` already produced by the health endpoint's own request instead of re-running every check a second time; it only falls back to running checks itself when applied to a route with no report to reuse
 - JSON responses drop the aggregate top-level `message` and now match Laravel's native health route contract exactly (`{"status": "up"|"down"}`), extended with a `checks` breakdown
 - The HTML view is rebuilt on Laravel's own `health-up.blade.php` markup (same Tailwind CDN, same "Application up" / "Application experiencing problems" wording, same "HTTP request received" copy) instead of a bespoke design, extended below with a per-check table
+- `Middleware\BasicAuth` is renamed to `Middleware\Authenticate`, reflecting that it now covers header-token auth too, not just basic auth
 
 ### Removed
 

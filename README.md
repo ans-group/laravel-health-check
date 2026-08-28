@@ -96,7 +96,7 @@ php artisan health-check:status --except=cache
 
 Configure `healthcheck.middleware` for the health endpoint. Built-in:
 
-- `BasicAuth` — require HTTP basic auth for the full body
+- `Authenticate` — require HTTP basic auth, a header token, or either, for the full body. Basic auth covers older monitoring systems that can't send custom headers; the header token covers anything that can — configure whichever you need under `healthcheck.auth` (both `user`/`password` and `token` can be set at once, so old and new systems can hit the same endpoint during a migration). A caller that fails auth still sees the real status code, just no body — so a monitor without credentials can tell "up or down" but nothing else.
 - `AddHeaders` — `X-{check}-status` headers
 
 ## Checks

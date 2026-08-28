@@ -69,6 +69,10 @@ If you built tooling against the old `context.exception.trace`/`file`/`line` sha
 
 4.0 drops Lumen. If you're on Lumen, stay on 2.x.
 
+## `Middleware\BasicAuth` is renamed to `Middleware\Authenticate`
+
+It now also supports a header-token auth method alongside basic auth (either passing is sufficient), so the name no longer fit. If you reference `UKFast\HealthCheck\Middleware\BasicAuth::class` in your `healthcheck.middleware` config, update it to `UKFast\HealthCheck\Middleware\Authenticate::class`. Basic auth behaves exactly as before if you only configure `healthcheck.auth.user`/`password`; the header token is opt-in via `healthcheck.auth.token`.
+
 ## Other
 
 - `healthcheck.route-paths` is replaced by `healthcheck.path`.
