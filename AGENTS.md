@@ -13,16 +13,16 @@ event, and fails the same way (throwing), then adds a library of checks,
 JSON/HTML presentation, and tooling on top. See the [README](README.md) for
 the full pitch. The important consequence for any change you make: this is
 **alignment with core Laravel direction, not a competing feature**. Don't
-propose bringing back a separate `/health` route, a second JSON encoder, or
-anything that would make this package diverge from how `DiagnosingHealth`
-behaves in a plain Laravel app.
+propose a separate `/health` route, a second JSON encoder, or anything that
+would make this package diverge from how `DiagnosingHealth` behaves in a
+plain Laravel app.
 
 ## Invariants — don't change these without discussing it first
 
 - **Checks fail by throwing.** `HealthCheck::fail()` throws
   `HealthCheckFailedException`; `degrade()` throws
   `HealthCheckDegradedException`. Nothing catches broadly and converts to a
-  boolean — that was the 2.x `Status` design and it's gone.
+  boolean.
 - **Degraded never fails the HTTP response.** A degraded check must never
   turn the endpoint's status code into the configured problem code. Only
   `down` does that.
@@ -46,19 +46,19 @@ unauthenticated caller can read.
   (guarded against the logger itself being what's broken) so the detail is
   still available server-side. If you're tempted to add more detail here for
   debugging convenience, it will leak to anonymous callers — don't.
-- **`Middleware/Authenticate`** intentionally runs the check suite before
-  verifying credentials, and returns the *real* status code with an empty
-  body on failed/missing auth (see `tests/Middleware/AuthenticateTest.php`).
-  That's a deliberate, tested design — a caller without credentials should
-  learn "up or down" but nothing else. Don't "fix" this into a generic 401
-  without discussing it; it's a documented behavior change, not a bug. It
-  authenticates via basic auth OR a header token OR an IP allowlist — any
-  one passing is sufficient, and each method only ever authenticates if
-  it's actually configured (empty config must never match empty/absent
-  credentials, and an empty allowlist must never match any IP).
 - Any new bundled check that catches an exception internally should route it
   through `exceptionContext()` rather than building its own context array —
   that's the one place the "don't leak trace details" rule is enforced.
+- **`Middleware/Authenticate`** ([src/Middleware/Authenticate.php](src/Middleware/Authenticate.php))
+  gates the endpoint behind basic auth, a header token, and an IP allowlist
+  — any one configured method passing is sufficient. Each method only ever
+  authenticates if it's actually configured: empty config must never match
+  empty/absent credentials, and an empty allowlist must never match any IP.
+  It intentionally runs the check suite before verifying credentials, and
+  returns the *real* status code with an empty body on failed/missing auth
+  (see `tests/Middleware/AuthenticateTest.php`) — a caller without
+  credentials should learn "up or down" but nothing else. Don't "fix" this
+  into a generic 401 without discussing it; it's a deliberate, tested design.
 
 ## Before finishing a change
 
@@ -74,17 +74,14 @@ All of these should be clean before you consider a change done. If
 `composer standards:fix` changes something you don't understand, read the
 diff rather than blindly re-running it.
 
-## Compatibility notes
+## Scope
 
-- 2.x is a separate maintained line for consumers who can't move to 4.x's
-  breaking, core-aligned design. There is no 4.x config flag to restore 2.x
-  behavior (old `/health` path, old JSON shape) — that would just delay the
-  same removal to a future major. Point people at 2.x instead. (Note: 3.x
-  exists as a tag but was a routine PHP/Laravel version-support bump, not
-  this rewrite — this work is 4.x.)
-- 4.x does not support Lumen. It's fine to use
-  `Illuminate\Foundation\Application`-only APIs (e.g. `hasDebugModeEnabled()`)
-  directly rather than routing around them for Lumen compatibility — but
-  prefer the plainest option that works (e.g. `config('app.debug')` over
-  `app()->hasDebugModeEnabled()`) when both are equally correct, since it's
-  one less framework-internal API to depend on.
+- This is the 4.x line. 2.x is maintained separately for consumers who
+  can't take 4.x's breaking, core-aligned design — there is no config flag
+  to restore 2.x behavior (old `/health` path, old JSON shape) on 4.x.
+  Point people at 2.x instead of trying to reintroduce it here.
+- Laravel only — Lumen isn't supported. Use
+  `Illuminate\Foundation\Application`-only APIs freely (e.g.
+  `hasDebugModeEnabled()`), but prefer the plainest option that works (e.g.
+  `config('app.debug')`) when both are equally correct, since it's one less
+  framework-internal API to depend on.
