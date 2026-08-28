@@ -74,3 +74,4 @@ If you built tooling against the old `context.exception.trace`/`file`/`line` sha
 - `healthcheck.route-paths` is replaced by `healthcheck.path`.
 - Named route `healthcheck.route-name` still exists; it points at the health endpoint, not the old `/health` URI.
 - If a route already exists at the configured health path when the package boots (for example, the framework's own `health:` argument is still set), a warning is logged. This doesn't stop either route from registering — remove `health:` from `withRouting()` as described above to avoid two handlers on the same URI.
+- `healthcheck.base-path` is removed. It was undocumented and unused by anything in the package beyond prepending itself to `healthcheck.path` — if you were setting it, fold it directly into `healthcheck.path` instead (e.g. `base-path: 'api'` + `path: '/up'` becomes `path: '/api/up'`).

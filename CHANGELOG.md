@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `/health` HTTP route and 2.x JSON envelope (`OK` / `PROBLEM` / `DEGRADED` at the top level)
 - The Laravel ping route (`PingController`); ping is a publishable static file only, never registered as a route
 - Lumen support
+- `healthcheck.base-path` config option — unused, present since the package's first commit but never documented or wired to anything beyond prepending itself to the health path
 
 ### Fixed
 

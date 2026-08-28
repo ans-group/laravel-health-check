@@ -6,7 +6,6 @@ namespace Tests;
 
 use Artisan;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UKFast\HealthCheck\HealthCheckServiceProvider;
 use Illuminate\Support\Facades\URL;
 
@@ -81,26 +80,14 @@ class HealthCheckServiceProviderTest extends TestCase
         $this->assertInstanceOf(\UKFast\HealthCheck\AppHealth::class, $this->app->make('app-health'));
     }
 
-    public function testUsesBasePathForUpRoute(): void
+    public function testNormalizesAConfiguredPathWithoutALeadingSlash(): void
     {
-        config(['healthcheck.base-path' => '/test/']);
+        config(['healthcheck.path' => 'status']);
         $this->app->register(HealthCheckServiceProvider::class);
 
         $routes = $this->app->make('router')->getRoutes();
 
-        $this->assertNotNull($routes->match(Request::create('/test/up')));
-        $this->expectException(NotFoundHttpException::class);
-        $routes->match(Request::create('/up'));
-    }
-
-    public function testBasePathDefaultsToNothing(): void
-    {
-        config(['healthcheck.base-path' => '']);
-        $this->app->register(HealthCheckServiceProvider::class);
-
-        $routes = $this->app->make('router')->getRoutes();
-
-        $this->assertNotNull($routes->match(Request::create('/up')));
+        $this->assertNotNull($routes->match(Request::create('/status')));
     }
 
     public function testRegisteredRouteHasAName(): void

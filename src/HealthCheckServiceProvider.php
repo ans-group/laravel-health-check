@@ -25,7 +25,7 @@ class HealthCheckServiceProvider extends ServiceProvider
             Event::listen(DiagnosingHealth::class, RunPackageHealthChecks::class);
         }
 
-        $healthPath = $this->withBasePath((string) config('healthcheck.path', '/up'));
+        $healthPath = $this->normalizePath((string) config('healthcheck.path', '/up'));
 
         if (class_exists(PreventRequestsDuringMaintenance::class)) {
             PreventRequestsDuringMaintenance::except($healthPath);
@@ -97,15 +97,8 @@ class HealthCheckServiceProvider extends ServiceProvider
         return false;
     }
 
-    private function withBasePath(string $path): string
+    private function normalizePath(string $path): string
     {
-        $path = trim($path, '/');
-        $basePath = trim((string) config('healthcheck.base-path'), '/');
-
-        if ($basePath === '') {
-            return "/$path";
-        }
-
-        return "/$basePath/$path";
+        return '/' . trim($path, '/');
     }
 }

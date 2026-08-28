@@ -2,11 +2,6 @@
 
 return [
     /**
-     * Base path prepended to the health endpoint URI (rarely needed).
-     */
-    'base-path' => '',
-
-    /**
      * URI for the health endpoint. Same role as Laravel's
      * `withRouting(health: ...)` — set this instead of the framework
      * `health:` argument (omit `health:` so this package owns the route).
