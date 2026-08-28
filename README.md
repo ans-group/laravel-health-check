@@ -72,6 +72,9 @@ It accepts HTTP basic auth, a header token, a static IP allowlist, a DDNS hostna
 
 ```php
 'auth' => [
+    // Skip the gate entirely in the local environment, regardless of the other methods below
+    'bypass-in-local' => (bool) env('HEALTH_CHECK_AUTH_BYPASS_LOCAL', false),
+
     // HTTP basic auth, for older monitoring systems that can't send custom headers
     'user' => env('HEALTH_CHECK_USER'),
     'password' => env('HEALTH_CHECK_PASSWORD'),
@@ -91,6 +94,8 @@ It accepts HTTP basic auth, a header token, a static IP allowlist, a DDNS hostna
 `HEALTH_CHECK_ALLOWED_IPS` is a comma-separated list, e.g. `10.0.0.5,10.1.0.0/24,2001:db8::/32`. Leaving `user`/`password` unset disables basic auth, `token` unset disables the header token, `allowed-ips` empty disables the IP allowlist, and `allowed-hostnames` empty disables the hostname allowlist — each method is independently opt-in. A caller that fails all configured methods still gets the real HTTP status code back, just no body, so an unauthenticated monitor can tell "up or down" without seeing check detail.
 
 `allowed-hostnames` is for callers on a dynamic IP — a developer on a residential ISP behind a DDNS record (e.g. one managed through [SafeDNS](https://developers.ukfast.io)), rather than a fixed office/datacenter IP (e.g. `HEALTH_CHECK_ALLOWED_HOSTNAMES=my-home.example.com`). Each hostname is resolved via DNS and the result cached for the record's own TTL, so normal requests never pay a lookup — only the first request after the cache expires does, and DNS lookups have no built-in timeout, so a slow or unreachable DNS server can make that one request slower than usual (it doesn't affect requests served from cache, or break the endpoint).
+
+`bypass-in-local` is for local development — set `HEALTH_CHECK_AUTH_BYPASS_LOCAL=true` in your `.env.local`-equivalent (never in a shared/production `.env`) and the whole gate is skipped without configuring any of the other methods, as long as `APP_ENV=local`. It's off by default and checked against `app()->environment('local')` rather than the request's IP, since a client IP can be spoofed or misreported by a misconfigured reverse proxy but the app's own environment can't — deliberately safer than adding `127.0.0.1` to `allowed-ips`, which would bypass auth for anyone whose request looks like it came from localhost, proxy misconfiguration included.
 
 ### Ping (published static file)
 

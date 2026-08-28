@@ -259,6 +259,41 @@ class AuthenticateTest extends TestCase
         $this->assertSame('body', $response->getContent());
     }
 
+    public function testShowsFullResponseWhenBypassedInLocalAndEnvironmentIsLocal(): void
+    {
+        config(['healthcheck.auth.bypass-in-local' => true]);
+        $this->app['env'] = 'local';
+
+        $request = Request::create('/health', 'GET');
+
+        $response = (new Authenticate())->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('body', $response->getContent());
+    }
+
+    public function testBypassInLocalHasNoEffectOutsideTheLocalEnvironment(): void
+    {
+        config(['healthcheck.auth.bypass-in-local' => true]);
+        $this->app['env'] = 'production';
+
+        $request = Request::create('/health', 'GET');
+
+        $response = (new Authenticate())->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function testBypassInLocalIsOffByDefaultEvenInTheLocalEnvironment(): void
+    {
+        $this->app['env'] = 'local';
+
+        $request = Request::create('/health', 'GET');
+
+        $response = (new Authenticate())->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('', $response->getContent());
+    }
+
     /**
      * @param array<int, string> $addresses
      */

@@ -20,7 +20,11 @@ use UKFast\HealthCheck\DnsHostnameResolver;
  * on a dynamic IP (e.g. a developer on a residential ISP behind a DDNS
  * record). Each method only authenticates if it's actually configured
  * (see `healthcheck.auth`), so enabling one doesn't implicitly open the
- * others.
+ * others. `healthcheck.auth.bypass-in-local` is a separate, explicit
+ * opt-in to skip the gate entirely in the local environment — off by
+ * default, and gated on `app()->environment('local')` rather than the
+ * request's IP, since a client IP can be spoofed or misreported by a
+ * misconfigured proxy but the app's own environment can't.
  */
 class Authenticate
 {
@@ -34,7 +38,8 @@ class Authenticate
         $response = $next($request);
 
         if (
-            $this->passesIpAllowlist($request)
+            $this->bypassedInLocal()
+            || $this->passesIpAllowlist($request)
             || $this->passesHostnameAllowlist($request)
             || $this->passesBasicAuth($request)
             || $this->passesHeaderAuth($request)
@@ -43,6 +48,15 @@ class Authenticate
         }
 
         return new Response(null, $response->status());
+    }
+
+    private function bypassedInLocal(): bool
+    {
+        if (! config('healthcheck.auth.bypass-in-local', false)) {
+            return false;
+        }
+
+        return app()->environment('local');
     }
 
     private function passesIpAllowlist(Request $request): bool

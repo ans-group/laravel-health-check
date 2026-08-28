@@ -60,6 +60,13 @@ unauthenticated caller can read.
   (see `tests/Middleware/AuthenticateTest.php`) — a caller without
   credentials should learn "up or down" but nothing else. Don't "fix" this
   into a generic 401 without discussing it; it's a deliberate, tested design.
+  `healthcheck.auth.bypass-in-local` skips the gate entirely, but only when
+  *both* the flag is on *and* `app()->environment('local')` — deliberately
+  checked against the app's own environment rather than the request's IP
+  (e.g. adding `127.0.0.1` to `allowed-ips`), since a client IP can be
+  spoofed or misreported by a misconfigured reverse proxy but the app's
+  environment can't. Off by default; never make this on-by-default or
+  infer "local" from anything request-derived.
 - **`DnsHostnameResolver`** ([src/DnsHostnameResolver.php](src/DnsHostnameResolver.php))
   backs the hostname allowlist. It caches a hostname's resolved IPs for
   the DNS record's own TTL (not a fixed interval), and caches a failed

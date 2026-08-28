@@ -71,7 +71,7 @@ If you built tooling against the old `context.exception.trace`/`file`/`line` sha
 
 ## `Middleware\BasicAuth` is renamed to `Middleware\Authenticate`
 
-It now also supports a header-token auth method, a static IP allowlist, and a DDNS hostname allowlist alongside basic auth (any one passing is sufficient), so the name no longer fit. If you reference `UKFast\HealthCheck\Middleware\BasicAuth::class` in your `healthcheck.middleware` config, update it to `UKFast\HealthCheck\Middleware\Authenticate::class`. Basic auth behaves exactly as before if you only configure `healthcheck.auth.user`/`password`; the header token is opt-in via `healthcheck.auth.token`, the IP allowlist via `healthcheck.auth.allowed-ips`, and the hostname allowlist (for callers on a dynamic IP, e.g. a DDNS-backed home address) via `healthcheck.auth.allowed-hostnames`.
+It now also supports a header-token auth method, a static IP allowlist, and a DDNS hostname allowlist alongside basic auth (any one passing is sufficient), so the name no longer fit. If you reference `UKFast\HealthCheck\Middleware\BasicAuth::class` in your `healthcheck.middleware` config, update it to `UKFast\HealthCheck\Middleware\Authenticate::class`. Basic auth behaves exactly as before if you only configure `healthcheck.auth.user`/`password`; the header token is opt-in via `healthcheck.auth.token`, the IP allowlist via `healthcheck.auth.allowed-ips`, and the hostname allowlist (for callers on a dynamic IP, e.g. a DDNS-backed home address) via `healthcheck.auth.allowed-hostnames`. `healthcheck.auth.bypass-in-local` (off by default) skips the whole gate in the local environment, if you want auth enabled in every other environment but not local dev.
 
 ## Other
 

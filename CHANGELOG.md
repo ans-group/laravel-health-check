@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Publishable static ping file (`php artisan vendor:publish --tag=healthcheck-ping` copies `pong` to `public/ping`), meant to be committed like any other published asset
 - A warning is logged at boot if a route already exists at the configured health path, to catch the framework's own `health:` route being registered alongside this package's
 - `Authenticate` middleware gates the health endpoint behind HTTP basic auth, a shared header token, an IP allowlist, a DDNS hostname allowlist, or any combination — any one passing is sufficient, so an old and new monitoring system can hit the same endpoint during a migration. Configure via `healthcheck.auth` (`user`/`password` for basic auth, `header`/`token` for the header token, `allowed-ips` for a list of IPv4/IPv6 addresses or CIDR ranges, `allowed-hostnames` for DDNS-style hostnames resolved and cached per their DNS record's own TTL — for callers on a dynamic IP)
+- `healthcheck.auth.bypass-in-local` (`HEALTH_CHECK_AUTH_BYPASS_LOCAL`) skips the auth gate entirely in the local environment, off by default — an explicit opt-in checked against `app()->environment('local')` rather than the request's IP, so it can't be tripped by a misconfigured reverse proxy misreporting a client's IP as `127.0.0.1`
 
 ### Changed
 

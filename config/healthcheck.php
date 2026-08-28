@@ -35,6 +35,12 @@ return [
      * auth, or token unset to disable the header token, independently.
      */
     'auth' => [
+        // Skip the gate entirely in the local environment
+        // (app()->environment('local')), regardless of the other methods
+        // below - off by default, so opting in is a deliberate choice per
+        // app rather than something every consumer inherits.
+        'bypass-in-local' => (bool) env('HEALTH_CHECK_AUTH_BYPASS_LOCAL', false),
+
         // HTTP basic auth, for older monitoring systems that can't send
         // custom headers.
         'user' => env('HEALTH_CHECK_USER'),
