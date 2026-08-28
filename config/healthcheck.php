@@ -52,7 +52,7 @@ return [
         // DDNS or other hostnames whose currently-resolved IP(s) bypass
         // the other auth methods entirely - useful for developers on
         // dynamic residential IPs. Resolved via DNS and cached per the
-        // record's own TTL, e.g. "my-home.duckdns.org".
+        // record's own TTL, e.g. "my-home.example.com".
         'allowed-hostnames' => array_filter(explode(',', (string) env('HEALTH_CHECK_ALLOWED_HOSTNAMES', ''))),
     ],
 

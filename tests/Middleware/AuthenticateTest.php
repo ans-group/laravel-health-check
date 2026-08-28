@@ -211,7 +211,7 @@ class AuthenticateTest extends TestCase
 
     public function testShowsFullResponseIfClientIpMatchesAResolvedHostname(): void
     {
-        config(['healthcheck.auth.allowed-hostnames' => ['my-home.duckdns.org']]);
+        config(['healthcheck.auth.allowed-hostnames' => ['my-home.example.com']]);
 
         $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '203.0.113.7']);
 
@@ -223,7 +223,7 @@ class AuthenticateTest extends TestCase
 
     public function testOnlyShowsStatusCodeIfClientIpDoesNotMatchAResolvedHostname(): void
     {
-        config(['healthcheck.auth.allowed-hostnames' => ['my-home.duckdns.org']]);
+        config(['healthcheck.auth.allowed-hostnames' => ['my-home.example.com']]);
 
         $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '198.51.100.1']);
 
@@ -248,7 +248,7 @@ class AuthenticateTest extends TestCase
         config([
             'healthcheck.auth.user' => 'correct-user',
             'healthcheck.auth.password' => 'correct-password',
-            'healthcheck.auth.allowed-hostnames' => ['my-home.duckdns.org'],
+            'healthcheck.auth.allowed-hostnames' => ['my-home.example.com'],
         ]);
 
         $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '203.0.113.7']);
