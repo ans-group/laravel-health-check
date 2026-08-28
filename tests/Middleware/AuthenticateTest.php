@@ -138,4 +138,73 @@ class AuthenticateTest extends TestCase
 
         $this->assertSame('', $response->getContent());
     }
+
+    public function testShowsFullResponseIfIpv4AddressIsAllowed(): void
+    {
+        config(['healthcheck.auth.allowed-ips' => ['203.0.113.7']]);
+
+        $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '203.0.113.7']);
+
+        $response = (new Authenticate())->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('body', $response->getContent());
+    }
+
+    public function testShowsFullResponseIfIpv4AddressIsWithinAnAllowedCidrRange(): void
+    {
+        config(['healthcheck.auth.allowed-ips' => ['203.0.113.0/24']]);
+
+        $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '203.0.113.99']);
+
+        $response = (new Authenticate())->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('body', $response->getContent());
+    }
+
+    public function testShowsFullResponseIfIpv6AddressIsWithinAnAllowedCidrRange(): void
+    {
+        config(['healthcheck.auth.allowed-ips' => ['2001:db8::/32']]);
+
+        $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '2001:db8::1']);
+
+        $response = (new Authenticate())->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('body', $response->getContent());
+    }
+
+    public function testOnlyShowsStatusCodeIfIpAddressIsNotAllowed(): void
+    {
+        config(['healthcheck.auth.allowed-ips' => ['203.0.113.7']]);
+
+        $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '198.51.100.1']);
+
+        $response = (new Authenticate())->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function testAnUnconfiguredIpAllowlistNeverAuthenticates(): void
+    {
+        $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '198.51.100.1']);
+
+        $response = (new Authenticate())->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function testIpAllowlistPassingIsSufficientAlongsideOtherConfiguredMethods(): void
+    {
+        config([
+            'healthcheck.auth.user' => 'correct-user',
+            'healthcheck.auth.password' => 'correct-password',
+            'healthcheck.auth.token' => 'correct-token',
+            'healthcheck.auth.allowed-ips' => ['203.0.113.7'],
+        ]);
+
+        $request = Request::create('/health', 'GET', [], [], [], ['REMOTE_ADDR' => '203.0.113.7']);
+
+        $response = (new Authenticate())->handle($request, fn(): ResponseFactory|Response => response('body', 500));
+
+        $this->assertSame('body', $response->getContent());
+    }
 }

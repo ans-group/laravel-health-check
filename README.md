@@ -68,7 +68,7 @@ The health endpoint is public by default — the same as Laravel's native one. A
 ],
 ```
 
-It accepts HTTP basic auth, a header token, or both — either passing is enough, so an old monitoring system that can only do basic auth and a new one sending a header can hit the same endpoint at once (useful mid-migration). Configure whichever you need:
+It accepts HTTP basic auth, a header token, an IP allowlist, or any combination — passing any one is enough, so (for example) an old monitoring system that can only do basic auth and a new one sending a header can hit the same endpoint at once (useful mid-migration). Configure whichever you need:
 
 ```php
 'auth' => [
@@ -79,10 +79,13 @@ It accepts HTTP basic auth, a header token, or both — either passing is enough
     // A shared secret sent as a request header, for anything that can send custom headers
     'header' => env('HEALTH_CHECK_AUTH_HEADER', 'X-Health-Check-Token'),
     'token' => env('HEALTH_CHECK_AUTH_TOKEN'),
+
+    // IP addresses or CIDR ranges (IPv4 or IPv6) that bypass the other methods entirely
+    'allowed-ips' => array_filter(explode(',', (string) env('HEALTH_CHECK_ALLOWED_IPS', ''))),
 ],
 ```
 
-Leaving `user`/`password` unset disables basic auth; leaving `token` unset disables the header token — each method is independently opt-in. A caller that fails both still gets the real HTTP status code back, just no body, so an unauthenticated monitor can tell "up or down" without seeing check detail.
+`HEALTH_CHECK_ALLOWED_IPS` is a comma-separated list, e.g. `10.0.0.5,10.1.0.0/24,2001:db8::/32`. Leaving `user`/`password` unset disables basic auth, `token` unset disables the header token, and `allowed-ips` empty disables the IP allowlist — each method is independently opt-in. A caller that fails all configured methods still gets the real HTTP status code back, just no body, so an unauthenticated monitor can tell "up or down" without seeing check detail.
 
 ### Ping (published static file)
 

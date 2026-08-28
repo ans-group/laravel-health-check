@@ -52,9 +52,10 @@ unauthenticated caller can read.
   That's a deliberate, tested design — a caller without credentials should
   learn "up or down" but nothing else. Don't "fix" this into a generic 401
   without discussing it; it's a documented behavior change, not a bug. It
-  authenticates via basic auth OR a header token — either passing is
-  sufficient, and each method only ever authenticates if it's actually
-  configured (empty config must never match empty/absent credentials).
+  authenticates via basic auth OR a header token OR an IP allowlist — any
+  one passing is sufficient, and each method only ever authenticates if
+  it's actually configured (empty config must never match empty/absent
+  credentials, and an empty allowlist must never match any IP).
 - Any new bundled check that catches an exception internally should route it
   through `exceptionContext()` rather than building its own context array —
   that's the one place the "don't leak trace details" rule is enforced.

@@ -44,6 +44,10 @@ return [
         // send custom headers.
         'header' => env('HEALTH_CHECK_AUTH_HEADER', 'X-Health-Check-Token'),
         'token' => env('HEALTH_CHECK_AUTH_TOKEN'),
+
+        // IP addresses or CIDR ranges (IPv4 or IPv6) that bypass the other
+        // auth methods entirely, e.g. "10.0.0.5,10.1.0.0/24,2001:db8::/32".
+        'allowed-ips' => array_filter(explode(',', (string) env('HEALTH_CHECK_ALLOWED_IPS', ''))),
     ],
 
     /*
