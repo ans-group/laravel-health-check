@@ -11,6 +11,7 @@ This package **is** that health route — it registers the endpoint itself, disp
 - **A library of ready-made checks** (database, cache, Redis, storage, FTP, outbound HTTP, pending migrations, scheduler liveness, Composer package security, cross-service) instead of writing your own `DiagnosingHealth` listeners from scratch.
 - **A `degrade()` path alongside `fail()`** — report a check as unhealthy without dropping the endpoint to a `500`, for problems you want visible but not paging on-call.
 - **The same JSON and HTML Laravel already returns, extended, not replaced** — JSON is still `{"status": "up"|"down"}` with a `checks` breakdown added; the HTML page is Laravel's own health page markup with a per-check table added below it. Point an existing uptime monitor at this endpoint and nothing about the contract it already expects changes.
+- **An HTML view you can actually customise.** Laravel's own health page markup isn't overridable — a [core PR to allow it was rejected](https://github.com/laravel/framework/pull/50373). This package owns the view instead, so `php artisan vendor:publish --tag=healthcheck-views` and it's yours to edit (see [Custom HTML view](#custom-html-view)).
 - **A facade, Artisan command (`health-check:status --only=... --except=...`), and route middleware** (basic auth or header-token gating, `X-{check}-status` response headers) for querying check status outside the HTTP route too.
 - **A publishable static ping file** — copy `pong` to `public/ping` and commit it, so the web server can answer a cheaper "is the box up?" signal without booting PHP at all.
 
@@ -57,6 +58,22 @@ Same role as Laravel's `health:` option:
 ```
 
 Change `HEALTHCHECK_PATH` or `'path'` in config. Middleware on that route is `healthcheck.middleware`.
+
+### Custom HTML view
+
+This is one of the main reasons this package exists — Laravel's own health page markup isn't overridable, but this package's is. Publish it:
+
+```bash
+php artisan vendor:publish --provider="UKFast\HealthCheck\HealthCheckServiceProvider" --tag="healthcheck-views"
+```
+
+That copies `up.blade.php` to `resources/views/vendor/healthcheck/up.blade.php`. Laravel prefers your published copy over the package's own the moment it exists there — no config change needed, and browsers keep getting HTML from the same route as before. Edit it freely; it's a plain Blade view with three variables:
+
+- `$payload` — the same array the JSON response sends: `['status' => 'up'|'down', 'checks' => [...]]`
+- `$problem` — `true` when the response status is the configured `default-problem-http-code`, `false` for a normal `200`
+- `$report` — the underlying `HealthReport` instance, if you want more than `toArray()` gives you
+
+Start from the package's own [`up.blade.php`](resources/views/up.blade.php) as a base — it already shows the pattern of reusing Laravel's native card markup and extending it with a per-check table.
 
 ### Authentication
 

@@ -33,6 +33,15 @@ plain Laravel app.
 - **Debug mode rethrows, matching core.** `UpController` rethrows in debug
   mode instead of rendering — that's intentional parity with how Laravel's
   own exception handler behaves.
+- **The HTML view is overridable, and that's the point.** `loadViewsFrom(...,
+  'healthcheck')` registers the `healthcheck::` namespace, and
+  `UpController` renders `healthcheck::up` — both names are a public
+  contract the moment anyone runs `vendor:publish --tag=healthcheck-views`
+  and edits the published copy. Renaming either silently breaks every
+  consumer's customization on upgrade. The `$payload`/`$problem`/`$report`
+  variables passed to the view (see [UpController.php](src/Controllers/UpController.php))
+  are the same contract — don't rename or remove one without treating it
+  as a breaking change.
 
 ## Security-sensitive areas — read before touching
 

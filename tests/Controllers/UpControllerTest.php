@@ -7,6 +7,7 @@ namespace Tests\Controllers;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
 use Illuminate\Routing\RouteCollection;
+use Illuminate\Support\Facades\File;
 use RuntimeException;
 use Tests\Stubs\Checks\AlwaysDegradedCheck;
 use Tests\Stubs\Checks\AlwaysDownCheck;
@@ -79,6 +80,21 @@ class UpControllerTest extends TestCase
             ->assertSee('always-up')
             ->assertSee('always-down')
             ->assertSee('Something went wrong');
+    }
+
+    public function testAPublishedViewOverridesThePackageViewWithoutAnyConfigChange(): void
+    {
+        $target = resource_path('views/vendor/healthcheck/up.blade.php');
+        File::ensureDirectoryExists(dirname($target));
+        File::put($target, 'CUSTOM VIEW: status is {{ $payload["status"] }}, problem={{ $problem ? "yes" : "no" }}');
+
+        $this->setChecks([AlwaysUpCheck::class]);
+
+        try {
+            $this->get('/up')->assertSee('CUSTOM VIEW: status is up, problem=no', false);
+        } finally {
+            File::delete($target);
+        }
     }
 
     public function testHtmlPresentationShowsAPlaceholderForAPassingCheckWithNoMessage(): void
