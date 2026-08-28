@@ -81,6 +81,15 @@ class UpControllerTest extends TestCase
             ->assertSee('Something went wrong');
     }
 
+    public function testHtmlPresentationShowsAPlaceholderForAPassingCheckWithNoMessage(): void
+    {
+        $this->setChecks([AlwaysUpCheck::class]);
+
+        $this->get('/up')
+            ->assertOk()
+            ->assertSee('—', false);
+    }
+
     public function testOverridesDefaultUpPath(): void
     {
         app('router')->setRoutes(app(RouteCollection::class));

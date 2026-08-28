@@ -63,7 +63,7 @@
                                         'text-yellow-600' => $check['status'] === 'degraded',
                                     ])>{{ $check['status'] }}</span>
                                 </td>
-                                <td class="px-6 py-3 text-gray-500">{{ $check['message'] ?? '' }}</td>
+                                <td class="px-6 py-3 {{ isset($check['message']) ? 'text-gray-500' : 'text-gray-400' }}">{{ $check['message'] ?? '—' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
